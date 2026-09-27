@@ -1,0 +1,14 @@
+node_modules
+.turbo
+dist
+.next
+.env
+.env.development
+.env.production
+.env.local
+.env.*.local
+*.tsbuildinfo
+
+# Claude Code / agents
+.agents
+.claude

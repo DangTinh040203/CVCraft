@@ -1,0 +1,37 @@
+{
+  "name": "nest-next-monorepo-codebase",
+  "private": true,
+  "scripts": {
+    "build": "turbo run build",
+    "build:fe": "turbo run build --filter=@repo/fe",
+    "build:be": "turbo run build --filter=@repo/be",
+    "dev": "turbo run dev --parallel --filter=@repo/fe --filter=@repo/be",
+    "dev:fe": "turbo run dev --filter=@repo/fe",
+    "dev:be": "turbo run dev --filter=@repo/be",
+    "lint": "turbo run lint",
+    "lint:fix": "turbo run lint:fix",
+    "typecheck": "turbo run typecheck",
+    "test": "turbo run test",
+    "format": "prettier --write \"**/*.{ts,tsx,js,mjs,json,md,css}\""
+  },
+  "devDependencies": {
+    "@repo/prettier-config": "workspace:*",
+    "prettier": "^3.4.2",
+    "turbo": "^2.5.4",
+    "typescript": "^5.8.3"
+  },
+  "prettier": "@repo/prettier-config",
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "esbuild",
+      "sharp",
+      "unrs-resolver",
+      "@nestjs/core"
+    ]
+  },
+  "engines": {
+    "node": ">=20",
+    "pnpm": ">=9"
+  },
+  "packageManager": "pnpm@10.33.0"
+}
