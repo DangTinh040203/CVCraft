@@ -1,0 +1,42 @@
+/**
+ * The shared `.dark` theme in @repo/ui/globals.css only overrides the
+ * sidebar tokens — background/foreground/primary/etc. stay at their light
+ * values. This file gives the admin app a complete dark palette based on
+ * the Dracula color scheme (https://draculatheme.com/contribute) instead,
+ * without touching the shared package (the client app keeps the default).
+ */
+.dark {
+  --background: #282a36;
+  --foreground: #f8f8f2;
+  --card: #21222c;
+  --card-foreground: #f8f8f2;
+  --popover: #21222c;
+  --popover-foreground: #f8f8f2;
+  --primary: #bd93f9;
+  --primary-foreground: #282a36;
+  --secondary: #44475a;
+  --secondary-foreground: #f8f8f2;
+  --muted: #343746;
+  --muted-foreground: #6272a4;
+  --accent: #44475a;
+  --accent-foreground: #f8f8f2;
+  --destructive: #ff5555;
+  --destructive-foreground: #282a36;
+  --border: #44475a;
+  --input: #44475a;
+  --ring: #bd93f9;
+  --chart-1: #ff79c6;
+  --chart-2: #8be9fd;
+  --chart-3: #50fa7b;
+  --chart-4: #ffb86c;
+  --chart-5: #f1fa8c;
+
+  --sidebar: #21222c;
+  --sidebar-foreground: #f8f8f2;
+  --sidebar-primary: #bd93f9;
+  --sidebar-primary-foreground: #282a36;
+  --sidebar-accent: #44475a;
+  --sidebar-accent-foreground: #f8f8f2;
+  --sidebar-border: #343746;
+  --sidebar-ring: #bd93f9;
+}

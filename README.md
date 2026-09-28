@@ -7,7 +7,8 @@ A monorepo starter for building full-stack apps with **NestJS** + **Next.js**, p
 | Area          | Tech                                              |
 | ------------- | ------------------------------------------------- |
 | Monorepo      | Turborepo, pnpm workspaces                        |
-| Frontend      | Next.js (App Router), React 19, Tailwind CSS v4   |
+| Client        | Next.js (App Router), React 19, Tailwind CSS v4   |
+| Admin         | Next.js (App Router), React 19, Tailwind CSS v4   |
 | UI            | shadcn/ui-style shared component library          |
 | Backend       | NestJS 11, class-validator, @nestjs/config        |
 | Language      | TypeScript (strict)                               |
@@ -17,11 +18,12 @@ A monorepo starter for building full-stack apps with **NestJS** + **Next.js**, p
 
 ```
 apps/
-  fe/                  # Next.js frontend (port 3001)
-  be/                  # NestJS backend  (port 8000)
+  client/              # Next.js client app     (port 3001)
+  admin/               # Next.js admin app      (port 3002)
+  be/                  # NestJS backend         (port 8000)
 packages/
   ui/                  # Shared React UI components (shadcn/ui style)
-  shared/              # Shared types & utils (FE + BE)
+  shared/              # Shared types & utils (client + admin + BE)
   eslint-config/       # Shared ESLint flat configs (base / next-js / react-internal / node)
   prettier-config/     # Shared Prettier config
   typescript-config/   # Shared tsconfig presets (base / nextjs / nestjs / react-library)
@@ -34,33 +36,36 @@ packages/
 pnpm install
 
 # Copy env files
-cp apps/fe/.env.example apps/fe/.env
+cp apps/client/.env.example apps/client/.env
+cp apps/admin/.env.example apps/admin/.env
 cp apps/be/.env.example apps/be/.env
 
-# Run both apps in dev mode
+# Run all apps in dev mode
 pnpm dev
 
 # Or individually
-pnpm dev:fe   # http://localhost:3001
-pnpm dev:be   # http://localhost:8000/api
+pnpm dev:client  # http://localhost:3001
+pnpm dev:admin   # http://localhost:3002
+pnpm dev:be      # http://localhost:8000/api
 ```
 
 ## Scripts
 
-| Command          | Description                         |
-| ---------------- | ----------------------------------- |
-| `pnpm dev`       | Run FE + BE in parallel (dev mode)  |
-| `pnpm build`     | Build all apps & packages           |
-| `pnpm lint`      | Lint all workspaces                 |
-| `pnpm lint:fix`  | Lint & auto-fix                     |
-| `pnpm typecheck` | Typecheck all workspaces            |
-| `pnpm test`      | Run tests                           |
-| `pnpm format`    | Format the whole repo with Prettier |
+| Command          | Description                            |
+| ---------------- | --------------------------------------- |
+| `pnpm dev`       | Run client + BE + admin in parallel (dev mode) |
+| `pnpm build`     | Build all apps & packages               |
+| `pnpm lint`      | Lint all workspaces                     |
+| `pnpm lint:fix`  | Lint & auto-fix                         |
+| `pnpm typecheck` | Typecheck all workspaces                |
+| `pnpm test`      | Run tests                               |
+| `pnpm format`    | Format the whole repo with Prettier     |
 
 ## Conventions
 
 - **Path aliases only** — relative imports are blocked by ESLint; use `@/*` inside apps and `@repo/*` across packages.
-- **Import boundaries** — FE must not import from BE (and vice versa); shared code lives in `packages/shared`.
+- **Import boundaries** — client/admin must not import from BE (and vice versa), and client/admin must not import from each other; shared code lives in `packages/shared`.
 - **Import sorting** — enforced via `eslint-plugin-simple-import-sort`.
 - **Prettier** — single quotes, semicolons, trailing commas, 80 print width (see `packages/prettier-config`).
+
 # resume-builder-rebuild
