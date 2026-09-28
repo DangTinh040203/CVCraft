@@ -1,15 +1,48 @@
-import { Button } from '@repo/ui/components/button';
+import dynamic from 'next/dynamic';
+
+import HeroSection from '@/components/home-screen/hero';
+import Footer from '@/components/layout/footer';
+import Header from '@/components/layout/header';
+
+const Marquee = dynamic(() => import('@/components/home-screen/marquee'));
+const FeaturesSection = dynamic(
+  () => import('@/components/home-screen/features-section'),
+);
+const HowItWorksSection = dynamic(
+  () => import('@/components/home-screen/how-it-works'),
+);
+const TemplatePreviewSection = dynamic(
+  () => import('@/components/home-screen/template-preview'),
+);
+const WhyChooseUsSection = dynamic(
+  () => import('@/components/home-screen/why-choose-us'),
+);
+const BenefitsSection = dynamic(
+  () => import('@/components/home-screen/benefits'),
+);
+const StatsSection = dynamic(() => import('@/components/home-screen/stats'));
+const TestimonialsSection = dynamic(
+  () => import('@/components/home-screen/testimonials'),
+);
+const FAQSection = dynamic(() => import('@/components/home-screen/faq'));
+const CTASection = dynamic(() => import('@/components/home-screen/cta'));
 
 export default function HomePage() {
   return (
-    <main className={`
-      flex min-h-screen flex-col items-center justify-center gap-6
-    `}>
-      <h1 className='text-4xl font-bold'>Nest + Next Monorepo</h1>
-      <p className='text-muted-foreground'>
-        Turborepo · Next.js · NestJS · Tailwind CSS · shadcn/ui
-      </p>
-      <Button>Get started</Button>
-    </main>
+    <div>
+      <Header />
+      <HeroSection />
+      <Marquee />
+      <FeaturesSection />
+      <HowItWorksSection />
+      <TemplatePreviewSection />
+      <WhyChooseUsSection />
+      <BenefitsSection />
+      <StatsSection />
+      <TestimonialsSection />
+      <FAQSection />
+      <CTASection />
+      <Footer />
+    </div>
   );
 }
