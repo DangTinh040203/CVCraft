@@ -28,11 +28,22 @@ export default [
               message:
                 'Cannot import from apps into shared packages. Only import from shared into apps.',
             },
-            // Cross-app boundary: FE must not import from BE
+            // Cross-app boundary: admin must not import from BE
             {
               group: ['**/apps/be/**', '*/be/**', '../be/**', '../../be/**'],
               message:
-                'Cross-app import: FE must not import from BE. Move shared code to packages/shared.',
+                'Cross-app import: admin must not import from BE. Move shared code to packages/shared.',
+            },
+            // Cross-app boundary: admin must not import from client
+            {
+              group: [
+                '**/apps/client/**',
+                '*/client/**',
+                '../client/**',
+                '../../client/**',
+              ],
+              message:
+                'Cross-app import: admin must not import from client. Move shared code to packages/shared.',
             },
           ],
           paths: [
@@ -40,7 +51,12 @@ export default [
             {
               name: '@repo/be',
               message:
-                'Cross-app import: FE must not import from the BE package. Move shared code to packages/shared.',
+                'Cross-app import: admin must not import from the BE package. Move shared code to packages/shared.',
+            },
+            {
+              name: '@repo/client',
+              message:
+                'Cross-app import: admin must not import from the client package. Move shared code to packages/shared.',
             },
           ],
         },

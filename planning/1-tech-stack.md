@@ -9,7 +9,7 @@ rather than re-decided.
 
 ---
 
-## Frontend (`apps/fe`)
+## Frontend (`apps/client`)
 
 | Concern         | Choice                                                                                              |
 | --------------- | --------------------------------------------------------------------------------------------------- |
@@ -47,14 +47,14 @@ client-state editor, so it gets a lighter data layer.
 
 | Concern        | Choice                                                                               |
 | --------------- | ------------------------------------------------------------------------------------- |
-| Framework       | Next.js (App Router), same major version as `apps/fe`, separate app/port (dev: 3002) |
+| Framework       | Next.js (App Router), same major version as `apps/client`, separate app/port (dev: 3002) |
 | Server state    | TanStack Query (`@tanstack/react-query`) — simpler fit than Redux for read-heavy tables/dashboards; no redux-persist needed |
 | Tables          | `packages/ui` table components + `@tanstack/react-table` (sort/filter/pagination) |
 | Charts          | `recharts` (already vendored in `packages/ui/src/components/chart.tsx`) for the analytics/AI-usage dashboards |
 | Styling / UI    | Tailwind CSS 4 + shared `packages/ui` (same design system as the client app) |
 | Auth            | `@clerk/nextjs` — **same Clerk identity/project as the client app**, not a separate user system |
 | Access control  | Role-based: `publicMetadata.role === 'admin'` (or a Clerk Organization/role), checked both FE (redirect non-admins at layout level) and BE (`AdminGuard` on admin-only routes) |
-| Env validation  | `@t3-oss/env-nextjs` + zod, same pattern as `apps/fe` |
+| Env validation  | `@t3-oss/env-nextjs` + zod, same pattern as `apps/client` |
 
 **Not included on purpose:** the PDF pipeline, `@dnd-kit`, and
 `redux-persist` — none of the admin surface needs them, and pulling them in
