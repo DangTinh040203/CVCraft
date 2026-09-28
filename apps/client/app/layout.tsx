@@ -5,6 +5,8 @@ import { type Metadata } from 'next';
 import { Geist_Mono, Plus_Jakarta_Sans } from 'next/font/google';
 import { type ReactNode } from 'react';
 
+import MotionProvider from '@/components/providers/motion-provider';
+
 const fontSans = Plus_Jakarta_Sans({
   subsets: ['latin', 'latin-ext', 'vietnamese'],
   variable: '--font-sans',
@@ -20,8 +22,12 @@ const fontMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: 'Nest + Next Monorepo',
-  description: 'A NestJS + Next.js monorepo starter powered by Turborepo',
+  title: {
+    default: 'CVCraft - AI-Powered Professional CV Builder',
+    template: '%s | CVCraft',
+  },
+  description:
+    'Build a stunning, professional, and ATS-optimized CV in minutes with CVCraft.',
 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {
@@ -34,7 +40,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
           font-sans antialiased
         `}
       >
-        {children}
+        <MotionProvider>{children}</MotionProvider>
       </body>
     </html>
   );
