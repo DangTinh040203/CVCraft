@@ -2,6 +2,7 @@
 import { Card, CardContent } from '@repo/ui/components/card';
 import { m } from 'framer-motion';
 import { Star } from 'lucide-react';
+import Image from 'next/image';
 import React from 'react';
 
 import BlurText from '@/components/common/blur-text';
@@ -10,21 +11,21 @@ import { fadeInUp, staggerContainer } from '@/styles/animation';
 
 const testimonials = [
   {
-    initials: 'SC',
+    avatar: '/avatars/sarah-chen.jpg',
     name: 'Sarah Chen',
     role: 'Software Engineer at Google',
     content:
       'CVCraft helped me land my dream job at Google. The AI suggestions made my resume stand out from hundreds of applicants.',
   },
   {
-    initials: 'MR',
+    avatar: '/avatars/michael-roberts.jpg',
     name: 'Michael Roberts',
     role: 'Product Manager at Meta',
     content:
       'The mock interview feature was a game-changer. I felt so prepared walking into my final round interviews.',
   },
   {
-    initials: 'EW',
+    avatar: '/avatars/emily-watson.jpg',
     name: 'Emily Watson',
     role: 'Marketing Director',
     content:
@@ -138,14 +139,18 @@ const TestimonialsSection = () => {
                   >
                     <m.div
                       className={`
-                        from-primary to-accent text-primary-foreground
-                        shadow-primary/20 flex h-14 w-14 items-center
-                        justify-center rounded-2xl bg-linear-to-br font-bold
-                        shadow-lg
+                        shadow-primary/20 relative h-14 w-14 shrink-0
+                        overflow-hidden rounded-2xl shadow-lg
                       `}
                       whileHover={{ scale: 1.1, rotate: 5 }}
                     >
-                      {testimonial.initials}
+                      <Image
+                        src={testimonial.avatar}
+                        alt={testimonial.name}
+                        fill
+                        sizes='56px'
+                        className='object-cover'
+                      />
                     </m.div>
                     <div>
                       <div className={`
