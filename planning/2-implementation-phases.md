@@ -21,7 +21,7 @@ yet, but proves the toolchain.
 
 **Scope:**
 
-- Confirm/adjust the existing Turborepo starter (`apps/client`, `apps/be`,
+- Confirm/adjust the existing Turborepo starter (`apps/client`, `apps/backend`,
   `apps/admin`, `packages/*`) against the chosen stack in `1-tech-stack.md`.
 - Wire env validation skeletons: Joi schema (BE), `@t3-oss/env-nextjs`
   schema (FE), with the build-vs-runtime split for `CLERK_SECRET_KEY`
