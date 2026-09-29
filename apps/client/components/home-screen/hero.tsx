@@ -2,11 +2,12 @@
 import { Badge } from '@repo/ui/components/badge';
 import { Button } from '@repo/ui/components/button';
 import { m } from 'framer-motion';
-import { ArrowRight, Sparkles } from 'lucide-react';
+import { ArrowRight, CheckCircle2, Sparkles } from 'lucide-react';
 import Link from 'next/link';
 import React from 'react';
 
 import { fadeInUp, staggerContainer } from '@/styles/animation';
+
 
 const statMeta = [
   { color: 'bg-green-500', count: '50k+', label: 'Professionals' },
@@ -38,6 +39,74 @@ const HeroSection = () => {
           `}
         />
       </div>
+
+      {/* Floating resume-preview card (decorative, large screens only) */}
+      <m.div
+        className={`
+          bg-card border-border/60 absolute top-28 right-8 z-10 hidden w-56
+          rotate-6 rounded-2xl border p-4 shadow-2xl backdrop-blur-sm
+          xl:block
+        `}
+        initial={{ opacity: 0, scale: 0.8, rotate: 12 }}
+        animate={{ opacity: 1, scale: 1, rotate: 6, y: [0, -12, 0] }}
+        transition={{
+          opacity: { duration: 0.6, delay: 0.6 },
+          scale: { duration: 0.6, delay: 0.6 },
+          y: { duration: 5, repeat: Infinity, ease: 'easeInOut', delay: 1.2 },
+        }}
+      >
+        <div className='mb-3 flex items-center gap-3'>
+          <div
+            className={`
+              from-primary to-accent h-10 w-10 rounded-full bg-linear-to-br
+            `}
+          />
+          <div className='flex-1 space-y-1.5'>
+            <div className='bg-foreground/15 h-2 w-3/4 rounded-full' />
+            <div className='bg-muted-foreground/10 h-2 w-1/2 rounded-full' />
+          </div>
+        </div>
+        <div className='space-y-1.5'>
+          <div className='bg-muted h-1.5 w-full rounded-full' />
+          <div className='bg-muted h-1.5 w-full rounded-full' />
+          <div className='bg-muted h-1.5 w-2/3 rounded-full' />
+        </div>
+        <div
+          className={`
+            border-border/60 mt-3 flex items-center gap-1.5 border-t pt-3
+          `}
+        >
+          <CheckCircle2 className='text-primary h-3.5 w-3.5' />
+          <span className='text-primary text-xs font-bold'>
+            98% ATS Match
+          </span>
+        </div>
+      </m.div>
+
+      {/* Floating AI-suggestion card (decorative, large screens only) */}
+      <m.div
+        className={`
+          bg-card border-border/60 absolute bottom-40 left-10 z-10 hidden w-52
+          -rotate-6 rounded-2xl border p-4 shadow-2xl backdrop-blur-sm
+          xl:block
+        `}
+        initial={{ opacity: 0, scale: 0.8, rotate: -12 }}
+        animate={{ opacity: 1, scale: 1, rotate: -6, y: [0, 12, 0] }}
+        transition={{
+          opacity: { duration: 0.6, delay: 0.8 },
+          scale: { duration: 0.6, delay: 0.8 },
+          y: { duration: 4.5, repeat: Infinity, ease: 'easeInOut', delay: 1.4 },
+        }}
+      >
+        <div className='mb-2 flex items-center gap-1.5'>
+          <Sparkles className='text-primary h-3.5 w-3.5' />
+          <span className='text-xs font-bold'>AI Suggestion</span>
+        </div>
+        <p className='text-muted-foreground text-xs leading-relaxed'>
+          &quot;Led a team of 5 engineers&quot; → try adding a measurable
+          impact.
+        </p>
+      </m.div>
 
       <div className='relative z-10 container mx-auto'>
         <div className='mx-auto max-w-4xl text-center'>

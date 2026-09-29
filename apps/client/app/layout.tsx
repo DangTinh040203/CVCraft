@@ -5,6 +5,7 @@ import { type Metadata } from 'next';
 import { Geist_Mono, Plus_Jakarta_Sans } from 'next/font/google';
 import { type ReactNode } from 'react';
 
+import { ScrollToTop } from '@/components/common/scroll-to-top';
 import MotionProvider from '@/components/providers/motion-provider';
 
 const fontSans = Plus_Jakarta_Sans({
@@ -40,7 +41,10 @@ export default function RootLayout({ children }: { children: ReactNode }) {
           font-sans antialiased
         `}
       >
-        <MotionProvider>{children}</MotionProvider>
+        <MotionProvider>
+          <ScrollToTop />
+          {children}
+        </MotionProvider>
       </body>
     </html>
   );

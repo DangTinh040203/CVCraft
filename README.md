@@ -51,15 +51,15 @@ pnpm dev:backend # http://localhost:8000/api
 
 ## Scripts
 
-| Command          | Description                            |
-| ---------------- | --------------------------------------- |
+| Command          | Description                                         |
+| ---------------- | --------------------------------------------------- |
 | `pnpm dev`       | Run client + backend + admin in parallel (dev mode) |
-| `pnpm build`     | Build all apps & packages               |
-| `pnpm lint`      | Lint all workspaces                     |
-| `pnpm lint:fix`  | Lint & auto-fix                         |
-| `pnpm typecheck` | Typecheck all workspaces                |
-| `pnpm test`      | Run tests                               |
-| `pnpm format`    | Format the whole repo with Prettier     |
+| `pnpm build`     | Build all apps & packages                           |
+| `pnpm lint`      | Lint all workspaces                                 |
+| `pnpm lint:fix`  | Lint & auto-fix                                     |
+| `pnpm typecheck` | Typecheck all workspaces                            |
+| `pnpm test`      | Run tests                                           |
+| `pnpm format`    | Format the whole repo with Prettier                 |
 
 ## Conventions
 
