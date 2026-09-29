@@ -67,5 +67,3 @@ pnpm dev:backend # http://localhost:8000/api
 - **Import boundaries** — client/admin must not import from backend (and vice versa), and client/admin must not import from each other; shared code lives in `packages/shared`.
 - **Import sorting** — enforced via `eslint-plugin-simple-import-sort`.
 - **Prettier** — single quotes, semicolons, trailing commas, 80 print width (see `packages/prettier-config`).
-
-# resume-builder-rebuild
