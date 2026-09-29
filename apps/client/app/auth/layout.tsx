@@ -1,6 +1,6 @@
 'use client';
 import { motion } from 'framer-motion';
-import { FileText, Sparkles, Target, Zap } from 'lucide-react';
+import { FileText, ShieldCheck, Sparkles, Target, Zap } from 'lucide-react';
 import Link from 'next/link';
 import React, { type PropsWithChildren } from 'react';
 
@@ -178,11 +178,24 @@ const AuthLayout: React.FC<PropsWithChildren> = ({ children }) => {
       </div>
 
       <div className={`
-        flex flex-1 items-center justify-center px-4
+        relative flex flex-1 items-center justify-center overflow-hidden px-4
         lg:p-8
       `}>
+        <div
+          className={`
+            bg-primary/5 absolute top-[-10%] right-[-10%] h-80 w-80
+            rounded-full blur-3xl
+          `}
+        />
+        <div
+          className={`
+            bg-accent/5 absolute bottom-[-10%] left-[-10%] h-96 w-96
+            rounded-full blur-3xl
+          `}
+        />
+
         <motion.div
-          className='w-full max-w-md'
+          className='relative w-full max-w-md'
           initial={{ opacity: 0, x: 20 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.5 }}
@@ -245,6 +258,19 @@ const AuthLayout: React.FC<PropsWithChildren> = ({ children }) => {
               Privacy Policy
             </span>
           </motion.p>
+
+          <motion.div
+            className={`
+              text-muted-foreground mt-6 flex items-center justify-center
+              gap-2 text-xs
+            `}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.7 }}
+          >
+            <ShieldCheck className='h-4 w-4' />
+            Your data is encrypted and never shared
+          </motion.div>
         </motion.div>
       </div>
     </div>
