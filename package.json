@@ -4,11 +4,11 @@
   "scripts": {
     "build": "turbo run build",
     "build:client": "turbo run build --filter=@repo/client",
-    "build:be": "turbo run build --filter=@repo/be",
+    "build:backend": "turbo run build --filter=@repo/backend",
     "build:admin": "turbo run build --filter=@repo/admin",
-    "dev": "turbo run dev --parallel --filter=@repo/client --filter=@repo/be --filter=@repo/admin",
+    "dev": "turbo run dev --parallel --filter=@repo/client --filter=@repo/backend --filter=@repo/admin",
     "dev:client": "turbo run dev --filter=@repo/client",
-    "dev:be": "turbo run dev --filter=@repo/be",
+    "dev:backend": "turbo run dev --filter=@repo/backend",
     "dev:admin": "turbo run dev --filter=@repo/admin",
     "lint": "turbo run lint",
     "lint:fix": "turbo run lint:fix",
@@ -28,7 +28,8 @@
       "esbuild",
       "sharp",
       "unrs-resolver",
-      "@nestjs/core"
+      "@nestjs/core",
+      "msgpackr-extract"
     ]
   },
   "engines": {

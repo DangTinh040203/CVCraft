@@ -20,7 +20,7 @@ A monorepo starter for building full-stack apps with **NestJS** + **Next.js**, p
 apps/
   client/              # Next.js client app     (port 3001)
   admin/               # Next.js admin app      (port 3002)
-  be/                  # NestJS backend         (port 8000)
+  backend/             # NestJS backend         (port 8000)
 packages/
   ui/                  # Shared React UI components (shadcn/ui style)
   shared/              # Shared types & utils (client + admin + BE)
@@ -38,7 +38,7 @@ pnpm install
 # Copy env files
 cp apps/client/.env.example apps/client/.env
 cp apps/admin/.env.example apps/admin/.env
-cp apps/be/.env.example apps/be/.env
+cp apps/backend/.env.example apps/backend/.env
 
 # Run all apps in dev mode
 pnpm dev
@@ -46,14 +46,14 @@ pnpm dev
 # Or individually
 pnpm dev:client  # http://localhost:3001
 pnpm dev:admin   # http://localhost:3002
-pnpm dev:be      # http://localhost:8000/api
+pnpm dev:backend # http://localhost:8000/api
 ```
 
 ## Scripts
 
 | Command          | Description                            |
 | ---------------- | --------------------------------------- |
-| `pnpm dev`       | Run client + BE + admin in parallel (dev mode) |
+| `pnpm dev`       | Run client + backend + admin in parallel (dev mode) |
 | `pnpm build`     | Build all apps & packages               |
 | `pnpm lint`      | Lint all workspaces                     |
 | `pnpm lint:fix`  | Lint & auto-fix                         |
@@ -64,7 +64,7 @@ pnpm dev:be      # http://localhost:8000/api
 ## Conventions
 
 - **Path aliases only** — relative imports are blocked by ESLint; use `@/*` inside apps and `@repo/*` across packages.
-- **Import boundaries** — client/admin must not import from BE (and vice versa), and client/admin must not import from each other; shared code lives in `packages/shared`.
+- **Import boundaries** — client/admin must not import from backend (and vice versa), and client/admin must not import from each other; shared code lives in `packages/shared`.
 - **Import sorting** — enforced via `eslint-plugin-simple-import-sort`.
 - **Prettier** — single quotes, semicolons, trailing commas, 80 print width (see `packages/prettier-config`).
 

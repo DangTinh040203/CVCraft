@@ -183,8 +183,8 @@ const AuthLayout: React.FC<PropsWithChildren> = ({ children }) => {
       `}>
         <div
           className={`
-            bg-primary/5 absolute top-[-10%] right-[-10%] h-80 w-80
-            rounded-full blur-3xl
+            bg-primary/5 absolute top-[-10%] right-[-10%] h-80 w-80 rounded-full
+            blur-3xl
           `}
         />
         <div
@@ -261,8 +261,8 @@ const AuthLayout: React.FC<PropsWithChildren> = ({ children }) => {
 
           <motion.div
             className={`
-              text-muted-foreground mt-6 flex items-center justify-center
-              gap-2 text-xs
+              text-muted-foreground mt-6 flex items-center justify-center gap-2
+              text-xs
             `}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
