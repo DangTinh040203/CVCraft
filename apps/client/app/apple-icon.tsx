@@ -1,5 +1,7 @@
 import { ImageResponse } from 'next/og';
 
+import { AppIcon } from '@/components/common/app-icon';
+
 // Apple touch icon (180×180) for iOS home-screen bookmarks — same brand "CV"
 // monogram as the favicon, scaled up with iOS-appropriate corner rounding.
 export const size = {
@@ -11,27 +13,13 @@ export const contentType = 'image/png';
 export default function AppleIcon() {
   return new ImageResponse(
     (
-      <div
-        style={{
-          // Brand --gradient-primary (violet-700 → violet-600)
-          background: 'linear-gradient(135deg, #6d28d9 0%, #7c3aed 100%)',
-          width: '100%',
-          height: '100%',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          borderRadius: '40px',
-          color: 'white',
-          fontSize: 104,
-          fontWeight: 800,
-          letterSpacing: '-4px',
-        }}
-      >
-        CV
-      </div>
+      <AppIcon
+        size={180}
+        borderRadius={40}
+        fontSize={104}
+        letterSpacing='-4px'
+      />
     ),
-    {
-      ...size,
-    },
+    { ...size },
   );
 }

@@ -107,6 +107,7 @@ const FAQSection = () => {
                     bg-card/40 border-border/50 rounded-2xl border px-6
                     backdrop-blur-sm transition-all duration-300
                     hover:border-primary/20
+                    last:border-b
                   `}
                 >
                   <AccordionTrigger

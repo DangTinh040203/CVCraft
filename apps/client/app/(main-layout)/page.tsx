@@ -1,8 +1,6 @@
 import dynamic from 'next/dynamic';
 
 import HeroSection from '@/components/home-screen/hero';
-import Footer from '@/components/layout/footer';
-import Header from '@/components/layout/header';
 
 const Marquee = dynamic(() => import('@/components/home-screen/marquee'));
 const FeaturesSection = dynamic(
@@ -29,8 +27,7 @@ const CTASection = dynamic(() => import('@/components/home-screen/cta'));
 
 export default function HomePage() {
   return (
-    <div>
-      <Header />
+    <>
       <HeroSection />
       <Marquee />
       <FeaturesSection />
@@ -42,7 +39,6 @@ export default function HomePage() {
       <TestimonialsSection />
       <FAQSection />
       <CTASection />
-      <Footer />
-    </div>
+    </>
   );
 }

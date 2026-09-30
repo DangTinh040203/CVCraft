@@ -1,269 +1,213 @@
 'use client';
+
+import 'swiper/css';
+
+import { Badge } from '@repo/ui/components/badge';
 import { Button } from '@repo/ui/components/button';
 import { m } from 'framer-motion';
-import { ChevronRight } from 'lucide-react';
+import { ArrowRight, ChevronLeft, ChevronRight, Lock } from 'lucide-react';
 import Link from 'next/link';
-import React from 'react';
+import { useRef, useState } from 'react';
+import { Swiper, type SwiperClass,SwiperSlide } from 'swiper/react';
 
-import { fadeInUp, scaleIn, staggerContainer } from '@/styles/animation';
-
-const categories = [
-  {
-    key: 'professional',
-    label: 'Professional',
-    count: 4,
-    color: 'bg-primary/10 text-primary',
-  },
-  {
-    key: 'modern',
-    label: 'Modern',
-    count: 2,
-    color: 'bg-secondary/10 text-primary',
-  },
-  {
-    key: 'creative',
-    label: 'Creative',
-    count: 2,
-    color: 'bg-destructive/10 text-destructive',
-  },
-  {
-    key: 'minimal',
-    label: 'Minimal',
-    count: 2,
-    color: 'bg-muted text-muted-foreground',
-  },
-];
+import { TEMPLATES } from '@/components/templates/registry';
+import { sampleResume } from '@/components/templates/sample-resume';
+import { TemplateThumbnail } from '@/components/templates/template-thumbnail';
+import { fadeInUp, staggerContainer } from '@/styles/animation';
 
 const TemplatePreviewSection = () => {
+  const swiperRef = useRef<SwiperClass | null>(null);
+  const [activeIndex, setActiveIndex] = useState(0);
+
   return (
     <section
       className={`
-        bg-background relative overflow-hidden px-2 py-8
+        bg-background relative overflow-hidden px-2 py-16
         md:px-4 md:py-24
       `}
     >
-      <div className='container mx-auto'>
-        <div className={`
-          grid items-center gap-16
-          lg:grid-cols-2
-        `}>
-          <m.div
-            initial={{ opacity: 0, x: -60 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true, margin: '-100px' }}
-            transition={{ duration: 0.8, ease: 'easeOut' }}
-          >
-            <m.div
-              initial={{ opacity: 0, scale: 0.8 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true }}
-              className={`
-                text-primary bg-primary/10 mb-6 inline-block rounded-full px-4
-                py-1.5 text-sm font-semibold tracking-wider uppercase
-              `}
-            >
-              Premium Designs
-            </m.div>
-            <h2
-              className={`
-                font-display mb-8 text-3xl font-extrabold tracking-tight
-                md:text-5xl
-              `}
-            >
-              Choose from{' '}
-              <span className='gradient-text'>10+ Professional</span>{' '}
-              Templates
-            </h2>
-            <p
-              className={`
-                text-muted-foreground mb-10 text-base leading-relaxed
-                md:text-xl
-              `}
-            >
-              Our collection of high-performance templates is meticulously
-              crafted to meet the standards of top-tier companies and
-              recruitment agencies.
-            </p>
+      <m.div
+        className='container mx-auto mb-12 max-w-2xl text-center'
+        initial='hidden'
+        whileInView='visible'
+        viewport={{ once: true, margin: '-100px' }}
+        variants={staggerContainer}
+      >
+        <m.span
+          variants={fadeInUp}
+          className={`
+            text-primary bg-primary/10 mb-4 inline-block rounded-full px-4
+            py-1.5 text-sm font-semibold tracking-wider uppercase
+          `}
+        >
+          Premium Designs
+        </m.span>
+        <m.h2
+          variants={fadeInUp}
+          className={`
+            font-display mb-4 text-3xl font-extrabold tracking-tight
+            md:text-5xl
+          `}
+        >
+          Choose from <span className='gradient-text'>Professional</span>{' '}
+          Templates
+        </m.h2>
+        <m.p
+          variants={fadeInUp}
+          className={`
+            text-muted-foreground text-base
+            md:text-lg
+          `}
+        >
+          Every template you see here is the real thing — the exact
+          component that renders your resume, not a mockup.
+        </m.p>
+      </m.div>
 
-            <m.div
-              className='mb-12 flex flex-wrap gap-3'
-              variants={staggerContainer}
-              initial='hidden'
-              whileInView='visible'
-              viewport={{ once: true }}
-            >
-              {categories.map((cat) => (
-                <m.span
-                  key={cat.key}
+      <div className='relative mx-auto max-w-5xl'>
+        <button
+          type='button'
+          aria-label='Previous template'
+          onClick={() => swiperRef.current?.slidePrev()}
+          className={`
+            border-border/60 bg-background/90 text-foreground absolute top-1/2
+            left-1 z-10 hidden size-11 -translate-y-1/2 cursor-pointer
+            items-center justify-center rounded-full border shadow-lg
+            backdrop-blur-sm transition-all
+            hover:bg-primary hover:text-primary-foreground hover:scale-110
+            sm:left-2 sm:flex
+            md:-left-5
+          `}
+        >
+          <ChevronLeft className='size-5' />
+        </button>
+        <button
+          type='button'
+          aria-label='Next template'
+          onClick={() => swiperRef.current?.slideNext()}
+          className={`
+            border-border/60 bg-background/90 text-foreground absolute top-1/2
+            right-1 z-10 hidden size-11 -translate-y-1/2 cursor-pointer
+            items-center justify-center rounded-full border shadow-lg
+            backdrop-blur-sm transition-all
+            hover:bg-primary hover:text-primary-foreground hover:scale-110
+            sm:right-2 sm:flex
+            md:-right-5
+          `}
+        >
+          <ChevronRight className='size-5' />
+        </button>
+
+        <Swiper
+          onSwiper={(swiper) => {
+            swiperRef.current = swiper;
+          }}
+          onSlideChange={(swiper) => setActiveIndex(swiper.realIndex)}
+          centeredSlides
+          loop
+          spaceBetween={20}
+          slidesPerView={1.15}
+          breakpoints={{
+            640: { slidesPerView: 1.8, spaceBetween: 24 },
+            1024: { slidesPerView: 2.4, spaceBetween: 32 },
+          }}
+          className='!py-4'
+        >
+          {/* Swiper's own loop-clone logic gets flaky with only
+              TEMPLATES.length real slides (it warns "not enough slides for
+              loop mode" and the active-slide state desyncs). Repeating the
+              real data gives it enough genuine slides for a stable,
+              seamless loop instead of relying on its internal cloning. */}
+          {Array.from({ length: 8 }, (_, copy) => copy)
+            .flatMap((copy) => TEMPLATES.map((template) => ({ template, copy })))
+            .map(({ template, copy }, index) => {
+            const TemplateComponent = template.component;
+            const isActive = index === activeIndex;
+
+            return (
+              <SwiperSlide key={`${template.key}-${copy}`} className='!h-auto'>
+                <div
                   className={`
-                    cursor-pointer rounded-xl px-5 py-2.5 text-sm font-bold
-                    tracking-tight shadow-sm transition-all duration-300
-                    hover:shadow-md
-                    ${cat.color}
-                  `}
-                  variants={scaleIn}
-                  whileHover={{
-                    scale: 1.05,
-                    y: -2,
-                  }}
-                  whileTap={{ scale: 0.95 }}
-                >
-                  {cat.label}
-                  <span className='ml-2 text-xs font-medium opacity-60'>
-                    ({cat.count})
-                  </span>
-                </m.span>
-              ))}
-            </m.div>
-
-            <Link href='/templates'>
-              <m.div
-                whileHover={{ scale: 1.05, x: 5 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                <Button
-                  size='xl'
-                  className={`
-                    group shadow-primary/10 h-14 rounded-full px-10 text-base
-                    shadow-xl
-                    lg:text-lg
+                    border-border/60 bg-card relative overflow-hidden
+                    rounded-2xl border shadow-lg transition-all duration-500
+                    ${isActive ? 'border-primary/40 scale-100 shadow-2xl' : `
+                      scale-90 opacity-50
+                    `}
                   `}
                 >
-                  Explore All Templates
-                  <ChevronRight
-                    className={`
-                      ml-2 h-5 w-5 transition-transform duration-300
-                      group-hover:translate-x-1
-                    `}
-                  />
-                </Button>
-              </m.div>
-            </Link>
-          </m.div>
+                  <TemplateThumbnail>
+                    <TemplateComponent resume={sampleResume} />
+                  </TemplateThumbnail>
 
-          <m.div
-            className='relative'
-            initial={{ opacity: 0, x: 60 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true, margin: '-100px' }}
-            transition={{ duration: 0.8, ease: 'easeOut' }}
-          >
-            <div
-              className={`
-                from-primary/10 to-accent/10 absolute -inset-10 -z-10
-                rounded-full bg-linear-to-tr blur-3xl
-              `}
-            />
+                  {template.isPremium && (
+                    <Badge className={`
+                      absolute top-3 right-3 gap-1 bg-amber-500 text-white
+                      shadow-sm
+                    `}>
+                      <Lock className='size-3' />
+                      Premium
+                    </Badge>
+                  )}
 
-            <m.div
-              className={`
-                grid grid-cols-1 gap-6
-                sm:grid-cols-2
-              `}
-              variants={staggerContainer}
-              initial='hidden'
-              whileInView='visible'
-              viewport={{ once: true }}
-            >
-              {[1, 2, 3, 4].map((i) => (
-                <m.div
-                  key={i}
-                  className={`
-                    bg-card border-border/60 group relative aspect-square
-                    overflow-hidden rounded-[24px] border p-5 shadow-xl
-                    transition-all duration-500
-                    hover:border-primary/30 hover:shadow-2xl
-                  `}
-                  variants={fadeInUp}
-                >
-                  <div
-                    className={`
-                      from-primary/5 absolute inset-0 bg-linear-to-br
-                      to-transparent opacity-0 transition-opacity
-                      group-hover:opacity-100
-                    `}
-                  />
-
-                  <div
-                    className={`
-                      relative z-10 flex h-full flex-col justify-between
-                      space-y-4
-                    `}
-                  >
-                    <div className='flex items-center gap-4'>
+                  {isActive && (
+                    <div className='absolute inset-x-0 bottom-0'>
+                      {/* Fade strip above a fully opaque block — a
+                          fade-to-transparent alone let the resume text
+                          underneath show through and collide with the
+                          template name/button. */}
                       <div
                         className={`
-                          bg-primary/10 text-primary flex h-12 w-12 items-center
-                          justify-center rounded-xl font-bold shadow-inner
+                          from-background h-10 bg-linear-to-t to-transparent
                         `}
-                      >
-                        {i}
-                      </div>
-                      <div className='flex-1'>
-                        <div
-                          className={`
-                            bg-foreground/15 h-2.5 w-3/4 rounded-full
-                            transition-colors
-                            group-hover:bg-primary/20
-                          `}
-                        />
-                        <div
-                          className={`
-                            bg-muted-foreground/10 mt-2 h-2 w-1/2 rounded-full
-                          `}
-                        />
-                      </div>
-                    </div>
-
-                    <div className='border-border/60 space-y-3 border-t pt-4'>
-                      <m.div
-                        className='bg-muted/60 h-2 rounded-full'
-                        initial={{ width: 0 }}
-                        whileInView={{ width: '100%' }}
-                        viewport={{ once: true }}
-                        transition={{ duration: 1, delay: i * 0.1 + 0.3 }}
                       />
-                      <m.div
-                        className='bg-muted/60 h-2 rounded-full'
-                        initial={{ width: 0 }}
-                        whileInView={{ width: '85%' }}
-                        viewport={{ once: true }}
-                        transition={{ duration: 1, delay: i * 0.1 + 0.4 }}
-                      />
-                      {i === 1 && (
-                        <m.div
-                          className='bg-muted/60 h-2 rounded-full'
-                          initial={{ width: 0 }}
-                          whileInView={{ width: '92%' }}
-                          viewport={{ once: true }}
-                          transition={{ duration: 1, delay: 0.5 }}
-                        />
-                      )}
-                    </div>
-
-                    <div
-                      className={`
-                        flex translate-y-2 transform justify-end opacity-0
-                        transition-opacity duration-300
-                        group-hover:translate-y-0 group-hover:opacity-100
-                      `}
-                    >
-                      <div
-                        className={`
-                          text-primary text-xs font-black tracking-widest
-                          uppercase
-                        `}
-                      >
-                        Preview Design
+                      <div className='bg-background p-5 pt-0'>
+                        <p className='mb-3 text-center text-sm font-bold'>
+                          {template.name}
+                        </p>
+                        <Button asChild size='lg' className='w-full gap-2'>
+                          <Link href={`/builder?template=${template.key}`}>
+                            Use this template
+                            <ArrowRight className='size-4' />
+                          </Link>
+                        </Button>
                       </div>
                     </div>
-                  </div>
-                </m.div>
-              ))}
-            </m.div>
-          </m.div>
-        </div>
+                  )}
+                </div>
+              </SwiperSlide>
+            );
+          })}
+        </Swiper>
       </div>
+
+      <m.div
+        className='mt-12 text-center'
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.6 }}
+      >
+        <Link href='/templates'>
+          <m.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+            <Button
+              size='xl'
+              className={`
+                group shadow-primary/10 h-14 rounded-full px-10 text-base
+                shadow-xl
+                lg:text-lg
+              `}
+            >
+              Explore All Templates
+              <ChevronRight
+                className={`
+                  ml-2 h-5 w-5 transition-transform duration-300
+                  group-hover:translate-x-1
+                `}
+              />
+            </Button>
+          </m.div>
+        </Link>
+      </m.div>
     </section>
   );
 };

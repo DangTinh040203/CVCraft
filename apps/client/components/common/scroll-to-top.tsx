@@ -30,7 +30,7 @@ export const ScrollToTop = () => {
   return (
     <div
       className={`
-        animate-in fade-in zoom-in fixed right-8 bottom-8 z-50 duration-300
+        animate-in fade-in zoom-in fixed bottom-8 left-8 z-50 duration-300
       `}
     >
       <button
