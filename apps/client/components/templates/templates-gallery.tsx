@@ -28,12 +28,6 @@ export function TemplatesGallery() {
 
   return (
     <section className='relative'>
-      {/* Gradient wash + blobs behind the hero band. Fades from `background`
-          back to `background` (not to a flat cutoff) so it blends into the
-          header above AND the plain grid section below, with no visible
-          seam at either edge — and lives in its own fixed-height, clipped
-          wrapper so blob % positioning doesn't depend on the (very tall,
-          grid-dependent) height of the whole section. */}
       <div className='absolute inset-x-0 top-0 -z-10 h-[560px] overflow-hidden'>
         <div
           className={`
@@ -59,10 +53,12 @@ export function TemplatesGallery() {
 
       {/* pt-24/pt-32 clears the now-fixed Header (h-16) plus breathing
           room — same values home-screen/hero.tsx uses for the same reason. */}
-      <div className={`
-        container mx-auto px-4 pt-24 pb-10
-        md:px-6 md:pt-32
-      `}>
+      <div
+        className={`
+          container mx-auto px-4 pt-24 pb-10
+          md:px-6 md:pt-32
+        `}
+      >
         <m.div
           className='mx-auto mb-10 max-w-2xl text-center'
           initial='hidden'
@@ -86,8 +82,8 @@ export function TemplatesGallery() {
               md:text-lg
             `}
           >
-            Every template renders from the same content — preview any of
-            them with sample data, pick one, switch anytime later.
+            Every template renders from the same content — preview any of them
+            with sample data, pick one, switch anytime later.
           </m.p>
         </m.div>
 
@@ -127,10 +123,12 @@ export function TemplatesGallery() {
         </m.div>
       </div>
 
-      <div className={`
-        container mx-auto px-4 pb-20
-        md:px-6
-      `}>
+      <div
+        className={`
+          container mx-auto px-4 pb-20
+          md:px-6
+        `}
+      >
         <m.div
           key={filter}
           className={`

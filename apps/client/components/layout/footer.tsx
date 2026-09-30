@@ -8,15 +8,29 @@ import { fadeInUp, staggerContainer } from '@/styles/animation';
 const sections = [
   {
     title: 'Product',
-    links: ['Templates', 'CV Builder', 'Mock Interviews', 'Pricing'],
+    links: [
+      { label: 'Templates', href: '/templates' },
+      { label: 'CV Builder', href: '#' },
+      { label: 'Mock Interviews', href: '#' },
+      { label: 'Pricing', href: '#' },
+    ],
   },
   {
     title: 'Company',
-    links: ['About', 'Blog', 'Careers', 'Contact'],
+    links: [
+      { label: 'About', href: '#' },
+      { label: 'Blog', href: '#' },
+      { label: 'Careers', href: '#' },
+      { label: 'Contact', href: '#' },
+    ],
   },
   {
     title: 'Legal',
-    links: ['Privacy Policy', 'Terms of Service', 'Cookie Policy'],
+    links: [
+      { label: 'Privacy Policy', href: '/privacy' },
+      { label: 'Terms of Service', href: '/terms' },
+      { label: 'Cookie Policy', href: '#' },
+    ],
   },
 ];
 
@@ -61,16 +75,16 @@ const Footer = () => {
               <h4 className='mb-4 font-semibold'>{section.title}</h4>
               <ul className='space-y-2'>
                 {section.links.map((link) => (
-                  <li key={link}>
+                  <li key={link.label}>
                     <m.a
-                      href='#'
+                      href={link.href}
                       className={`
                         text-muted-foreground text-sm transition-colors
                         hover:text-foreground
                       `}
                       whileHover={{ x: 5 }}
                     >
-                      {link}
+                      {link.label}
                     </m.a>
                   </li>
                 ))}

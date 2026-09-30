@@ -1,4 +1,10 @@
-import { Briefcase, GraduationCap, Languages, Sparkles, User } from 'lucide-react';
+import {
+  Briefcase,
+  GraduationCap,
+  Languages,
+  Sparkles,
+  User,
+} from 'lucide-react';
 import Image from 'next/image';
 
 import {
@@ -48,8 +54,8 @@ function LanguageRing({ name, level }: { name: string; level: string }) {
           strokeDashoffset={offset}
         />
       </svg>
-      <p className='-mt-8 text-[8pt] font-bold text-white'>{percent}%</p>
-      <p className='mt-4 text-[7.5pt] text-rose-100'>{name}</p>
+      <p className='-mt-8.5 text-[6.5pt] font-bold text-white'>{percent}%</p>
+      <p className='mt-4 text-[6.5pt] text-rose-100'>{name}</p>
     </div>
   );
 }
@@ -68,9 +74,11 @@ export function Template09({ resume }: TemplateProps) {
   const languages = sortByOrder(resume.languages);
 
   return (
-    <div className={`
-      flex min-h-[297mm] w-[210mm] bg-white text-[10pt] text-neutral-800
-    `}>
+    <div
+      className={`
+        flex min-h-[297mm] w-[210mm] bg-white text-[10pt] text-neutral-800
+      `}
+    >
       <main className='flex-1 p-[9mm]'>
         <header className='mb-6'>
           <h1 className='text-[19pt] font-bold text-neutral-900'>
@@ -82,10 +90,12 @@ export function Template09({ resume }: TemplateProps) {
         </header>
 
         <section className='mb-5 break-inside-avoid'>
-          <h2 className={`
-            mb-1.5 flex items-center gap-2 text-[10pt] font-bold
-            text-neutral-900
-          `}>
+          <h2
+            className={`
+              mb-1.5 flex items-center gap-2 text-[10pt] font-bold
+              text-neutral-900
+            `}
+          >
             <User className='size-3.5 text-rose-700' />
             Professional Summary
           </h2>
@@ -95,9 +105,12 @@ export function Template09({ resume }: TemplateProps) {
         </section>
 
         <section className='mb-5'>
-          <h2 className={`
-            mb-2 flex items-center gap-2 text-[10pt] font-bold text-neutral-900
-          `}>
+          <h2
+            className={`
+              mb-2 flex items-center gap-2 text-[10pt] font-bold
+              text-neutral-900
+            `}
+          >
             <Briefcase className='size-3.5 text-rose-700' />
             Work Experience
           </h2>
@@ -115,9 +128,11 @@ export function Template09({ resume }: TemplateProps) {
                 <p className='text-[9pt] font-medium text-neutral-500'>
                   {job.company}
                 </p>
-                <p className={`
-                  mt-1 text-[9pt] whitespace-pre-line text-neutral-700
-                `}>
+                <p
+                  className={`
+                    mt-1 text-[9pt] whitespace-pre-line text-neutral-700
+                  `}
+                >
                   {job.description}
                 </p>
               </div>
@@ -126,9 +141,12 @@ export function Template09({ resume }: TemplateProps) {
         </section>
 
         <section className='break-inside-avoid'>
-          <h2 className={`
-            mb-2 flex items-center gap-2 text-[10pt] font-bold text-neutral-900
-          `}>
+          <h2
+            className={`
+              mb-2 flex items-center gap-2 text-[10pt] font-bold
+              text-neutral-900
+            `}
+          >
             <GraduationCap className='size-3.5 text-rose-700' />
             Education
           </h2>
@@ -149,10 +167,12 @@ export function Template09({ resume }: TemplateProps) {
 
       <aside className='w-[62mm] shrink-0 bg-rose-950 p-[8mm] text-white'>
         {resume.avatar && (
-          <div className={`
-            mx-auto mb-4 h-[24mm] w-[24mm] overflow-hidden rounded-full ring-2
-            ring-white/40
-          `}>
+          <div
+            className={`
+              mx-auto mb-4 h-[24mm] w-[24mm] overflow-hidden rounded-full ring-2
+              ring-white/40
+            `}
+          >
             <Image
               src={resume.avatar}
               alt={resume.title}
@@ -164,10 +184,12 @@ export function Template09({ resume }: TemplateProps) {
         )}
 
         <div className='mb-6 break-inside-avoid'>
-          <h2 className={`
-            mb-2 text-[8.5pt] font-bold tracking-[0.15em] text-rose-200
-            uppercase
-          `}>
+          <h2
+            className={`
+              mb-2 text-[8.5pt] font-bold tracking-[0.15em] text-rose-200
+              uppercase
+            `}
+          >
             Contact
           </h2>
           <ul className='space-y-1.5 text-[8pt] text-rose-100'>
@@ -178,10 +200,12 @@ export function Template09({ resume }: TemplateProps) {
         </div>
 
         <div className='mb-6 break-inside-avoid'>
-          <h2 className={`
-            mb-2 flex items-center gap-1.5 text-[8.5pt] font-bold
-            tracking-[0.15em] text-rose-200 uppercase
-          `}>
+          <h2
+            className={`
+              mb-2 flex items-center gap-1.5 text-[8.5pt] font-bold
+              tracking-[0.15em] text-rose-200 uppercase
+            `}
+          >
             <Sparkles className='size-3' />
             Skills
           </h2>
@@ -200,10 +224,12 @@ export function Template09({ resume }: TemplateProps) {
         </div>
 
         <div className='mb-6 break-inside-avoid'>
-          <h2 className={`
-            mb-2 text-[8.5pt] font-bold tracking-[0.15em] text-rose-200
-            uppercase
-          `}>
+          <h2
+            className={`
+              mb-2 text-[8.5pt] font-bold tracking-[0.15em] text-rose-200
+              uppercase
+            `}
+          >
             Certifications
           </h2>
           <ul className='space-y-1 text-[8pt] text-rose-100'>
@@ -214,10 +240,12 @@ export function Template09({ resume }: TemplateProps) {
         </div>
 
         <div className='break-inside-avoid'>
-          <h2 className={`
-            mb-4 flex items-center gap-1.5 text-[8.5pt] font-bold
-            tracking-[0.15em] text-rose-200 uppercase
-          `}>
+          <h2
+            className={`
+              mb-4 flex items-center gap-1.5 text-[8.5pt] font-bold
+              tracking-[0.15em] text-rose-200 uppercase
+            `}
+          >
             <Languages className='size-3' />
             Languages
           </h2>

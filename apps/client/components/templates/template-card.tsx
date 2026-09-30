@@ -2,11 +2,7 @@
 
 import { Badge } from '@repo/ui/components/badge';
 import { Button } from '@repo/ui/components/button';
-import {
-  Dialog,
-  DialogContent,
-  DialogTitle,
-} from '@repo/ui/components/dialog';
+import { Dialog, DialogContent, DialogTitle } from '@repo/ui/components/dialog';
 import { ArrowRight, Lock, ZoomIn } from 'lucide-react';
 import Link from 'next/link';
 import { useState } from 'react';
@@ -29,11 +25,13 @@ export function TemplateCard({ templateKey }: { templateKey: string }) {
   const TemplateComponent = template.component;
 
   return (
-    <div className={`
-      group border-border/60 bg-card relative overflow-hidden rounded-2xl border
-      shadow-sm transition-all duration-300
-      hover:border-primary/30 hover:-translate-y-1 hover:shadow-xl
-    `}>
+    <div
+      className={`
+        group border-border/60 bg-card relative overflow-hidden rounded-2xl
+        border shadow-sm transition-all duration-300
+        hover:border-primary/30 hover:-translate-y-1 hover:shadow-xl
+      `}
+    >
       <button
         type='button'
         onClick={() => setPreviewOpen(true)}
@@ -110,11 +108,9 @@ export function TemplateCard({ templateKey }: { templateKey: string }) {
         </Button>
       </div>
 
-      <Dialog open={previewOpen} onOpenChange={setPreviewOpen}>
+      <Dialog open={previewOpen} onOpenChange={setPreviewOpen} modal>
         <DialogContent className='max-h-[90vh] max-w-2xl overflow-y-auto p-0'>
-          <DialogTitle className='sr-only'>
-            {template.name} preview
-          </DialogTitle>
+          <DialogTitle className='sr-only'>{template.name} preview</DialogTitle>
           {/*
             Reuses TemplateThumbnail (not a fixed `scale-[n]`) so the
             preview always fits the dialog's actual width — a fixed scale
