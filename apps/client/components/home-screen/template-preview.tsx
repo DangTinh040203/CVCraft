@@ -118,7 +118,7 @@ const TemplatePreviewSection = () => {
               loop mode" and the active-slide state desyncs). Repeating the
               real data gives it enough genuine slides for a stable,
               seamless loop instead of relying on its internal cloning. */}
-          {Array.from({ length: 8 }, (_, copy) => copy)
+          {Array.from({ length: 3 }, (_, copy) => copy)
             .flatMap((copy) => TEMPLATES.map((template) => ({ template, copy })))
             .map(({ template, copy }, index) => {
             const TemplateComponent = template.component;
