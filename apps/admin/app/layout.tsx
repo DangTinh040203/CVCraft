@@ -10,8 +10,8 @@ import { ThemeProvider } from '@/components/theme-provider';
 import { SearchProvider } from '@/lib/search-context';
 
 export const metadata: Metadata = {
-  title: 'Resume Builder — Admin',
-  description: 'Internal admin dashboard for Resume Builder',
+  title: 'CraftCV — Admin',
+  description: 'Internal admin dashboard for CraftCV',
 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {

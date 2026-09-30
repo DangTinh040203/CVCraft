@@ -16,7 +16,7 @@ export function AppTitle() {
             <LayoutDashboard className='size-4' />
           </div>
           <div className='grid flex-1 text-start text-sm leading-tight'>
-            <span className='truncate font-semibold'>Resume Builder</span>
+            <span className='truncate font-semibold'>CraftCV</span>
             <span className='truncate text-xs'>Admin</span>
           </div>
         </SidebarMenuButton>

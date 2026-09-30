@@ -30,7 +30,7 @@ export function ProfileForm() {
     resolver: zodResolver(profileFormSchema),
     defaultValues: {
       name: 'Admin',
-      email: 'admin@resume-builder.local',
+      email: 'admin@craftcv.local',
       bio: '',
     },
   });

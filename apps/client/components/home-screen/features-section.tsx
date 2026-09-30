@@ -77,7 +77,7 @@ const FeaturesSection = () => {
             `}
           >
             From professional templates to AI-powered content generation and
-            mock interviews, CVCraft provides the end-to-end toolkit for your
+            mock interviews, CraftCV provides the end-to-end toolkit for your
             job search.
           </p>
         </m.div>

@@ -24,11 +24,11 @@ const fontMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: {
-    default: 'CVCraft - AI-Powered Professional CV Builder',
-    template: '%s | CVCraft',
+    default: 'CraftCV - AI-Powered Professional CV Builder',
+    template: '%s | CraftCV',
   },
   description:
-    'Build a stunning, professional, and ATS-optimized CV in minutes with CVCraft.',
+    'Build a stunning, professional, and ATS-optimized CV in minutes with CraftCV.',
 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {

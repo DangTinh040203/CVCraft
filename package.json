@@ -1,5 +1,5 @@
 {
-  "name": "nest-next-monorepo-codebase",
+  "name": "craftcv",
   "private": true,
   "scripts": {
     "build": "turbo run build",

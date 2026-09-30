@@ -49,7 +49,7 @@ const Footer = () => {
               >
                 <FileText className='text-primary-foreground h-5 w-5' />
               </m.div>
-              <span className='font-display text-xl font-bold'>CVCraft</span>
+              <span className='font-display text-xl font-bold'>CraftCV</span>
             </div>
             <p className='text-muted-foreground text-sm'>
               The AI-powered CV builder that helps you land your dream job.
@@ -88,7 +88,7 @@ const Footer = () => {
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
         >
-          © 2026 CVCraft - Cao Dang Tinh. All rights reserved.
+          © 2026 CraftCV - Cao Dang Tinh. All rights reserved.
         </m.div>
       </div>
     </footer>

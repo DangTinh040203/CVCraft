@@ -87,13 +87,13 @@ const WhyChooseUsSection = () => {
             `}
           >
             <ShinyText
-              text='The CVCraft Edge'
+              text='The CraftCV Edge'
               speed={3}
               className='text-sm font-semibold tracking-wider uppercase'
             />
           </m.div>
           <BlurText
-            text='Why Choose CVCraft?'
+            text='Why Choose CraftCV?'
             delay={80}
             animateBy='words'
             direction='top'

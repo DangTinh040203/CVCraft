@@ -2,7 +2,7 @@
 
 ## Overview
 
-**Resume Builder** is an AI-powered resume builder: a section-based editor with
+**CraftCV** is an AI-powered resume builder: a section-based editor with
 live preview, PDF export, AI resume parsing, job-description matching, AI
 email generation, and real-time voice mock interviews.
 

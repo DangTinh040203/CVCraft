@@ -175,7 +175,7 @@ const HeroSection = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.3 }}
           >
-            Welcome to CVCraft, the largest professional CV building
+            Welcome to CraftCV, the largest professional CV building
             platform.
             <br className={`
               hidden

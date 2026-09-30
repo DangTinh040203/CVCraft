@@ -95,7 +95,7 @@ const AuthLayout: React.FC<PropsWithChildren> = ({ children }) => {
               >
                 <FileText className='h-6 w-6 text-white' />
               </motion.div>
-              <span className='font-display text-2xl font-bold'>CVCraft</span>
+              <span className='font-display text-2xl font-bold'>CraftCV</span>
             </Link>
           </motion.div>
 
@@ -228,7 +228,7 @@ const AuthLayout: React.FC<PropsWithChildren> = ({ children }) => {
             transition={{ delay: 0.2 }}
           >
             <h2 className='font-display mb-2 text-3xl font-bold'>
-              Welcome to CVCraft
+              Welcome to CraftCV
             </h2>
             <p className='text-muted-foreground'>
               Build your standout CV in minutes
