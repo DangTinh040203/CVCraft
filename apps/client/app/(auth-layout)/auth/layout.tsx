@@ -244,19 +244,19 @@ const AuthLayout: React.FC<PropsWithChildren> = ({ children }) => {
             transition={{ delay: 0.6 }}
           >
             By continuing, you agree to our <br />
-            <span className={`
-              text-primary cursor-pointer
+            <Link href='/terms' className={`
+              text-primary
               hover:underline
             `}>
               Terms of Service
-            </span>{' '}
+            </Link>{' '}
             and{' '}
-            <span className={`
-              text-primary cursor-pointer
+            <Link href='/privacy' className={`
+              text-primary
               hover:underline
             `}>
               Privacy Policy
-            </span>
+            </Link>
           </motion.p>
 
           <motion.div
