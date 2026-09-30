@@ -15,7 +15,7 @@ const testimonials = [
     name: 'Sarah Chen',
     role: 'Software Engineer at Google',
     content:
-      'CVCraft helped me land my dream job at Google. The AI suggestions made my resume stand out from hundreds of applicants.',
+      'CraftCV helped me land my dream job at Google. The AI suggestions made my resume stand out from hundreds of applicants.',
   },
   {
     avatar: '/avatars/michael-roberts.jpg',
@@ -29,7 +29,7 @@ const testimonials = [
     name: 'Emily Watson',
     role: 'Marketing Director',
     content:
-      "I tried many CV builders, but CVCraft's templates and AI writing are simply the best. Highly recommend!",
+      "I tried many CV builders, but CraftCV's templates and AI writing are simply the best. Highly recommend!",
   },
 ];
 
@@ -79,7 +79,7 @@ const TestimonialsSection = () => {
               md:text-lg
             `}
           >
-            Discover how professionals from top companies are using CVCraft to
+            Discover how professionals from top companies are using CraftCV to
             accelerate their career growth.
           </p>
         </m.div>

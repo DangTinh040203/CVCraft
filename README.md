@@ -1,6 +1,6 @@
-# nest-next-monorepo-codebase
+# CraftCV
 
-A monorepo starter for building full-stack apps with **NestJS** + **Next.js**, powered by **Turborepo** and **pnpm workspaces**.
+An AI-powered, ATS-optimized CV builder — a Next.js + NestJS monorepo powered by **Turborepo** and **pnpm workspaces**.
 
 ## Tech stack
 

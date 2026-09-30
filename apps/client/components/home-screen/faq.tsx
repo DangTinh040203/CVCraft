@@ -13,7 +13,7 @@ import ShinyText from '@/components/common/shiny-text';
 
 const faqs = [
   {
-    q: 'Is CVCraft really free to use?',
+    q: 'Is CraftCV really free to use?',
     a: 'Yes! You can create and download your CV for free. We offer premium templates and advanced AI features for users who want extra polish.',
   },
   {
@@ -82,7 +82,7 @@ const FAQSection = () => {
               md:text-lg
             `}
           >
-            Everything you need to know about CVCraft and how it can help you
+            Everything you need to know about CraftCV and how it can help you
             land your dream job.
           </p>
         </m.div>

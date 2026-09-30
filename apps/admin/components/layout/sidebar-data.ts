@@ -14,7 +14,7 @@ import { type SidebarData } from '@/components/layout/types';
 export const sidebarData: SidebarData = {
   user: {
     name: 'Admin',
-    email: 'admin@resume-builder.local',
+    email: 'admin@craftcv.local',
   },
   navGroups: [
     {
