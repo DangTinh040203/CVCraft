@@ -11,8 +11,9 @@ const buttonVariants = cva(
     dark:aria-invalid:ring-destructive/40
     inline-flex shrink-0 cursor-pointer items-center justify-center gap-2
     rounded-xl text-sm font-medium whitespace-nowrap transition-all outline-none
-    hover:shadow-md
-    disabled:pointer-events-none disabled:opacity-50
+    hover:scale-[1.03] hover:shadow-md
+    active:scale-[0.97]
+    disabled:pointer-events-none disabled:opacity-50 disabled:hover:scale-100
     [&_svg]:pointer-events-none [&_svg]:shrink-0
     [&_svg:not([class*='size-'])]:size-4
   `,
@@ -27,8 +28,14 @@ const buttonVariants = cva(
           bg-destructive text-destructive-foreground
           hover:bg-destructive/90
         `,
-        outline: `border-primary bg-primary/10 text-primary border`,
-        secondary: `bg-primary/10 text-primary`,
+        outline: `
+          border-primary bg-primary/10 text-primary border
+          hover:bg-primary hover:text-primary-foreground
+        `,
+        secondary: `
+          bg-primary/10 text-primary
+          hover:bg-primary/20
+        `,
         ghost: 'hover:bg-primary hover:text-background',
         link: `
           text-primary underline-offset-4

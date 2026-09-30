@@ -86,13 +86,8 @@ const Header = () => {
   return (
     <m.nav
       className={cn(
-        'relative z-50 transition-all duration-300',
-        pathname === '/'
-          ? 'fixed top-0 right-0 left-0'
-          : 'bg-background border-b',
-        pathname === '/' &&
-          (isScrolled || isOpen) &&
-          'glass border-border/50 border-b shadow-md',
+        'fixed top-0 right-0 left-0 z-50 transition-all duration-300',
+        (isScrolled || isOpen) && 'glass border-border/50 border-b shadow-md',
       )}
       variants={headerVariants}
       initial='hidden'
