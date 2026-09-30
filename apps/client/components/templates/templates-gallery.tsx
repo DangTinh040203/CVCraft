@@ -43,14 +43,16 @@ export function TemplatesGallery() {
         />
         <div
           className={`
-            bg-primary/20 absolute top-[-10%] right-[-8%] h-[500px] w-[500px]
-            rounded-full blur-[120px]
+            bg-primary/10 absolute top-[-10%] right-[-8%] h-[220px] w-[220px]
+            rounded-full blur-[80px]
+            md:bg-primary/20 md:h-[500px] md:w-[500px] md:blur-[120px]
           `}
         />
         <div
           className={`
-            bg-accent/20 absolute top-[10%] left-[-10%] h-[400px] w-[400px]
-            rounded-full blur-[100px]
+            bg-accent/10 absolute top-[10%] left-[-10%] h-[180px] w-[180px]
+            rounded-full blur-[70px]
+            md:bg-accent/20 md:h-[400px] md:w-[400px] md:blur-[100px]
           `}
         />
       </div>
