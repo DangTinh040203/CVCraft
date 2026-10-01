@@ -96,11 +96,8 @@ export function TemplateCard({ templateKey }: { templateKey: string }) {
               </span>
             )}
           </div>
-          <p className='text-muted-foreground mt-0.5 truncate text-xs'>
-            {template.description}
-          </p>
         </div>
-        <Button asChild size='sm' className='shrink-0 gap-1'>
+        <Button asChild className='shrink-0 gap-1 min-w-20'>
           <Link href={`/builder?template=${template.key}`}>
             Use
             <ArrowRight className='size-3.5' />
