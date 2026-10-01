@@ -13,9 +13,11 @@ import { Template09 } from '@/components/templates/template-09';
 import { Template10 } from '@/components/templates/template-10';
 import { Template11 } from '@/components/templates/template-11';
 import { Template12 } from '@/components/templates/template-12';
+import { Template13 } from '@/components/templates/template-13';
 
 export interface TemplateMeta {
   key: string;
+  slug: string;
   name: string;
   description: string;
   isPremium: boolean;
@@ -24,7 +26,16 @@ export interface TemplateMeta {
 
 export const TEMPLATES: TemplateMeta[] = [
   {
+    key: 'template-13',
+    slug: 'green-network-13',
+    name: 'Green Network',
+    description: 'Green accents, photo beside a contact grid, dated entries.',
+    isPremium: false,
+    component: Template13,
+  },
+  {
     key: 'template-01',
+    slug: 'minimalist-01',
     name: 'Minimalist',
     description: 'Clean single column, ATS-friendly, no color.',
     isPremium: false,
@@ -32,6 +43,7 @@ export const TEMPLATES: TemplateMeta[] = [
   },
   {
     key: 'template-02',
+    slug: 'sidebar-modern-02',
     name: 'Sidebar Modern',
     description: 'Dark left sidebar for contact, skills and languages.',
     isPremium: false,
@@ -39,6 +51,7 @@ export const TEMPLATES: TemplateMeta[] = [
   },
   {
     key: 'template-03',
+    slug: 'timeline-03',
     name: 'Timeline',
     description: 'Experience and education shown on a vertical timeline.',
     isPremium: true,
@@ -46,6 +59,7 @@ export const TEMPLATES: TemplateMeta[] = [
   },
   {
     key: 'template-04',
+    slug: 'elegant-dark-04',
     name: 'Elegant Dark',
     description: 'Navy and gold sidebar with a refined serif display name.',
     isPremium: true,
@@ -53,6 +67,7 @@ export const TEMPLATES: TemplateMeta[] = [
   },
   {
     key: 'template-05',
+    slug: 'corporate-blue-05',
     name: 'Corporate Blue',
     description: 'Framed page with full-width blue section bars.',
     isPremium: false,
@@ -60,6 +75,7 @@ export const TEMPLATES: TemplateMeta[] = [
   },
   {
     key: 'template-06',
+    slug: 'bold-statement-06',
     name: 'Bold Statement',
     description: 'Oversized name with segmented skill-level bars.',
     isPremium: false,
@@ -67,6 +83,7 @@ export const TEMPLATES: TemplateMeta[] = [
   },
   {
     key: 'template-07',
+    slug: 'icon-professional-07',
     name: 'Icon Professional',
     description: 'Centered photo sidebar with icon-led section headers.',
     isPremium: true,
@@ -74,6 +91,7 @@ export const TEMPLATES: TemplateMeta[] = [
   },
   {
     key: 'template-08',
+    slug: 'executive-08',
     name: 'Executive',
     description: 'Photo inline with the name, slim graphite sidebar.',
     isPremium: false,
@@ -81,6 +99,7 @@ export const TEMPLATES: TemplateMeta[] = [
   },
   {
     key: 'template-09',
+    slug: 'colorful-icons-09',
     name: 'Colorful Icons',
     description: 'Wine sidebar with circular language proficiency rings.',
     isPremium: true,
@@ -88,6 +107,7 @@ export const TEMPLATES: TemplateMeta[] = [
   },
   {
     key: 'template-10',
+    slug: 'iconic-badges-10',
     name: 'Iconic Badges',
     description: 'Colored icon badges lead every section, table-style contact.',
     isPremium: false,
@@ -95,6 +115,7 @@ export const TEMPLATES: TemplateMeta[] = [
   },
   {
     key: 'template-11',
+    slug: 'framed-centered-11',
     name: 'Framed Centered',
     description: 'Dotted frame around the page, centered header, plain headings.',
     isPremium: false,
@@ -102,9 +123,14 @@ export const TEMPLATES: TemplateMeta[] = [
   },
   {
     key: 'template-12',
+    slug: 'two-column-icons-12',
     name: 'Two-Column Icons',
     description: 'Two-column body with icon-badged section headers.',
     isPremium: true,
     component: Template12,
   },
 ];
+
+export function getTemplateBySlug(slug: string): TemplateMeta | undefined {
+  return TEMPLATES.find((t) => t.slug === slug);
+}

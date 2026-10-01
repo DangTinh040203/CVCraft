@@ -10,6 +10,7 @@
     "dev:client": "turbo run dev --filter=@repo/client",
     "dev:backend": "turbo run dev --filter=@repo/backend",
     "dev:admin": "turbo run dev --filter=@repo/admin",
+    "dev:setup": "docker compose -f docker/docker-compose.dev.yml up -d",
     "lint": "turbo run lint",
     "lint:fix": "turbo run lint:fix",
     "typecheck": "turbo run typecheck",

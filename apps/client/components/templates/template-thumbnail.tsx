@@ -32,11 +32,13 @@ export function TemplateThumbnail({ children }: { children: ReactNode }) {
   return (
     <div
       ref={containerRef}
-      className='relative w-full overflow-hidden bg-white'
+      className='relative w-full overflow-hidden bg-white rounded-lg'
       style={{ aspectRatio: `${PAGE_WIDTH_PX} / ${PAGE_HEIGHT_PX}` }}
     >
       <div
-        className='absolute top-0 left-0 origin-top-left'
+        // text-left: undo the UA `text-align: center` inherited when the
+        // thumbnail sits inside a <button> (e.g. the template card).
+        className='absolute top-0 left-0 origin-top-left text-left'
         style={{ width: PAGE_WIDTH_PX, transform: `scale(${scale})` }}
       >
         {children}
