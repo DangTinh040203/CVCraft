@@ -22,12 +22,12 @@ const TemplatePreviewSection = () => {
   return (
     <section
       className={`
-        bg-background relative overflow-hidden px-2 py-16
-        md:px-4 md:py-24
+        bg-background relative overflow-hidden py-16
+        md:py-24
       `}
     >
       <m.div
-        className='container mx-auto mb-12 max-w-2xl text-center'
+        className='container mx-auto mb-12 max-w-2xl px-4 text-center'
         initial='hidden'
         whileInView='visible'
         viewport={{ once: true, margin: '-100px' }}
@@ -64,7 +64,7 @@ const TemplatePreviewSection = () => {
         </m.p>
       </m.div>
 
-      <div className='relative mx-auto max-w-5xl'>
+      <div className='relative w-full'>
         <button
           type='button'
           aria-label='Previous template'
@@ -75,8 +75,8 @@ const TemplatePreviewSection = () => {
             items-center justify-center rounded-full border shadow-lg
             backdrop-blur-sm transition-all
             hover:bg-primary hover:text-primary-foreground hover:scale-110
-            sm:left-2 sm:flex
-            md:-left-5
+            sm:left-4 sm:flex
+            md:left-8
           `}
         >
           <ChevronLeft className='size-5' />
@@ -91,8 +91,8 @@ const TemplatePreviewSection = () => {
             items-center justify-center rounded-full border shadow-lg
             backdrop-blur-sm transition-all
             hover:bg-primary hover:text-primary-foreground hover:scale-110
-            sm:right-2 sm:flex
-            md:-right-5
+            sm:right-4 sm:flex
+            md:right-8
           `}
         >
           <ChevronRight className='size-5' />
@@ -109,7 +109,9 @@ const TemplatePreviewSection = () => {
           slidesPerView={1.15}
           breakpoints={{
             640: { slidesPerView: 1.8, spaceBetween: 24 },
-            1024: { slidesPerView: 2.4, spaceBetween: 32 },
+            1024: { slidesPerView: 2.6, spaceBetween: 32 },
+            1280: { slidesPerView: 3.4, spaceBetween: 32 },
+            1536: { slidesPerView: 5, spaceBetween: 32 },
           }}
           className='!py-4'
         >
@@ -181,7 +183,7 @@ const TemplatePreviewSection = () => {
       </div>
 
       <m.div
-        className='mt-12 text-center'
+        className='mt-12 px-4 text-center'
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
