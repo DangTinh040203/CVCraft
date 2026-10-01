@@ -11,13 +11,6 @@ import { TEMPLATES } from '@/components/templates/registry';
 import { sampleResume } from '@/components/templates/sample-resume';
 import { TemplateThumbnail } from '@/components/templates/template-thumbnail';
 
-/**
- * Takes a `templateKey`, not the `TemplateMeta` object itself — `component`
- * is a function reference, and Next.js can't serialize a function across
- * the server/client boundary. This file is already a Client Component, so
- * it resolves the full meta (including the component) from `TEMPLATES`
- * itself instead of receiving it as a prop.
- */
 export function TemplateCard({ templateKey }: { templateKey: string }) {
   const [previewOpen, setPreviewOpen] = useState(false);
   const template = TEMPLATES.find((t) => t.key === templateKey);
@@ -41,9 +34,6 @@ export function TemplateCard({ templateKey }: { templateKey: string }) {
         <TemplateThumbnail>
           <TemplateComponent resume={sampleResume} />
         </TemplateThumbnail>
-        {/* Darkens on hover as a desktop nicety, but the "Preview" chip
-            below is always visible — a hover-only affordance would never
-            be seen on touch devices, since there's no hover there. */}
         <div
           className={`
             pointer-events-none absolute inset-0 bg-neutral-900/0
@@ -106,14 +96,8 @@ export function TemplateCard({ templateKey }: { templateKey: string }) {
       </div>
 
       <Dialog open={previewOpen} onOpenChange={setPreviewOpen} modal>
-        <DialogContent className='max-h-[90vh] max-w-2xl overflow-y-auto p-0'>
+        <DialogContent className='max-h-[90vh] max-w-2xl overflow-y-auto p-0 scrollbar-none'>
           <DialogTitle className='sr-only'>{template.name} preview</DialogTitle>
-          {/*
-            Reuses TemplateThumbnail (not a fixed `scale-[n]`) so the
-            preview always fits the dialog's actual width — a fixed scale
-            combined with `overflow-y-auto` clips content, since CSS forces
-            `overflow-x` to `auto` the moment `overflow-y` isn't `visible`.
-          */}
           <div className='bg-neutral-100 p-6'>
             <div className='mx-auto max-w-[480px] shadow-xl'>
               <TemplateThumbnail>
