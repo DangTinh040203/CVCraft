@@ -167,7 +167,7 @@ const TemplatePreviewSection = () => {
                           {template.name}
                         </p>
                         <Button asChild size='lg' className='w-full gap-2'>
-                          <Link href={`/builder?template=${template.key}`}>
+                          <Link href={`/builder?template=${template.slug}`}>
                             Use this template
                             <ArrowRight className='size-4' />
                           </Link>

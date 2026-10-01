@@ -88,7 +88,7 @@ export function TemplateCard({ templateKey }: { templateKey: string }) {
           </div>
         </div>
         <Button asChild className='shrink-0 gap-1 min-w-20'>
-          <Link href={`/builder?template=${template.key}`}>
+          <Link href={`/builder?template=${template.slug}`}>
             Use
             <ArrowRight className='size-3.5' />
           </Link>
