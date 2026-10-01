@@ -87,7 +87,7 @@ const Header = () => {
     <m.nav
       className={cn(
         'fixed top-0 right-0 left-0 z-50 transition-all duration-300',
-        (isScrolled || isOpen) && 'glass border-border/50 border-b shadow-md',
+        (isScrolled || isOpen) && 'glass shadow-md',
       )}
       variants={headerVariants}
       initial='hidden'
