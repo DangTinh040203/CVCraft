@@ -36,6 +36,11 @@ export const nodeConfig = [
       ],
       '@typescript-eslint/unbound-method': 'off',
       '@typescript-eslint/no-empty-interface': 'warn',
+      // recommendedTypeChecked re-enables this as error — keep base's warn
+      '@typescript-eslint/no-unused-vars': [
+        'warn',
+        { argsIgnorePattern: '^_' },
+      ],
 
       // Relax unsafe rules — NestJS decorators generate patterns that trigger these
       '@typescript-eslint/no-unsafe-call': 'off',
