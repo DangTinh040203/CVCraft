@@ -1,30 +1,71 @@
-import { Logger, ValidationPipe } from '@nestjs/common';
+import {
+  BadRequestException,
+  type INestApplication,
+  Logger,
+  ValidationPipe,
+} from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
+import cookieParser from 'cookie-parser';
+import helmet from 'helmet';
+import morgan from 'morgan';
 
-import { AppModule } from '@/app.module';
+import { AppModule } from '@/app/app.module';
+import { Env } from '@/libs/configs/env.config';
+import { loggerConfig } from '@/libs/configs/logger.config';
+import { formatError } from '@/libs/utils/formatError.util';
 
-async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
-  const configService = app.get(ConfigService);
+class BootstrapApplication {
+  private app: INestApplication;
+  private configService: ConfigService;
 
-  const port = configService.get<number>('PORT', 8000);
-  const apiPrefix = configService.get<string>('API_PREFIX', 'api');
+  async run() {
+    this.app = await NestFactory.create(AppModule, {
+      logger: loggerConfig,
+    });
 
-  app.setGlobalPrefix(apiPrefix);
-  app.useGlobalPipes(
-    new ValidationPipe({
-      whitelist: true,
-      transform: true,
-    }),
-  );
-  app.enableCors({
-    origin: configService.get<string>('FE_URL', 'http://localhost:3001'),
-    credentials: true,
-  });
+    this.configService = this.app.get(ConfigService);
+    const port = this.configService.getOrThrow<number>(Env.PORT);
+    const apiPrefix = this.configService.get<string>(Env.API_PREFIX, 'api');
+    const apiVersion = this.configService.get<string>(Env.API_VERSION, '1');
 
-  await app.listen(port);
-  Logger.log(`🚀 Server running on http://localhost:${port}/${apiPrefix}`);
+    this.app.setGlobalPrefix(`${apiPrefix}/v${apiVersion}`);
+
+    this.setupMiddleware();
+
+    await this.app.listen(port);
+    Logger.log(
+      `Server running on http://localhost:${port}/${apiPrefix}/v${apiVersion}`,
+      BootstrapApplication.name,
+    );
+  }
+
+  private setupMiddleware() {
+    this.app.use(cookieParser());
+    this.app.useGlobalPipes(
+      new ValidationPipe({
+        whitelist: true,
+        transform: true,
+        transformOptions: {
+          enableImplicitConversion: true,
+        },
+        exceptionFactory: (validationErrors) => {
+          return new BadRequestException(formatError(validationErrors));
+        },
+      }),
+    );
+
+    this.app.enableCors({
+      origin: this.configService.getOrThrow<string>(Env.FRONTEND_ORIGIN),
+      credentials: true,
+    });
+
+    this.app.use(helmet());
+
+    const isProduction =
+      this.configService.get<string>(Env.NODE_ENV) === 'production';
+    this.app.use(morgan(isProduction ? 'combined' : 'dev'));
+  }
 }
 
-void bootstrap();
+void new BootstrapApplication().run();
