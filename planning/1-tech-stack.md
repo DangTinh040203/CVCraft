@@ -89,7 +89,7 @@ would just be unused weight.
 | Realtime       | @nestjs/websockets + platform-socket.io                                                                                                                     |
 | Cache          | @nestjs/cache-manager + Keyv, pointed at Upstash Redis                                                                                                      |
 | Rate limiting  | @nestjs/throttler                                                                                                                                           |
-| Security       | helmet, CORS (`FRONTEND_ORIGIN`)                                                                                                                            |
+| Security       | helmet, CORS (`FRONTEND_ORIGIN`)                                                                                                                                  |
 | Logging        | winston + nest-winston (app logs), morgan (HTTP access logs) — see Logging section                                                                          |
 | API docs       | @nestjs/swagger (disabled in production)                                                                                                                    |
 
