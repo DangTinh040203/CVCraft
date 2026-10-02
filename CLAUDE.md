@@ -67,8 +67,8 @@ pnpm --filter @repo/backend test -- app.controller   # pattern matched against *
 
 ### Backend
 
-`main.ts` sets the global prefix (`API_PREFIX`, default `api`) and a global `ValidationPipe({ whitelist, transform })`. CORS is restricted to `FE_URL`. `ConfigModule` is global and loads `.env.development`, then `.env`. Add new features as NestJS modules imported into `AppModule`.
+`main.ts` sets the global prefix (`API_PREFIX`, default `api`) and a global `ValidationPipe({ whitelist, transform })`. CORS is restricted to `FRONTEND_ORIGIN`. `ConfigModule` is global and loads `.env.development`, then `.env`. Add new features as NestJS modules imported into `AppModule`.
 
 ### Turbo
 
-`lint`, `typecheck`, `test` and `build` depend on `^build`, so the internal packages build first. Turbo passes `NODE_ENV`, `FE_URL` and `PORT` through as global env.
+`lint`, `typecheck`, `test` and `build` depend on `^build`, so the internal packages build first. Turbo passes `NODE_ENV`, `FRONTEND_ORIGIN` and `PORT` through as global env.
