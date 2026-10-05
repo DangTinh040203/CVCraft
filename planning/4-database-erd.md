@@ -4,15 +4,15 @@ Baseline is v1's resume schema (`resume-builder-v1/apps/be/.../prisma/schema/*.p
 carried over as-is per `0-project-desc.md`, **plus** the minimum additions
 needed for features that are new or expanded in this rebuild: admin roles
 (Phase 1), drag-and-drop ordering (Phase 4/9), a template & font catalog and
-feature flags (Phase 8), and AI cost/usage logging (Phase 5/8).
+feature flags (Phase 8).
 
 **Deliberately unchanged from v1:** job-matching, email-generation, and
 live-interview stay **ephemeral** — computed per-request and returned to the
 client, nothing written to the DB for their content (no `JobMatch`, `Email`,
 or `Interview`/`InterviewMessage` tables). This isn't an oversight, it's v1's
 actual design (confirmed in `docs/features/*.md`), and no planning doc so far
-asks for history/re-visit of past matches, emails, or interviews — only their
-**usage/cost** needs to be persisted, which `AiUsageLog` below covers. If a
+asks for history/re-visit of past matches, emails, or interviews. AI
+token/cost usage is not persisted either (no `AiUsageLog` table). If a
 future feature wants "see your past interview feedback," that's a new
 requirement to raise explicitly, not something silently assumed here.
 
@@ -174,19 +174,7 @@ table FeatureFlag {
   updatedAt Date
 }
 
-table AiUsageLog {
-  id string PK
-  userId string
-  feature string // RESUME_PARSE | JOB_MATCH | EMAIL_GENERATION | INTERVIEW_LIVE | INTERVIEW_EVAL
-  model string
-  tokensIn number
-  tokensOut number
-  costUsd decimal
-  createdAt Date
-}
-
 Ref: "User"."id" < "Resume"."userId"
-Ref: "User"."id" < "AiUsageLog"."userId"
 
 Ref: "Resume"."id" < "ResumeInformation"."resumeId"
 Ref: "Resume"."id" < "Education"."resumeId"
@@ -227,7 +215,6 @@ reference; only the deltas are called out below.
 | `Template`, `Font` catalog tables                                                                                                              | new                                | Phase 8 explicitly gives admin "template & font catalog management" — that only makes sense if templates/fonts are DB rows admins can add/disable, not a hardcoded list in FE code as in v1. `isActive` lets admin retire a template/font without breaking resumes that already reference it (don't hard-delete a `Template`/`Font` row that's still referenced — enforce via app logic, not `onDelete: Restrict`, so an admin can't accidentally 500 the editor).                                                                                                                                                                                                                                 |
 | `Template.slug` (unique, `slugify(name) + '-' + id`)                                                                                           | `Template`                         | Public-facing identifier for URLs (`/builder?template=minimalist-cm4x9k2p0000`) instead of exposing the internal `key` (`template-01`). `key` stays as the FE component mapping; `slug` is only for URLs. Generated server-side on create (the `id` must exist first, so generate the id in app code, or create then update). The `id` suffix keeps it unique even if two templates share a name. Keep it stable on rename so old links don't break: either don't regenerate it, or resolve by the trailing `id` and redirect to the current slug when the name part is stale. |
 | `FeatureFlag` table                                                                                                                            | new                                | Phase 8: "flags table + simple on/off UI", explicitly called "start minimal" — a flat key/enabled/label table is intentionally as small as that phase asks for.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
-| `AiUsageLog` table                                                                                                                             | new                                | Phase 5: "instrument every RagService call with token/cost logging (tagged by user + feature)... feeds the Admin AI-usage dashboard in Phase 8." v1 never persisted this — this table exists purely for the rebuild's new admin analytics, not for replaying past AI results.                                                                                                                                                                                                                                                                                                                                                                                                                      |
 | `Template.isPremium`/`priceCents`, `UserTemplateUnlock` table                                                                                  | new — **not in any current phase** | Added speculatively because you raised "unlock templates via payment" as a future direction. `UserTemplateUnlock` is many-to-many (a user can unlock several premium templates over time), so it's a join table, not a flag on `User`. **This is not scoped into any phase in `2-implementation-phases.md`** — no payment/Stripe module, no webhook handling, no "what happens to unlocks on refund" logic exists yet. Treat this as reserving the shape in the schema, not a commitment to build monetization now; if/when it's actually scheduled, it deserves its own phase (payment provider, webhook verification, refund/chargeback handling belong there, not quietly folded into Phase 8). |
 
 ## Open assumptions to confirm before Phase 2 schema lock-in
@@ -238,13 +225,6 @@ reference; only the deltas are called out below.
   diff alone shows: it implies a resume-list view (pick/create/delete among
   several resumes) that doesn't exist in v1's single-resume flow, so Phase 2
   needs that list UI in scope, not just the relaxed constraint.
-- **`AiUsageLog.userId` behavior on user deletion.** Modeled here as
-  `onDelete: Cascade` for consistency with every other `User`-owned table,
-  but that erases historical cost data the moment an account is deleted —
-  which may fight Phase 8's admin analytics (e.g. lifetime AI spend
-  reporting). Alternative: make `userId` nullable with `onDelete: SetNull`,
-  keeping aggregate log rows (attributed to a deleted account) for
-  reporting. Pick one deliberately in Phase 5 rather than defaulting silently.
 - **`Template`/`Font` seeding.** These are new catalog tables with no v1
   equivalent — Phase 2/4 needs a seed script inserting v1's existing 5
   templates (and whatever fonts they use today) as the initial catalog rows,

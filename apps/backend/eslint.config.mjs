@@ -72,6 +72,11 @@ export default [
     },
   },
   {
-    ignores: ['dist/**', 'node_modules/**'],
+    ignores: [
+      'dist/**',
+      'node_modules/**',
+      'src/libs/databases/prisma/generated/**',
+      'prisma.config.ts',
+    ],
   },
 ];

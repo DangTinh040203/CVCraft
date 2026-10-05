@@ -40,7 +40,7 @@ fully on boot.
 ## Admin (`apps/admin`)
 
 New third app, no v1 equivalent — internal-only staff tool for user/resume
-management, analytics, system/content config, and AI cost/usage monitoring
+management, analytics, and system/content config
 (see `0-project-desc.md`, Core Function 10). Intentionally **not** a copy
 of the client app's stack: it's read/CRUD/dashboard-heavy, not a complex
 client-state editor, so it gets a lighter data layer.
@@ -50,7 +50,7 @@ client-state editor, so it gets a lighter data layer.
 | Framework       | Next.js (App Router), same major version as `apps/client`, separate app/port (dev: 3002) |
 | Server state    | TanStack Query (`@tanstack/react-query`) — simpler fit than Redux for read-heavy tables/dashboards; no redux-persist needed |
 | Tables          | `packages/ui` table components + `@tanstack/react-table` (sort/filter/pagination) |
-| Charts          | `recharts` (already vendored in `packages/ui/src/components/chart.tsx`) for the analytics/AI-usage dashboards |
+| Charts          | `recharts` (already vendored in `packages/ui/src/components/chart.tsx`) for the analytics dashboard |
 | Styling / UI    | Tailwind CSS 4 + shared `packages/ui` (same design system as the client app) |
 | Auth            | `@clerk/nextjs` — **same Clerk identity/project as the client app**, not a separate user system |
 | Access control  | Role-based: `publicMetadata.role === 'admin'` (or a Clerk Organization/role), checked both FE (redirect non-admins at layout level) and BE (`AdminGuard` on admin-only routes) |
@@ -68,10 +68,6 @@ would just be unused weight.
   aggregate analytics) — either a dedicated `admin` module or
   admin-guarded routes layered onto the existing `user`/`resume` modules,
   decided when the module boundary is actually designed.
-- **AI cost/usage tracking must be instrumented where the Gemini calls
-  happen** (`RagService`, Phase 5), not bolted on later — log
-  tokens-in/tokens-out (and derived cost) per call, tagged by user and
-  feature, so the admin dashboard has something to aggregate from day one.
 
 ---
 

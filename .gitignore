@@ -13,3 +13,4 @@ dist
 .agents
 .claude
 .playwright-mcp/
+generated/

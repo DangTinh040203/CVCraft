@@ -10,12 +10,14 @@ import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 
 import { AppConfigModule } from '@/libs/configs/config.module';
 import { Env, validationSchema } from '@/libs/configs/env.config';
+import { DatabaseModule } from '@/libs/databases/database.module';
 import { GlobalExceptionFilter } from '@/libs/filters/http-exception.filter';
 import { ClerkAuthGuard } from '@/libs/guards/clerk-auth.guard';
 import { RequestIdMiddleware } from '@/libs/middlewares/request-id.middleware';
 
 @Module({
   imports: [
+    DatabaseModule,
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath: ['.env.development', '.env'],

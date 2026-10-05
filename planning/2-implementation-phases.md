@@ -144,13 +144,9 @@ swappable.
 - Email generation: from resume + JD + match result.
 - Prompt-injection defense (sanitize user-supplied text before embedding
   in prompts) from day one, not retrofitted.
-- Instrument every `RagService` call with token/cost logging (tagged by
-  user + feature) — this is what feeds the Admin AI-usage dashboard in
-  Phase 8; adding it now is far cheaper than backfilling it later.
 
 **DoD:** each of the 3 features works against a real resume/JD end-to-end;
-malformed/non-PDF uploads are rejected before hitting Gemini; every call
-produces a usage/cost log record.
+malformed/non-PDF uploads are rejected before hitting Gemini.
 
 ---
 
@@ -194,7 +190,7 @@ user-facing string found in a sweep of all components built so far.
 ## Phase 8 — Admin Dashboard
 
 **Goal:** a separate, staff-only app for operating the product, built once
-there's enough real data/features (users, resumes, AI usage logs) for it
+there's enough real data/features (users, resumes) for it
 to have something to show.
 
 **Scope:**
@@ -204,15 +200,13 @@ to have something to show.
   client app.
 - BE `AdminGuard` (role check on the `User.role` field from Phase 1) +
   admin-only read endpoints: user list/detail, resume list/detail.
-- Analytics dashboard: resumes created, PDF exports, AI call volume, active
-  users — sourced from existing tables plus the Phase 5 usage logs.
-- AI cost/usage view: per-user/per-feature token and cost breakdown from
-  the Phase 5 instrumentation.
+- Analytics dashboard: resumes created, PDF exports, active users —
+  sourced from existing tables.
 - System/content config: template & font catalog management, feature
   flags (start minimal — a flags table + simple on/off UI is enough).
 
 **DoD:** a `role: admin` user can log into `apps/admin` and see real
-production-shaped data (users, resumes, AI usage/cost) that a non-admin
+production-shaped data (users, resumes) that a non-admin
 account cannot reach, either in the UI or by calling the admin API routes
 directly.
 

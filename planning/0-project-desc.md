@@ -65,12 +65,10 @@ PostgreSQL + Redis, Google Gemini for AI features.
     A separate, internal-only app (`apps/admin`) for operating the product:
     - **User & resume management** — look up users, view/moderate their
       resumes, handle reports/violations.
-    - **Analytics** — usage numbers: resumes created, PDF exports, AI call
-      volume, active users, etc.
+    - **Analytics** — usage numbers: resumes created, PDF exports, active
+      users, etc.
     - **System/content config** — manage the template/font catalog, feature
       flags, and plan/pricing config if introduced later.
-    - **AI cost/usage monitoring** — track Gemini token usage and cost,
-      broken down per user/feature, to catch runaway usage early.
 
     Access is restricted to admin/staff accounts via role-based auth on top
     of the same Clerk identity used by the client app (not a separate user
