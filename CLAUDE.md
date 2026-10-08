@@ -25,7 +25,8 @@ Requirements: Node >= 20, pnpm >= 9. Copy each app's `.env.example` to `.env`.
 
 ```bash
 pnpm install
-pnpm dev:setup        # docker compose: Postgres 16, Redis 7, pgAdmin (docker/docker-compose.dev.yml)
+pnpm dev:setup        # pulls all images (incl. ngrok), starts Postgres 16, Redis 7, pgAdmin (docker/docker-compose.dev.yml)
+pnpm dev:tunnel       # ngrok tunnel to backend :8000 at NGROK_DOMAIN (needs docker/.env with NGROK_AUTHTOKEN); dev:tunnel:down stops it
 pnpm dev              # client + backend + admin in parallel
 pnpm dev:client | dev:admin | dev:backend
 pnpm build            # or build:client / build:admin / build:backend

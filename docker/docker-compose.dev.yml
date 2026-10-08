@@ -48,6 +48,26 @@ services:
     volumes:
       - pgadmin_data:/var/lib/pgadmin
 
+  # Public tunnel to the backend running on the host, for Clerk webhooks.
+  # Opt-in: `pnpm dev:tunnel`. Inspector: http://localhost:4040
+  # Image is pulled by `pnpm dev:setup`. Set NGROK_AUTHTOKEN in docker/.env.
+  ngrok:
+    image: ngrok/ngrok:alpine
+    container_name: cc_ngrok
+    restart: unless-stopped
+    profiles: ['tunnel']
+    environment:
+      NGROK_AUTHTOKEN: ${NGROK_AUTHTOKEN:-}
+    command:
+      - http
+      - host.docker.internal:${NGROK_PORT:-8000}
+      - --url=${NGROK_DOMAIN:-melynda-unfaltering-expatiatingly.ngrok-free.dev}
+      - --log=stdout
+    extra_hosts:
+      - 'host.docker.internal:host-gateway'
+    ports:
+      - '4040:4040'
+
 volumes:
   postgres_data:
   redis_data:
