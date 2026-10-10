@@ -38,7 +38,10 @@ function NetworkPattern({ className }: { className: string }) {
   return (
     <svg
       viewBox='0 0 230 250'
-      className={`pointer-events-none absolute text-neutral-200 ${className}`}
+      className={`
+        pointer-events-none absolute text-neutral-200
+        ${className}
+      `}
       aria-hidden='true'
     >
       {NETWORK_EDGES.map(([a, b]) => {
@@ -79,7 +82,9 @@ function SectionTitle({
       style={{ color: ACCENT }}
     >
       <span
-        className='flex size-5 items-center justify-center rounded-sm text-white'
+        className={`
+          flex size-5 items-center justify-center rounded-sm text-white
+        `}
         style={{ backgroundColor: ACCENT }}
       >
         <Icon className='size-3' />

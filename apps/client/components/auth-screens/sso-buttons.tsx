@@ -9,6 +9,7 @@ import { buttonScaleVariants, formItemVariants } from '@/styles/animation';
 // once an auth provider is configured for this app. Buttons are visual only.
 const SSOButtons = () => {
   const signInWith = (provider: 'google' | 'github') => {
+    // eslint-disable-next-line no-console -- placeholder until OAuth is wired
     console.log(`TODO: wire up ${provider} OAuth sign-in`);
   };
 

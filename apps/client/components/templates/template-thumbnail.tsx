@@ -32,7 +32,7 @@ export function TemplateThumbnail({ children }: { children: ReactNode }) {
   return (
     <div
       ref={containerRef}
-      className='relative w-full overflow-hidden bg-white rounded-lg'
+      className='relative w-full overflow-hidden rounded-lg bg-white'
       style={{ aspectRatio: `${PAGE_WIDTH_PX} / ${PAGE_HEIGHT_PX}` }}
     >
       <div

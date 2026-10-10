@@ -87,7 +87,7 @@ export function TemplateCard({ templateKey }: { templateKey: string }) {
             )}
           </div>
         </div>
-        <Button asChild className='shrink-0 gap-1 min-w-20'>
+        <Button asChild className='min-w-20 shrink-0 gap-1'>
           <Link href={`/builder?template=${template.slug}`}>
             Use
             <ArrowRight className='size-3.5' />
@@ -96,7 +96,9 @@ export function TemplateCard({ templateKey }: { templateKey: string }) {
       </div>
 
       <Dialog open={previewOpen} onOpenChange={setPreviewOpen} modal>
-        <DialogContent className='max-h-[90vh] max-w-2xl overflow-y-auto p-0 scrollbar-none'>
+        <DialogContent className={`
+          max-h-[90vh] max-w-2xl scrollbar-none overflow-y-auto p-0
+        `}>
           <DialogTitle className='sr-only'>{template.name} preview</DialogTitle>
           <div className='bg-neutral-100 p-6'>
             <div className='mx-auto max-w-[480px] shadow-xl'>
