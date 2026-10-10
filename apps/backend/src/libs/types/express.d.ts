@@ -1,4 +1,4 @@
-import { type JwtPayload } from '@clerk/backend';
+import { type JwtPayload } from '@clerk/types';
 
 import { type ClerkWebhook } from '@/modules/user/domain/clerk-webhook.domain';
 
