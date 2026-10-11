@@ -55,6 +55,7 @@ export function Template02({ resume }: TemplateProps) {
           {resume.subTitle}
         </p>
 
+        {(resume.information.length > 0) && (
         <div className='mt-6 break-inside-avoid'>
           <h2
             className={`
@@ -70,7 +71,9 @@ export function Template02({ resume }: TemplateProps) {
             ))}
           </ul>
         </div>
+        )}
 
+        {(resume.skills.length > 0) && (
         <div className='mt-6 break-inside-avoid'>
           <h2
             className={`
@@ -105,7 +108,9 @@ export function Template02({ resume }: TemplateProps) {
             ))}
           </div>
         </div>
+        )}
 
+        {(resume.languages.length > 0) && (
         <div className='mt-6 break-inside-avoid'>
           <h2
             className={`
@@ -124,9 +129,11 @@ export function Template02({ resume }: TemplateProps) {
             ))}
           </ul>
         </div>
+        )}
       </aside>
 
       <main className='flex-1 p-[10mm]'>
+        {(resume.overview) && (
         <section className='mb-5 break-inside-avoid'>
           <h2
             className={`
@@ -140,7 +147,9 @@ export function Template02({ resume }: TemplateProps) {
             {resume.overview}
           </p>
         </section>
+        )}
 
+        {(resume.workExperiences.length > 0) && (
         <section className='mb-5'>
           <h2
             className={`
@@ -173,7 +182,9 @@ export function Template02({ resume }: TemplateProps) {
             ))}
           </div>
         </section>
+        )}
 
+        {(resume.projects.length > 0) && (
         <section className='mb-5'>
           <h2
             className={`
@@ -196,8 +207,10 @@ export function Template02({ resume }: TemplateProps) {
             ))}
           </div>
         </section>
+        )}
 
         <div className='grid grid-cols-2 gap-5'>
+          {(resume.educations.length > 0) && (
           <section className='break-inside-avoid'>
             <h2
               className={`
@@ -223,7 +236,9 @@ export function Template02({ resume }: TemplateProps) {
               ))}
             </div>
           </section>
+          )}
 
+          {(resume.certifications.length > 0) && (
           <section className='break-inside-avoid'>
             <h2
               className={`
@@ -243,6 +258,7 @@ export function Template02({ resume }: TemplateProps) {
               ))}
             </ul>
           </section>
+          )}
         </div>
       </main>
     </div>

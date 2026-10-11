@@ -1,12 +1,17 @@
 import '@repo/ui/globals.css';
 import '@/styles/theme.css';
 
+import { ClerkProvider } from '@clerk/nextjs';
+import { Toaster } from '@repo/ui/components/sonner';
 import { type Metadata } from 'next';
 import { Geist_Mono, Plus_Jakarta_Sans } from 'next/font/google';
+import NextTopLoader from 'nextjs-toploader';
 import { type ReactNode } from 'react';
 
 import { ScrollToTop } from '@/components/common/scroll-to-top';
 import MotionProvider from '@/components/providers/motion-provider';
+import StoreProvider from '@/components/providers/store-provider';
+import { resumeFontVariables } from '@/configs/font.config';
 
 const fontSans = Plus_Jakarta_Sans({
   subsets: ['latin', 'latin-ext', 'vietnamese'],
@@ -33,19 +38,34 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang='en' suppressHydrationWarning>
-      <body
-        className={`
-          ${fontSans.variable}
-          ${fontMono.variable}
-          font-sans antialiased
-        `}
-      >
-        <MotionProvider>
-          <ScrollToTop />
-          {children}
-        </MotionProvider>
-      </body>
-    </html>
+    <ClerkProvider
+      signInFallbackRedirectUrl='/builder'
+      afterSignOutUrl='/auth/sign-in'
+    >
+      <html lang='en' suppressHydrationWarning className='overflow-x-hidden'>
+        <body
+          className={`
+            ${fontSans.variable}
+            ${fontMono.variable}
+            ${resumeFontVariables}
+            w-full max-w-screen scrollbar-thin overflow-x-hidden font-sans
+            antialiased
+          `}
+        >
+          <StoreProvider>
+            <MotionProvider>
+              <Toaster richColors />
+              <NextTopLoader
+                color='#6c23d7'
+                showSpinner={false}
+                easing='ease-in-out'
+              />
+              <ScrollToTop />
+              {children}
+            </MotionProvider>
+          </StoreProvider>
+        </body>
+      </html>
+    </ClerkProvider>
   );
 }

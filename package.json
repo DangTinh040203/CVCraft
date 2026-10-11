@@ -30,7 +30,8 @@
       "sharp",
       "unrs-resolver",
       "@nestjs/core",
-      "msgpackr-extract"
+      "msgpackr-extract",
+      "puppeteer"
     ]
   },
   "engines": {

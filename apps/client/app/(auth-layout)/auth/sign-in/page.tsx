@@ -1,5 +1,12 @@
+import { Suspense } from 'react';
+
 import SignIn from '@/components/auth-screens/sign-in';
 
 export default function SignInPage() {
-  return <SignIn />;
+  // SSO buttons read ?callbackUrl via useSearchParams
+  return (
+    <Suspense>
+      <SignIn />
+    </Suspense>
+  );
 }

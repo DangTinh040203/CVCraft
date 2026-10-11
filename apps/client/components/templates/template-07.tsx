@@ -79,6 +79,7 @@ export function Template07({ resume }: TemplateProps) {
         </h1>
         <p className='mt-1 text-[9pt] text-teal-700'>{resume.subTitle}</p>
 
+        {resume.information.length > 0 && (
         <div className='mt-6 break-inside-avoid text-left'>
           <SidebarLabel>Details</SidebarLabel>
           <ul className='space-y-1.5 text-[8pt] text-neutral-600'>
@@ -87,7 +88,9 @@ export function Template07({ resume }: TemplateProps) {
             ))}
           </ul>
         </div>
+        )}
 
+        {resume.skills.length > 0 && (
         <div className='mt-6 break-inside-avoid text-left'>
           <SidebarLabel>Skills</SidebarLabel>
           <div className='space-y-2'>
@@ -113,7 +116,9 @@ export function Template07({ resume }: TemplateProps) {
             ))}
           </div>
         </div>
+        )}
 
+        {resume.languages.length > 0 && (
         <div className='mt-6 break-inside-avoid text-left'>
           <SidebarLabel>Languages</SidebarLabel>
           <ul className='space-y-1 text-[8pt] text-neutral-600'>
@@ -124,16 +129,20 @@ export function Template07({ resume }: TemplateProps) {
             ))}
           </ul>
         </div>
+        )}
       </aside>
 
       <main className='flex-1 p-[9mm]'>
+        {(resume.overview) && (
         <section className='mb-5 break-inside-avoid'>
           <MainHeading icon={User}>Profile</MainHeading>
           <p className='text-[9.5pt] leading-relaxed text-neutral-700'>
             {resume.overview}
           </p>
         </section>
+        )}
 
+        {(resume.workExperiences.length > 0) && (
         <section className='mb-5'>
           <MainHeading icon={Briefcase}>Work Experience</MainHeading>
           <div className='space-y-4'>
@@ -156,7 +165,9 @@ export function Template07({ resume }: TemplateProps) {
             ))}
           </div>
         </section>
+        )}
 
+        {(resume.projects.length > 0) && (
         <section className='mb-5'>
           <MainHeading icon={FolderKanban}>Projects</MainHeading>
           <div className='space-y-2.5'>
@@ -172,7 +183,9 @@ export function Template07({ resume }: TemplateProps) {
             ))}
           </div>
         </section>
+        )}
 
+        {(resume.educations.length > 0) && (
         <section className='break-inside-avoid'>
           <MainHeading icon={GraduationCap}>Education</MainHeading>
           <div className='space-y-2'>
@@ -188,6 +201,7 @@ export function Template07({ resume }: TemplateProps) {
             ))}
           </div>
         </section>
+        )}
       </main>
     </div>
   );

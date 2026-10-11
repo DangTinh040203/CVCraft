@@ -59,6 +59,7 @@ export function Template11({ resume }: TemplateProps) {
           </p>
         </header>
 
+        {(resume.information.length > 0) && (
         <section className='mb-5 break-inside-avoid'>
           <PlainHeading>Contact Information</PlainHeading>
           <div className='grid grid-cols-2 gap-x-8'>
@@ -67,14 +68,18 @@ export function Template11({ resume }: TemplateProps) {
             ))}
           </div>
         </section>
+        )}
 
+        {(resume.overview) && (
         <section className='mb-5 break-inside-avoid'>
           <PlainHeading>Overview</PlainHeading>
           <p className='text-[9.5pt] leading-relaxed text-neutral-700'>
             {resume.overview}
           </p>
         </section>
+        )}
 
+        {(resume.workExperiences.length > 0) && (
         <section className='mb-5'>
           <PlainHeading>Work Experience</PlainHeading>
           <div className='space-y-4'>
@@ -105,7 +110,9 @@ export function Template11({ resume }: TemplateProps) {
             ))}
           </div>
         </section>
+        )}
 
+        {(resume.educations.length > 0) && (
         <section className='mb-5 break-inside-avoid'>
           <PlainHeading>Education</PlainHeading>
           <div className='space-y-2'>
@@ -124,7 +131,9 @@ export function Template11({ resume }: TemplateProps) {
             ))}
           </div>
         </section>
+        )}
 
+        {(resume.projects.length > 0) && (
         <section className='mb-5 break-inside-avoid'>
           <PlainHeading>Selected Projects</PlainHeading>
           <div className='space-y-2'>
@@ -140,26 +149,33 @@ export function Template11({ resume }: TemplateProps) {
             ))}
           </div>
         </section>
+        )}
 
         <div className='grid break-inside-avoid grid-cols-3 gap-6'>
+          {(resume.skills.length > 0) && (
           <section>
             <PlainHeading>Skills</PlainHeading>
             <p className='text-[8.5pt] text-neutral-700'>
               {skills.map((skill) => skill.label).join(', ')}
             </p>
           </section>
+          )}
+          {(resume.certifications.length > 0) && (
           <section>
             <PlainHeading>Certificates</PlainHeading>
             <p className='text-[8.5pt] text-neutral-700'>
               {certifications.map((cert) => cert.name).join(', ')}
             </p>
           </section>
+          )}
+          {(resume.languages.length > 0) && (
           <section>
             <PlainHeading>Languages</PlainHeading>
             <p className='text-[8.5pt] text-neutral-700'>
               {languages.map((lang) => lang.name).join(', ')}
             </p>
           </section>
+          )}
         </div>
       </div>
     </div>

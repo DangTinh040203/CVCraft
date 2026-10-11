@@ -5,6 +5,7 @@ export enum Env {
 
   PORT = 'PORT',
   FRONTEND_ORIGIN = 'FRONTEND_ORIGIN',
+  PDF_RENDER_URL = 'PDF_RENDER_URL',
 
   API_PREFIX = 'API_PREFIX',
   API_VERSION = 'API_VERSION',
@@ -30,6 +31,8 @@ export const validationSchema = Joi.object({
 
   [Env.PORT]: Joi.number().required(),
   [Env.FRONTEND_ORIGIN]: Joi.string().required(),
+  // Base URL headless Chromium opens to render /print (defaults to FRONTEND_ORIGIN)
+  [Env.PDF_RENDER_URL]: Joi.string().uri().optional(),
 
   [Env.API_PREFIX]: Joi.string().default('api'),
   [Env.API_VERSION]: Joi.string().default('1'),

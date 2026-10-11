@@ -54,6 +54,7 @@ export function Template08({ resume }: TemplateProps) {
           </div>
         </header>
 
+        {(resume.overview) && (
         <section className='mb-5 break-inside-avoid'>
           <h2 className={`
             mb-1.5 text-[10pt] font-bold text-neutral-900 uppercase
@@ -64,7 +65,9 @@ export function Template08({ resume }: TemplateProps) {
             {resume.overview}
           </p>
         </section>
+        )}
 
+        {(resume.workExperiences.length > 0) && (
         <section className='mb-5'>
           <h2 className='mb-2 text-[10pt] font-bold text-neutral-900 uppercase'>
             Employment History
@@ -89,7 +92,9 @@ export function Template08({ resume }: TemplateProps) {
             ))}
           </div>
         </section>
+        )}
 
+        {(resume.projects.length > 0) && (
         <section className='break-inside-avoid'>
           <h2 className='mb-2 text-[10pt] font-bold text-neutral-900 uppercase'>
             Projects
@@ -107,11 +112,13 @@ export function Template08({ resume }: TemplateProps) {
             ))}
           </div>
         </section>
+        )}
       </main>
 
       <aside className={`
         w-[56mm] shrink-0 bg-neutral-800 p-[8mm] text-neutral-100
       `}>
+        {(resume.information.length > 0) && (
         <div className='mb-6 break-inside-avoid'>
           <h2 className={`
             mb-2 text-[8.5pt] font-bold tracking-[0.15em] text-neutral-400
@@ -125,7 +132,9 @@ export function Template08({ resume }: TemplateProps) {
             ))}
           </ul>
         </div>
+        )}
 
+        {(resume.skills.length > 0) && (
         <div className='mb-6 break-inside-avoid'>
           <h2 className={`
             mb-2 text-[8.5pt] font-bold tracking-[0.15em] text-neutral-400
@@ -139,7 +148,9 @@ export function Template08({ resume }: TemplateProps) {
             ))}
           </ul>
         </div>
+        )}
 
+        {(resume.educations.length > 0) && (
         <div className='mb-6 break-inside-avoid'>
           <h2 className={`
             mb-2 text-[8.5pt] font-bold tracking-[0.15em] text-neutral-400
@@ -161,7 +172,9 @@ export function Template08({ resume }: TemplateProps) {
             ))}
           </div>
         </div>
+        )}
 
+        {(resume.certifications.length > 0) && (
         <div className='mb-6 break-inside-avoid'>
           <h2 className={`
             mb-2 text-[8.5pt] font-bold tracking-[0.15em] text-neutral-400
@@ -175,7 +188,9 @@ export function Template08({ resume }: TemplateProps) {
             ))}
           </ul>
         </div>
+        )}
 
+        {(resume.languages.length > 0) && (
         <div className='break-inside-avoid'>
           <h2 className={`
             mb-2 text-[8.5pt] font-bold tracking-[0.15em] text-neutral-400
@@ -192,6 +207,7 @@ export function Template08({ resume }: TemplateProps) {
             ))}
           </ul>
         </div>
+        )}
       </aside>
     </div>
   );

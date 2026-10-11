@@ -5,6 +5,7 @@ import { useDispatch, useSelector, useStore } from 'react-redux';
 import { persistReducer, persistStore } from 'redux-persist';
 
 import { StorageSliceName } from '@/constants/storage.constant';
+import { resumeReducer } from '@/stores/features/resume.slice';
 import { templateReducer } from '@/stores/features/template.slice';
 
 const createNoopStorage = () => {
@@ -25,6 +26,7 @@ const storage =
   typeof window !== 'undefined' ? AsyncStorage : createNoopStorage();
 
 const appReducer = combineReducers({
+  [StorageSliceName.Resume]: resumeReducer,
   [StorageSliceName.Template]: templateReducer,
 });
 
@@ -32,6 +34,10 @@ export const rootReducer = (
   state: ReturnType<typeof appReducer> | undefined,
   action: Action,
 ) => {
+  if (action.type === 'root/reset') {
+    state = undefined;
+  }
+
   return appReducer(state, action);
 };
 
@@ -49,6 +55,19 @@ export const makeStore = () => {
   return configureStore({
     reducer: persistedReducer,
     devTools: process.env.NODE_ENV !== 'production',
+    middleware: (getDefaultMiddleware) =>
+      getDefaultMiddleware({
+        serializableCheck: {
+          ignoredActions: [
+            'persist/PERSIST',
+            'persist/REHYDRATE',
+            'persist/PAUSE',
+            'persist/FLUSH',
+            'persist/PURGE',
+            'persist/REGISTER',
+          ],
+        },
+      }),
   });
 };
 

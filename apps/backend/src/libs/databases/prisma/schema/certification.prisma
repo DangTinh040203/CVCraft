@@ -1,0 +1,12 @@
+model Certification {
+  id     String   @id @default(uuid())
+  name   String
+  issuer String
+  date   DateTime
+  order  Int      @default(0)
+
+  resumeId String
+  resume   Resume @relation(fields: [resumeId], references: [id], onDelete: Cascade)
+
+  @@index([resumeId])
+}

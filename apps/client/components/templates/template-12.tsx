@@ -75,6 +75,7 @@ export function Template12({ resume }: TemplateProps) {
 
       <div className='grid grid-cols-[0.85fr_1.15fr] gap-8'>
         <div className='space-y-5'>
+          {(resume.information.length > 0) && (
           <section className='break-inside-avoid'>
             <Badge icon={IdCard} color='#0891b2'>
               Contact Information
@@ -90,7 +91,9 @@ export function Template12({ resume }: TemplateProps) {
               ))}
             </ul>
           </section>
+          )}
 
+          {(resume.workExperiences.length > 0) && (
           <section>
             <Badge icon={Briefcase} color='#7c3aed'>
               Work Experience
@@ -116,7 +119,9 @@ export function Template12({ resume }: TemplateProps) {
               ))}
             </div>
           </section>
+          )}
 
+          {(resume.certifications.length > 0) && (
           <section className='break-inside-avoid'>
             <Badge icon={Award} color='#4f46e5'>
               Certifications
@@ -129,9 +134,11 @@ export function Template12({ resume }: TemplateProps) {
               ))}
             </ul>
           </section>
+          )}
         </div>
 
         <div className='space-y-5'>
+          {(resume.overview) && (
           <section className='break-inside-avoid'>
             <Badge icon={FileText} color='#059669'>
               Overview
@@ -140,7 +147,9 @@ export function Template12({ resume }: TemplateProps) {
               {resume.overview}
             </p>
           </section>
+          )}
 
+          {(resume.educations.length > 0) && (
           <section className='break-inside-avoid'>
             <Badge icon={GraduationCap} color='#d97706'>
               Education
@@ -161,7 +170,9 @@ export function Template12({ resume }: TemplateProps) {
               ))}
             </div>
           </section>
+          )}
 
+          {(resume.skills.length > 0) && (
           <section className='break-inside-avoid'>
             <Badge icon={Layers} color='#2563eb'>
               Skills
@@ -180,7 +191,9 @@ export function Template12({ resume }: TemplateProps) {
               ))}
             </div>
           </section>
+          )}
 
+          {(resume.languages.length > 0) && (
           <section className='break-inside-avoid'>
             <Badge icon={IdCard} color='#0d9488'>
               Languages
@@ -196,7 +209,9 @@ export function Template12({ resume }: TemplateProps) {
               ))}
             </ul>
           </section>
+          )}
 
+          {(resume.projects.length > 0) && (
           <section className='break-inside-avoid'>
             <Badge icon={FileText} color='#e11d48'>
               Projects
@@ -214,6 +229,7 @@ export function Template12({ resume }: TemplateProps) {
               ))}
             </div>
           </section>
+          )}
         </div>
       </div>
     </div>

@@ -21,6 +21,12 @@ export interface TemplateMeta {
   name: string;
   description: string;
   isPremium: boolean;
+  /**
+   * Tailwind palette the template uses as its accent. The Customize panel's
+   * accent color remaps this palette's CSS variables (see resume-document).
+   * Omitted for monochrome or multi-color designs.
+   */
+  accentPalette?: string;
   component: ComponentType<{ resume: ResumeData }>;
 }
 
@@ -47,6 +53,7 @@ export const TEMPLATES: TemplateMeta[] = [
     name: 'Sidebar Modern',
     description: 'Dark left sidebar for contact, skills and languages.',
     isPremium: false,
+    accentPalette: 'sky',
     component: Template02,
   },
   {
@@ -55,6 +62,7 @@ export const TEMPLATES: TemplateMeta[] = [
     name: 'Timeline',
     description: 'Experience and education shown on a vertical timeline.',
     isPremium: true,
+    accentPalette: 'emerald',
     component: Template03,
   },
   {
@@ -63,6 +71,7 @@ export const TEMPLATES: TemplateMeta[] = [
     name: 'Elegant Dark',
     description: 'Navy and gold sidebar with a refined serif display name.',
     isPremium: true,
+    accentPalette: 'amber',
     component: Template04,
   },
   {
@@ -71,6 +80,7 @@ export const TEMPLATES: TemplateMeta[] = [
     name: 'Corporate Blue',
     description: 'Framed page with full-width blue section bars.',
     isPremium: false,
+    accentPalette: 'blue',
     component: Template05,
   },
   {
@@ -87,6 +97,7 @@ export const TEMPLATES: TemplateMeta[] = [
     name: 'Icon Professional',
     description: 'Centered photo sidebar with icon-led section headers.',
     isPremium: true,
+    accentPalette: 'teal',
     component: Template07,
   },
   {
@@ -103,6 +114,7 @@ export const TEMPLATES: TemplateMeta[] = [
     name: 'Colorful Icons',
     description: 'Wine sidebar with circular language proficiency rings.',
     isPremium: true,
+    accentPalette: 'rose',
     component: Template09,
   },
   {
@@ -127,6 +139,7 @@ export const TEMPLATES: TemplateMeta[] = [
     name: 'Two-Column Icons',
     description: 'Two-column body with icon-badged section headers.',
     isPremium: true,
+    accentPalette: 'blue',
     component: Template12,
   },
 ];

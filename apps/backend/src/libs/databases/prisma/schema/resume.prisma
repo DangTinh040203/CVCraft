@@ -1,0 +1,39 @@
+model Resume {
+  id String @id @default(uuid())
+
+  userId String @unique
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  title       String
+  subTitle    String
+  overview    String
+  avatar      String?
+  templateKey String?
+  format      Json? // fontFamily, color, hiddenSections[], sectionOrder[], ...
+
+  information     ResumeInformation[]
+  educations      Education[]
+  workExperiences WorkExperience[]
+  projects        Project[]
+  skills          Skill[]
+  certifications  Certification[]
+  languages       Language[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId])
+}
+
+model ResumeInformation {
+  id    String @id @default(uuid())
+  label String
+  value String
+  order Int    @default(0)
+
+  resumeId String
+  resume   Resume @relation(fields: [resumeId], references: [id], onDelete: Cascade)
+
+  @@index([resumeId])
+  @@map("Information")
+}

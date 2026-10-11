@@ -69,6 +69,17 @@
   --shadow-glow: 0 0 40px oklch(0.4919 0.2403 293.54 / 0.2);
 }
 
+/*
+ * This file re-imports tailwindcss after @repo/ui/globals.css, and that second
+ * preflight resets every border to currentColor (black). Re-apply the themed
+ * border color so `border` without a color stays light gray.
+ */
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+}
+
 @layer utilities {
   .gradient-text,
   .text-gradient {

@@ -48,10 +48,13 @@ export function Template01({ resume }: TemplateProps) {
         </div>
       </header>
 
+      {(resume.overview) && (
       <section className='mb-5'>
         <p className='text-[10pt] text-neutral-700'>{resume.overview}</p>
       </section>
+      )}
 
+      {(resume.workExperiences.length > 0) && (
       <section className='mb-5'>
         <h2
           className={`
@@ -68,7 +71,9 @@ export function Template01({ resume }: TemplateProps) {
                 <h3 className='text-[10.5pt] font-semibold text-neutral-900'>
                   {job.position} · {job.company}
                 </h3>
-                <span className='text-[9pt] text-neutral-500'>
+                <span className={`
+                  shrink-0 pl-4 text-[9pt] whitespace-nowrap text-neutral-500
+                `}>
                   {formatDateRange(job.startDate, job.endDate)}
                 </span>
               </div>
@@ -83,7 +88,9 @@ export function Template01({ resume }: TemplateProps) {
           ))}
         </div>
       </section>
+      )}
 
+      {(resume.projects.length > 0) && (
       <section className='mb-5'>
         <h2
           className={`
@@ -107,7 +114,9 @@ export function Template01({ resume }: TemplateProps) {
           ))}
         </div>
       </section>
+      )}
 
+      {(resume.educations.length > 0) && (
       <section className='mb-5'>
         <h2
           className={`
@@ -128,15 +137,19 @@ export function Template01({ resume }: TemplateProps) {
               <h3 className='text-[10pt] font-semibold text-neutral-900'>
                 {edu.degree}, {edu.major} · {edu.school}
               </h3>
-              <span className='text-[9pt] text-neutral-500'>
+              <span className={`
+                shrink-0 pl-4 text-[9pt] whitespace-nowrap text-neutral-500
+              `}>
                 {formatDateRange(edu.startDate, edu.endDate)}
               </span>
             </div>
           ))}
         </div>
       </section>
+      )}
 
       <div className='grid grid-cols-2 gap-6'>
+        {(resume.skills.length > 0) && (
         <section className='break-inside-avoid'>
           <h2
             className={`
@@ -150,7 +163,9 @@ export function Template01({ resume }: TemplateProps) {
             {skills.map((skill) => skill.label).join(' · ')}
           </p>
         </section>
+        )}
 
+        {(resume.certifications.length > 0) && (
         <section className='break-inside-avoid'>
           <h2
             className={`
@@ -168,8 +183,10 @@ export function Template01({ resume }: TemplateProps) {
             ))}
           </ul>
         </section>
+        )}
       </div>
 
+      {(resume.languages.length > 0) && (
       <section className='mt-5 break-inside-avoid'>
         <h2
           className={`
@@ -185,6 +202,7 @@ export function Template01({ resume }: TemplateProps) {
             .join(' · ')}
         </p>
       </section>
+      )}
     </div>
   );
 }

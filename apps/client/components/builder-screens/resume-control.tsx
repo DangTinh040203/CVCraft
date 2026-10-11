@@ -1,0 +1,159 @@
+'use client';
+import { Button } from '@repo/ui/components/button';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@repo/ui/components/tooltip';
+import { cn } from '@repo/ui/lib/utils';
+import { motion } from 'framer-motion';
+import { Eye, EyeOff, FileText, Loader2, Save } from 'lucide-react';
+import React from 'react';
+
+import DownloadPdf from '@/components/builder-screens/download-pdf';
+import { useSyncResume } from '@/hooks/use-sync-resume';
+import {
+  templateConfigSelector,
+  updatePreviewMode,
+} from '@/stores/features/template.slice';
+import { useAppDispatch, useAppSelector } from '@/stores/store';
+
+const ResumeControl = () => {
+  const { resume, sync, isSyncing } = useSyncResume();
+  const { previewMode } = useAppSelector(templateConfigSelector);
+  const dispatch = useAppDispatch();
+
+  const handleTogglePreviewMode = () => {
+    dispatch(updatePreviewMode(!previewMode));
+  };
+
+  return (
+    <div className='mb-4'>
+      <div className='my-4 flex items-center gap-4'>
+        <div
+          className={`
+            from-primary to-primary/70 flex h-10 w-10 shrink-0 items-center
+            justify-center rounded-xl bg-linear-to-br
+            md:h-12 md:w-12
+          `}
+        >
+          <FileText
+            className={`
+              text-primary-foreground h-5 w-5
+              md:h-6 md:w-6
+            `}
+          />
+        </div>
+        <div>
+          <h1
+            className={`
+              font-display from-foreground to-foreground/70 bg-linear-to-br
+              bg-clip-text text-xl font-bold text-transparent
+              md:text-2xl
+              lg:text-3xl
+            `}
+          >
+            Resume Builder
+          </h1>
+          <p
+            className={`
+              text-muted-foreground text-xs
+              md:text-sm
+            `}
+          >
+            Build a standout resume in minutes.
+          </p>
+        </div>
+      </div>
+
+      <div
+        className={`
+          grid grid-cols-2 gap-2
+          sm:flex sm:flex-wrap sm:gap-4
+        `}
+      >
+        <motion.div
+          className={`
+            w-full
+            sm:w-auto
+          `}
+        >
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  variant='gradient'
+                  className={cn(
+                    `
+                      w-full shrink-0 gap-2 transition-all duration-200
+                      sm:w-auto
+                    `,
+                  )}
+                  onClick={sync}
+                  disabled={isSyncing}
+                >
+                  {isSyncing ? (
+                    <Loader2 className='h-4 w-4 animate-spin' />
+                  ) : (
+                    <Save className='h-4 w-4' />
+                  )}
+                  Save
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Save your changes (Ctrl+S)</p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+        </motion.div>
+
+        <motion.div
+          className={`
+            w-full
+            sm:w-auto
+          `}
+          whileHover={{ scale: 1.02 }}
+          whileTap={{ scale: 0.98 }}
+        >
+          <Button
+            variant='secondary'
+            className={cn(
+              `
+                w-full shrink-0 gap-2 transition-colors duration-200
+                sm:w-auto
+              `,
+            )}
+            onClick={handleTogglePreviewMode}
+          >
+            <motion.div
+              initial={false}
+              animate={{ rotate: previewMode ? 180 : 0 }}
+              transition={{ duration: 0.3 }}
+            >
+              {previewMode ? (
+                <EyeOff className='h-4 w-4' />
+              ) : (
+                <Eye className='h-4 w-4' />
+              )}
+            </motion.div>
+            {previewMode ? 'Edit' : 'Customize'}
+          </Button>
+        </motion.div>
+
+        {resume && (
+          <div
+            className={`
+              w-full
+              sm:w-auto
+            `}
+          >
+            <DownloadPdf resume={resume} />
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
+
+export default ResumeControl;

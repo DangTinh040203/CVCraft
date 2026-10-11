@@ -1,0 +1,15 @@
+model WorkExperience {
+  id          String @id @default(uuid())
+  company     String
+  position    String
+  description String
+
+  startDate DateTime
+  endDate   DateTime? // Null = "Present"
+  order     Int       @default(0)
+
+  resumeId String
+  resume   Resume @relation(fields: [resumeId], references: [id], onDelete: Cascade)
+
+  @@index([resumeId])
+}

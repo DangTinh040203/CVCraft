@@ -1,7 +1,13 @@
 {
   "$schema": "https://turbo.build/schema.json",
   "ui": "tui",
-  "globalEnv": ["NODE_ENV", "FRONTEND_ORIGIN", "PORT"],
+  "globalEnv": [
+    "NODE_ENV",
+    "FRONTEND_ORIGIN",
+    "PORT",
+    "CLERK_SECRET_KEY",
+    "SKIP_ENV_VALIDATION"
+  ],
   "tasks": {
     "build": {
       "dependsOn": ["^build"],

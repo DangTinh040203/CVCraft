@@ -1,9 +1,32 @@
 'use client';
 
+import {
+  SignedIn,
+  SignedOut,
+  SignOutButton,
+  UserAvatar,
+  useUser,
+} from '@clerk/nextjs';
 import { Button } from '@repo/ui/components/button';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@repo/ui/components/dropdown-menu';
 import { cn } from '@repo/ui/lib/utils';
 import { AnimatePresence, m } from 'framer-motion';
-import { FileText, Home, Menu, X } from 'lucide-react';
+import {
+  CreditCard,
+  FileText,
+  Home,
+  LogOut,
+  Menu,
+  User,
+  X,
+} from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
@@ -72,6 +95,7 @@ const mobileItemVariants = {
 const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const { user, isLoaded } = useUser();
 
   const pathname = usePathname();
 
@@ -175,39 +199,104 @@ const Header = () => {
               md:flex
             `}
           >
-            <m.div
-              custom={navLinks.length}
-              variants={navItemVariants}
-              initial='hidden'
-              animate='visible'
-              className={`
-                hidden
-                lg:block
-              `}
-            >
-              <Link href='/auth/sign-in'>
-                <m.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                  <Button variant='ghost'>Sign In</Button>
-                </m.div>
-              </Link>
-            </m.div>
+            {!isLoaded ? (
+              <div className='h-10 w-24' />
+            ) : (
+              <>
+                <SignedIn>
+                  <m.div
+                    custom={navLinks.length}
+                    variants={navItemVariants}
+                    initial='hidden'
+                    animate='visible'
+                  >
+                    <DropdownMenu modal={false}>
+                      <DropdownMenuTrigger className='cursor-pointer'>
+                        <UserAvatar />
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent
+                        className='w-56'
+                        align='end'
+                        forceMount
+                      >
+                        <DropdownMenuLabel className='font-normal'>
+                          <div className='flex flex-col space-y-1'>
+                            <p className='text-sm leading-none font-medium'>
+                              {user?.fullName}
+                            </p>
+                          </div>
+                        </DropdownMenuLabel>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuItem disabled>
+                          <User className='mr-2 h-4 w-4' />
+                          Profile
+                        </DropdownMenuItem>
+                        <DropdownMenuItem disabled>
+                          <CreditCard className='mr-2 h-4 w-4' />
+                          Subscription
+                        </DropdownMenuItem>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuItem asChild>
+                          <SignOutButton>
+                            <div
+                              className={`
+                                flex w-full cursor-pointer items-center
+                              `}
+                            >
+                              <LogOut className='mr-2 h-4 w-4' />
+                              Sign out
+                            </div>
+                          </SignOutButton>
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  </m.div>
+                </SignedIn>
 
-            <m.div
-              custom={navLinks.length + 1}
-              variants={navItemVariants}
-              initial='hidden'
-              animate='visible'
-            >
-              <Link href='/auth/sign-in'>
-                <m.div
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  transition={{ type: 'spring', stiffness: 400, damping: 17 }}
-                >
-                  <Button variant='gradient'>Get Started</Button>
-                </m.div>
-              </Link>
-            </m.div>
+                <SignedOut>
+                  <m.div
+                    custom={navLinks.length}
+                    variants={navItemVariants}
+                    initial='hidden'
+                    animate='visible'
+                    className={`
+                      hidden
+                      lg:block
+                    `}
+                  >
+                    <Link href='/auth/sign-in'>
+                      <m.div
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                      >
+                        <Button variant='ghost'>Sign In</Button>
+                      </m.div>
+                    </Link>
+                  </m.div>
+
+                  <m.div
+                    custom={navLinks.length + 1}
+                    variants={navItemVariants}
+                    initial='hidden'
+                    animate='visible'
+                  >
+                    <Link href='/auth/sign-in'>
+                      <m.div
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                        transition={{
+                          type: 'spring',
+                          stiffness: 400,
+                          damping: 17,
+                        }}
+                      >
+                        <Button variant='gradient'>Get Started</Button>
+                      </m.div>
+                    </Link>
+                  </m.div>
+                </SignedOut>
+              </>
+            )}
           </div>
 
           {/* Animated Mobile Menu Button */}
@@ -295,13 +384,68 @@ const Header = () => {
                   animate='visible'
                   exit='exit'
                 >
-                  <Link href='/auth/sign-in' onClick={() => setIsOpen(false)}>
-                    <m.div whileTap={{ scale: 0.98 }} whileHover={{}}>
-                      <Button variant='gradient' className='mt-2 w-full'>
-                        Sign In / Sign Up
-                      </Button>
-                    </m.div>
-                  </Link>
+                  <SignedIn>
+                    <Button
+                      variant='ghost'
+                      className='w-full justify-start gap-3'
+                      disabled
+                    >
+                      <CreditCard className='h-4 w-4' />
+                      Subscription
+                    </Button>
+                    <Button
+                      variant='ghost'
+                      className='w-full justify-start gap-3'
+                      disabled
+                    >
+                      <User className='h-4 w-4' />
+                      Profile
+                    </Button>
+
+                    <div className='border-border mt-2 flex border-t pt-2'>
+                      <div
+                        className={`
+                          border-border flex flex-1 items-center border-r px-4
+                          py-2
+                        `}
+                      >
+                        <div className='flex items-center gap-3'>
+                          <UserAvatar />
+                          <div className='flex flex-col'>
+                            <p className='text-sm font-medium'>
+                              {user?.fullName ||
+                                user?.primaryEmailAddress?.emailAddress.split(
+                                  '@',
+                                )[0]}
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                      <div className='flex-1 px-4 py-2'>
+                        <SignOutButton>
+                          <Button
+                            variant='ghost'
+                            className={`
+                              w-full justify-start gap-3 text-red-500
+                              hover:bg-red-50 hover:text-red-500
+                            `}
+                          >
+                            <LogOut className='h-4 w-4' />
+                            Sign out
+                          </Button>
+                        </SignOutButton>
+                      </div>
+                    </div>
+                  </SignedIn>
+                  <SignedOut>
+                    <Link href='/auth/sign-in' onClick={() => setIsOpen(false)}>
+                      <m.div whileTap={{ scale: 0.98 }} whileHover={{}}>
+                        <Button variant='gradient' className='mt-2 w-full'>
+                          Sign In / Sign Up
+                        </Button>
+                      </m.div>
+                    </Link>
+                  </SignedOut>
                 </m.div>
               </div>
             </m.div>

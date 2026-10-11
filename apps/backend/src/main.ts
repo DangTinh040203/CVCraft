@@ -6,6 +6,7 @@ import {
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import cookieParser from 'cookie-parser';
 import helmet from 'helmet';
 import morgan from 'morgan';
@@ -33,11 +34,28 @@ class BootstrapApplication {
 
     this.setupMiddleware();
 
+    if (this.configService.get<string>(Env.NODE_ENV) !== 'production') {
+      this.setupSwagger();
+    }
+
     await this.app.listen(port);
     Logger.log(
       `Server running on http://localhost:${port}/${apiPrefix}/v${apiVersion}`,
       BootstrapApplication.name,
     );
+  }
+
+  private setupSwagger() {
+    const document = SwaggerModule.createDocument(
+      this.app,
+      new DocumentBuilder()
+        .setTitle('CraftCV API')
+        .setDescription('The API details of the CraftCV application')
+        .setVersion('1.0')
+        .addBearerAuth()
+        .build(),
+    );
+    SwaggerModule.setup('docs', this.app, document);
   }
 
   private setupMiddleware() {

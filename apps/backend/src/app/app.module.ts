@@ -8,6 +8,7 @@ import { APP_FILTER, APP_GUARD } from '@nestjs/core';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 
+import { HealthController } from '@/app/health.controller';
 import { CacheModule } from '@/libs/cache';
 import { AppConfigModule } from '@/libs/configs/config.module';
 import { Env, validationSchema } from '@/libs/configs/env.config';
@@ -15,11 +16,15 @@ import { DatabaseModule } from '@/libs/databases/database.module';
 import { GlobalExceptionFilter } from '@/libs/filters/http-exception.filter';
 import { ClerkAuthGuard } from '@/libs/guards/clerk-auth.guard';
 import { RequestIdMiddleware } from '@/libs/middlewares/request-id.middleware';
+import { PdfModule } from '@/modules/pdf/pdf.module';
+import { ResumeModule } from '@/modules/resume/resume.module';
 import { UserModule } from '@/modules/user/user.module';
 
 @Module({
   imports: [
     UserModule,
+    ResumeModule,
+    PdfModule,
     DatabaseModule,
     CacheModule,
     ConfigModule.forRoot({
@@ -39,7 +44,7 @@ import { UserModule } from '@/modules/user/user.module';
       ],
     }),
   ],
-  controllers: [],
+  controllers: [HealthController],
   providers: [
     {
       provide: APP_FILTER,

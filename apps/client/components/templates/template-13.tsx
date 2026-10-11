@@ -19,7 +19,8 @@ interface TemplateProps {
   resume: ResumeData;
 }
 
-const ACCENT = '#3f8a68';
+// Customize panel's accent color overrides this via --resume-accent
+const ACCENT = 'var(--resume-accent, #3f8a68)';
 
 // Fixed node/edge coordinates so the decoration renders identically on the
 // server, the client, and in the exported PDF.
@@ -128,7 +129,7 @@ export function Template13({ resume }: TemplateProps) {
   return (
     <div
       className={`
-        relative min-h-[297mm] w-[210mm] overflow-hidden bg-white p-[14mm]
+        relative min-h-[297mm] w-[210mm] overflow-hidden bg-white p-[10mm]
         text-[9.5pt] leading-relaxed text-neutral-800
       `}
     >
@@ -178,13 +179,16 @@ export function Template13({ resume }: TemplateProps) {
           </div>
         </header>
 
+        {(resume.overview) && (
         <section className='mb-5'>
           <SectionTitle icon={ScanFace}>Overview</SectionTitle>
           <p className='whitespace-pre-line text-neutral-700'>
             {resume.overview}
           </p>
         </section>
+        )}
 
+        {(resume.workExperiences.length > 0) && (
         <section className='mb-5'>
           <SectionTitle icon={Briefcase}>Work experience</SectionTitle>
           <div className='space-y-3'>
@@ -208,7 +212,9 @@ export function Template13({ resume }: TemplateProps) {
             ))}
           </div>
         </section>
+        )}
 
+        {(resume.projects.length > 0) && (
         <section className='mb-5'>
           <SectionTitle icon={FolderKanban}>Projects</SectionTitle>
           <div className='space-y-3'>
@@ -232,7 +238,9 @@ export function Template13({ resume }: TemplateProps) {
             ))}
           </div>
         </section>
+        )}
 
+        {(resume.educations.length > 0) && (
         <section className='mb-5'>
           <SectionTitle icon={GraduationCap}>Education</SectionTitle>
           <div className='space-y-3'>
@@ -253,8 +261,10 @@ export function Template13({ resume }: TemplateProps) {
             ))}
           </div>
         </section>
+        )}
 
         <div className='grid grid-cols-2 gap-6'>
+          {(resume.skills.length > 0) && (
           <section className='break-inside-avoid'>
             <SectionTitle icon={Layers}>Skills</SectionTitle>
             <ul className='space-y-0.5 text-neutral-700'>
@@ -266,8 +276,10 @@ export function Template13({ resume }: TemplateProps) {
               ))}
             </ul>
           </section>
+          )}
 
           <div className='space-y-5'>
+            {(resume.certifications.length > 0) && (
             <section className='break-inside-avoid'>
               <SectionTitle icon={Award}>Certifications</SectionTitle>
               <ul className='space-y-0.5 text-neutral-700'>
@@ -279,7 +291,9 @@ export function Template13({ resume }: TemplateProps) {
                 ))}
               </ul>
             </section>
+            )}
 
+            {(resume.languages.length > 0) && (
             <section className='break-inside-avoid'>
               <SectionTitle icon={LanguagesIcon}>Languages</SectionTitle>
               <ul className='space-y-0.5 text-neutral-700'>
@@ -293,6 +307,7 @@ export function Template13({ resume }: TemplateProps) {
                 ))}
               </ul>
             </section>
+            )}
           </div>
         </div>
       </div>

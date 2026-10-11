@@ -11,7 +11,7 @@ CraftCV is an AI-powered, ATS-optimized CV builder. It is a rebuild of an earlie
 - `apps/backend`: NestJS 11 API (port 8000, global prefix `/api`)
 - `packages/ui`: shared shadcn/ui-style components, `packages/shared`: types/utils shared by all apps, plus shared `eslint-config`, `prettier-config` and `typescript-config`
 
-The project is early. Much of what `planning/` describes (Clerk auth, Redux, next-intl, Postgres/Prisma models, BullMQ jobs, Gemini AI, Paged.js/Puppeteer PDF export) is **not built yet**. The backend is still a bare `AppModule`. Read `planning/` before you build a feature:
+The project is early. Built so far: Clerk auth (SSO only), the Redux builder synced to the backend, Postgres/Prisma user + resume models, and Puppeteer PDF export. Still **not built**: next-intl (the client is English-only for now), BullMQ jobs, Gemini AI (resume parsing, job matching and mock interviews from v1 were deliberately left out), and the Paged.js paginated preview. Read `planning/` before you build a feature:
 
 - `0-project-desc.md`: product scope and core functions
 - `1-tech-stack.md`: chosen libraries and conventions (e.g. FE env goes through `@t3-oss/env-nextjs` as `Env.X`, never raw `process.env`)
@@ -57,7 +57,9 @@ pnpm --filter @repo/backend test -- app.controller   # pattern matched against *
 - `resume.types.ts` defines `ResumeData` and its helpers (`sortByOrder`, `formatDateRange`). `sample-resume.ts` is the demo data used for previews.
 - `registry.ts` (`TEMPLATES`, `getTemplateBySlug`) is the single list of templates. It holds key, slug, name, description, `isPremium` and the component. Array order is display order. To add a template, create the component and register it here; the gallery, home preview and builder all read from the registry.
 - `TemplateThumbnail` renders the **real** template at full size and CSS-scales it to fit its container. It is a live preview, not an image, so thumbnails never drift from the real template.
-- `/builder?template=<slug>` is currently a placeholder that only previews the selected template. The section editor comes in Phase 2.
+- Each template takes `{ resume: ResumeData }` only. `ResumeDocument` (`resume-document.tsx`) renders a template by key and applies the Customize panel's font and accent color: the accent remaps the template's Tailwind palette variables (`accentPalette` in the registry), or `--resume-accent` for templates that use a hex constant. Templates must skip sections whose data is empty, which is how "hidden sections" work.
+- `/builder?template=<slug>` is the section editor (`components/builder-screens/`). The editor keeps the v1 `Resume` shape (`types/resume.type.ts`), and `toResumeData()` in `utils/resume.utils.ts` maps it to `ResumeData` (array index becomes `order`, Quill HTML becomes plain text, hidden sections are emptied). Save (button or Ctrl+S) posts the resume plus `templateKey` and `format` to `POST /resumes/:id`.
+- `/print` renders a bare `ResumeDocument` from `window.__CRAFTCV_PRINT__` and sets `data-print-ready`. It is excluded from the Clerk middleware so the backend's headless Chromium can open it.
 - The same template component is meant to become the PDF source (one-component architecture, see `planning/3-pdf-mvp-reference.md`). So that pagination stays correct, keep templates print-safe: put `break-inside-avoid` on each job, education and project block, and size the page with one `@page` A4 rule.
 
 ### Client and admin apps
@@ -67,7 +69,11 @@ pnpm --filter @repo/backend test -- app.controller   # pattern matched against *
 
 ### Backend
 
-`main.ts` sets the global prefix (`API_PREFIX`, default `api`) and a global `ValidationPipe({ whitelist, transform })`. CORS is restricted to `FRONTEND_ORIGIN`. `ConfigModule` is global and loads `.env.development`, then `.env`. Add new features as NestJS modules imported into `AppModule`.
+`main.ts` sets the global prefix (`API_PREFIX`, default `api`) and a global `ValidationPipe({ whitelist, transform })`. CORS is restricted to `FRONTEND_ORIGIN`. `ConfigModule` is global and loads `.env.development`, then `.env`. Add new features as NestJS modules imported into `AppModule`. The global prefix is `${API_PREFIX}/v${API_VERSION}` (e.g. `/api/v1`), and Swagger is served at `/docs` outside production. `ClerkAuthGuard` is global, so mark open routes with `@Public()`.
+
+- `user`: Clerk webhook (`POST /users/clerk`, svix-verified) creates, updates and deletes users. `user.created` emits an event that `resume`'s listener uses to create the user's default resume (one resume per user, as in v1).
+- `resume`: `GET /resumes` returns the current user's resume. `POST /resumes/:id` replaces the resume and all its child rows in one transaction, storing array order in `order`.
+- `pdf`: `POST /pdf/export` takes `{ templateKey, format, resume }`, opens the FE `/print` route in one long-lived Puppeteer browser (a new page per request), and returns the PDF. Request interception only allows the FE origin plus https images and fonts. `PDF_RENDER_URL` overrides the FE base URL.
 
 ### Turbo
 

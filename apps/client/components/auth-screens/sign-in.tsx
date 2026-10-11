@@ -5,9 +5,7 @@ import React from 'react';
 import SSOButtons from '@/components/auth-screens/sso-buttons';
 import { formContainerVariants } from '@/styles/animation';
 
-// NOTE: Password-based sign-in is disabled to match the source design.
-// OAuth (Google/Github) only, and those buttons are currently placeholders
-// (see sso-buttons.tsx) until a real auth provider is wired up.
+// Password sign-in, sign-up and OTP stay disabled, as in v1: OAuth only.
 const SignIn = () => {
   return (
     <motion.div

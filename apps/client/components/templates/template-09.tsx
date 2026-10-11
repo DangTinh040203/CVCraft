@@ -89,6 +89,7 @@ export function Template09({ resume }: TemplateProps) {
           </p>
         </header>
 
+        {(resume.overview) && (
         <section className='mb-5 break-inside-avoid'>
           <h2
             className={`
@@ -103,7 +104,9 @@ export function Template09({ resume }: TemplateProps) {
             {resume.overview}
           </p>
         </section>
+        )}
 
+        {(resume.workExperiences.length > 0) && (
         <section className='mb-5'>
           <h2
             className={`
@@ -139,7 +142,9 @@ export function Template09({ resume }: TemplateProps) {
             ))}
           </div>
         </section>
+        )}
 
+        {(resume.educations.length > 0) && (
         <section className='break-inside-avoid'>
           <h2
             className={`
@@ -163,6 +168,7 @@ export function Template09({ resume }: TemplateProps) {
             ))}
           </div>
         </section>
+        )}
       </main>
 
       <aside className='w-[62mm] shrink-0 bg-rose-950 p-[8mm] text-white'>
@@ -183,6 +189,7 @@ export function Template09({ resume }: TemplateProps) {
           </div>
         )}
 
+        {(resume.information.length > 0) && (
         <div className='mb-6 break-inside-avoid'>
           <h2
             className={`
@@ -198,7 +205,9 @@ export function Template09({ resume }: TemplateProps) {
             ))}
           </ul>
         </div>
+        )}
 
+        {(resume.skills.length > 0) && (
         <div className='mb-6 break-inside-avoid'>
           <h2
             className={`
@@ -222,7 +231,9 @@ export function Template09({ resume }: TemplateProps) {
             ))}
           </div>
         </div>
+        )}
 
+        {(resume.certifications.length > 0) && (
         <div className='mb-6 break-inside-avoid'>
           <h2
             className={`
@@ -238,7 +249,9 @@ export function Template09({ resume }: TemplateProps) {
             ))}
           </ul>
         </div>
+        )}
 
+        {(resume.languages.length > 0) && (
         <div className='break-inside-avoid'>
           <h2
             className={`
@@ -259,6 +272,7 @@ export function Template09({ resume }: TemplateProps) {
             ))}
           </div>
         </div>
+        )}
       </aside>
     </div>
   );

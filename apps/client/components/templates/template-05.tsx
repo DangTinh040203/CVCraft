@@ -61,13 +61,16 @@ export function Template05({ resume }: TemplateProps) {
           )}
         </header>
 
+        {(resume.overview) && (
         <section className='mb-5 break-inside-avoid'>
           <h2 className={sectionBar}>Summary</h2>
           <p className='text-[9.5pt] leading-relaxed text-neutral-700'>
             {resume.overview}
           </p>
         </section>
+        )}
 
+        {(resume.workExperiences.length > 0) && (
         <section className='mb-5'>
           <h2 className={sectionBar}>Professional Experience</h2>
           <div className='space-y-4'>
@@ -93,7 +96,9 @@ export function Template05({ resume }: TemplateProps) {
             ))}
           </div>
         </section>
+        )}
 
+        {(resume.educations.length > 0) && (
         <section className='mb-5'>
           <h2 className={sectionBar}>Education</h2>
           <div className='space-y-2'>
@@ -122,7 +127,9 @@ export function Template05({ resume }: TemplateProps) {
             ))}
           </div>
         </section>
+        )}
 
+        {(resume.projects.length > 0) && (
         <section className='mb-5'>
           <h2 className={sectionBar}>Selected Projects</h2>
           <div className='space-y-2.5'>
@@ -138,7 +145,9 @@ export function Template05({ resume }: TemplateProps) {
             ))}
           </div>
         </section>
+        )}
 
+        {(resume.skills.length > 0) && (
         <section className='mb-5 break-inside-avoid'>
           <h2 className={sectionBar}>Technical Skills</h2>
           <div className={`
@@ -149,20 +158,27 @@ export function Template05({ resume }: TemplateProps) {
             ))}
           </div>
         </section>
+        )}
 
+        {(resume.languages.length > 0 || resume.certifications.length > 0) && (
         <section className='break-inside-avoid'>
           <h2 className={sectionBar}>Additional Information</h2>
           <ul className='space-y-1 text-[9pt] text-neutral-700'>
-            <li>
-              <span className='font-bold'>Languages: </span>
-              {languages.map((lang) => lang.name).join(', ')}
-            </li>
-            <li>
-              <span className='font-bold'>Certificates: </span>
-              {certifications.map((cert) => cert.name).join(', ')}
-            </li>
+            {languages.length > 0 && (
+              <li>
+                <span className='font-bold'>Languages: </span>
+                {languages.map((lang) => lang.name).join(', ')}
+              </li>
+            )}
+            {certifications.length > 0 && (
+              <li>
+                <span className='font-bold'>Certificates: </span>
+                {certifications.map((cert) => cert.name).join(', ')}
+              </li>
+            )}
           </ul>
         </section>
+        )}
       </div>
     </div>
   );

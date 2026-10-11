@@ -87,7 +87,7 @@ export function Template10({ resume }: TemplateProps) {
 
   return (
     <div className={`
-      relative min-h-[297mm] w-[210mm] overflow-hidden bg-white p-[14mm]
+      relative min-h-[297mm] w-[210mm] overflow-hidden bg-white p-[10mm]
       text-[10pt] text-neutral-800
     `}>
       <DotPattern />
@@ -101,6 +101,7 @@ export function Template10({ resume }: TemplateProps) {
         </p>
       </header>
 
+      {(resume.information.length > 0) && (
       <section className='relative mb-5 break-inside-avoid'>
         <Badge icon={IdCard} color='#0891b2'>
           Contact Information
@@ -111,7 +112,9 @@ export function Template10({ resume }: TemplateProps) {
           ))}
         </div>
       </section>
+      )}
 
+      {(resume.overview) && (
       <section className='relative mb-5 break-inside-avoid'>
         <Badge icon={FileText} color='#059669'>
           Overview
@@ -120,7 +123,9 @@ export function Template10({ resume }: TemplateProps) {
           {resume.overview}
         </p>
       </section>
+      )}
 
+      {(resume.skills.length > 0) && (
       <section className='relative mb-5 break-inside-avoid'>
         <Badge icon={Layers} color='#2563eb'>
           Skills
@@ -131,7 +136,9 @@ export function Template10({ resume }: TemplateProps) {
           ))}
         </div>
       </section>
+      )}
 
+      {(resume.educations.length > 0) && (
       <section className='relative mb-5 break-inside-avoid'>
         <Badge icon={GraduationCap} color='#d97706'>
           Education
@@ -154,7 +161,9 @@ export function Template10({ resume }: TemplateProps) {
           ))}
         </div>
       </section>
+      )}
 
+      {(resume.workExperiences.length > 0) && (
       <section className='relative mb-5'>
         <Badge icon={Briefcase} color='#7c3aed'>
           Work Experience
@@ -179,7 +188,9 @@ export function Template10({ resume }: TemplateProps) {
           ))}
         </div>
       </section>
+      )}
 
+      {(resume.projects.length > 0) && (
       <section className='relative mb-5'>
         <Badge icon={FolderKanban} color='#e11d48'>
           Projects
@@ -195,8 +206,10 @@ export function Template10({ resume }: TemplateProps) {
           ))}
         </div>
       </section>
+      )}
 
       <div className='relative grid grid-cols-2 gap-6'>
+        {(resume.certifications.length > 0) && (
         <section className='break-inside-avoid'>
           <Badge icon={Award} color='#4f46e5'>
             Certifications
@@ -207,7 +220,9 @@ export function Template10({ resume }: TemplateProps) {
             ))}
           </ul>
         </section>
+        )}
 
+        {(resume.languages.length > 0) && (
         <section className='break-inside-avoid'>
           <Badge icon={LanguagesIcon} color='#0d9488'>
             Languages
@@ -220,6 +235,7 @@ export function Template10({ resume }: TemplateProps) {
             ))}
           </ul>
         </section>
+        )}
       </div>
     </div>
   );
