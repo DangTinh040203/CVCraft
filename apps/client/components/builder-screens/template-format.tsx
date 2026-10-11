@@ -1,24 +1,6 @@
 'use client';
 
 import {
-  closestCenter,
-  DndContext,
-  type DragEndEvent,
-  DragOverlay,
-  KeyboardSensor,
-  PointerSensor,
-  useSensor,
-  useSensors,
-} from '@dnd-kit/core';
-import {
-  arrayMove,
-  SortableContext,
-  sortableKeyboardCoordinates,
-  useSortable,
-  verticalListSortingStrategy,
-} from '@dnd-kit/sortable';
-import { CSS } from '@dnd-kit/utilities';
-import {
   Accordion,
   AccordionContent,
   AccordionItem,
@@ -44,29 +26,21 @@ import { cn } from '@repo/ui/lib/utils';
 import {
   ALargeSmall,
   Bold,
-  Eye,
-  EyeOff,
-  GripVertical,
   Heading1,
   Heading2,
   LetterText,
-  List,
   Maximize2,
   MoveVertical,
   Palette,
   RotateCcw,
   Type,
 } from 'lucide-react';
-import { useState } from 'react';
-import { createPortal } from 'react-dom';
 
 import { FONT_OPTIONS } from '@/configs/font.config';
 import {
   defaultFormat,
-  defaultSectionOrder,
   type FontWeight,
   type Format,
-  type SectionType,
   TEMPLATE_DEFAULT,
   templateFormatSelector,
   updateTemplateConfigFormat,
@@ -183,225 +157,6 @@ const FormatSelectRow = ({ icon, label, children }: FormatSelectRowProps) => {
         <Label className='text-sm font-medium'>{label}</Label>
       </div>
       {children}
-    </div>
-  );
-};
-
-const SECTION_LABEL_KEYS: Record<SectionType, string> = {
-  personal: 'Personal',
-  summary: 'Summary',
-  skills: 'Skills',
-  education: 'Education',
-  certifications: 'Certifications',
-  languages: 'Languages',
-  experience: 'Experience',
-  projects: 'Projects',
-};
-
-function SortableSectionItem({
-  sectionType,
-  isHidden,
-  onToggleVisibility,
-}: {
-  sectionType: SectionType;
-  isHidden: boolean;
-  onToggleVisibility: (type: SectionType) => void;
-}) {
-  const {
-    attributes,
-    listeners,
-    setNodeRef,
-    transform,
-    transition,
-    isDragging,
-  } = useSortable({ id: sectionType });
-
-  const style = {
-    transform: CSS.Translate.toString(transform),
-    transition,
-  };
-
-  return (
-    <div
-      ref={setNodeRef}
-      style={style}
-      className={cn(
-        `
-          flex items-center gap-2 rounded-lg border px-3 py-2 text-sm
-          transition-all
-        `,
-        isDragging && 'relative z-50 opacity-50',
-        isHidden
-          ? 'border-dashed border-slate-200 bg-slate-50 text-slate-400 dark:border-slate-700 dark:bg-slate-800/50 dark:text-slate-500'
-          : 'border-slate-200 bg-white dark:border-slate-700 dark:bg-slate-800',
-      )}
-    >
-      <button
-        type='button'
-        className={cn(
-          'cursor-grab touch-none rounded p-0.5 text-slate-400',
-          `
-            hover:text-slate-600
-            dark:hover:text-slate-300
-          `,
-          isDragging && 'cursor-grabbing',
-        )}
-        {...attributes}
-        {...listeners}
-      >
-        <GripVertical className='h-3.5 w-3.5' />
-      </button>
-
-      <span
-        className={cn('flex-1 text-sm font-medium', isHidden && 'line-through')}
-      >
-        {SECTION_LABEL_KEYS[sectionType]}
-      </span>
-
-      <button
-        type='button'
-        onClick={() => onToggleVisibility(sectionType)}
-        className={cn(
-          'rounded p-1 transition-colors',
-          isHidden
-            ? 'text-slate-300 hover:text-slate-500 dark:text-slate-600 dark:hover:text-slate-400'
-            : 'text-slate-500 hover:text-purple-600 dark:text-slate-400 dark:hover:text-purple-400',
-        )}
-      >
-        {isHidden ? (
-          <EyeOff className='h-3.5 w-3.5' />
-        ) : (
-          <Eye className='h-3.5 w-3.5' />
-        )}
-      </button>
-    </div>
-  );
-}
-
-const SectionOrderPanel = ({
-  format,
-  updateFormat,
-}: {
-  format: Format;
-  updateFormat: (updates: Partial<Format>) => void;
-}) => {
-  const [activeId, setActiveId] = useState<string | null>(null);
-
-  const sensors = useSensors(
-    useSensor(PointerSensor),
-    useSensor(KeyboardSensor, {
-      coordinateGetter: sortableKeyboardCoordinates,
-    }),
-  );
-
-  const handleDragStart = (event: DragEndEvent) => {
-    setActiveId(event.active.id as string);
-  };
-
-  const handleDragEnd = (event: DragEndEvent) => {
-    const { active, over } = event;
-    if (over && active.id !== over.id) {
-      const oldIndex = format.sectionOrder.indexOf(active.id as SectionType);
-      const newIndex = format.sectionOrder.indexOf(over.id as SectionType);
-      const newOrder = arrayMove(format.sectionOrder, oldIndex, newIndex);
-      updateFormat({ sectionOrder: newOrder });
-    }
-    setActiveId(null);
-  };
-
-  const toggleVisibility = (type: SectionType) => {
-    const hidden = format.hiddenSections || [];
-    const newHidden = hidden.includes(type)
-      ? hidden.filter((t) => t !== type)
-      : [...hidden, type];
-    updateFormat({ hiddenSections: newHidden });
-  };
-
-  const handleResetOrder = () => {
-    updateFormat({
-      sectionOrder: defaultSectionOrder,
-      hiddenSections: [],
-    });
-  };
-
-  const activeSection = activeId as SectionType | null;
-
-  return (
-    <div className='space-y-3'>
-      <div className='flex items-center justify-between'>
-        <div className='flex items-center gap-2'>
-          <div
-            className={`
-              flex h-7 w-7 items-center justify-center rounded-md
-              bg-linear-to-br from-purple-500 to-indigo-600 text-white
-            `}
-          >
-            <List className='h-4 w-4' />
-          </div>
-          <Label className='text-sm font-medium'>
-            {'Section Order'}
-          </Label>
-        </div>
-        <Button
-          variant='ghost'
-          size='sm'
-          onClick={handleResetOrder}
-          className='h-7 px-2 text-xs'
-        >
-          <RotateCcw className='mr-1 h-3 w-3' />
-          {'Reset'}
-        </Button>
-      </div>
-
-      <DndContext
-        sensors={sensors}
-        collisionDetection={closestCenter}
-        onDragStart={handleDragStart}
-        onDragEnd={handleDragEnd}
-      >
-        <SortableContext
-          items={format.sectionOrder || []}
-          strategy={verticalListSortingStrategy}
-        >
-          <div className='space-y-1.5'>
-            {(format.sectionOrder || []).map((sectionType) => (
-              <SortableSectionItem
-                key={sectionType}
-                sectionType={sectionType}
-                isHidden={(format.hiddenSections || []).includes(sectionType)}
-                onToggleVisibility={toggleVisibility}
-              />
-            ))}
-          </div>
-        </SortableContext>
-        {typeof document !== 'undefined' &&
-          createPortal(
-            <DragOverlay dropAnimation={null}>
-              {activeSection ? (
-                <div
-                  className={cn(
-                    `
-                      flex w-[200px] items-center gap-2 rounded-lg border
-                      border-purple-300 bg-white px-3 py-2 text-sm shadow-lg
-                      dark:border-purple-600 dark:bg-slate-800
-                    `,
-                  )}
-                >
-                  <GripVertical className='h-3.5 w-3.5 text-slate-400' />
-                  <span className='flex-1 text-sm font-medium'>
-                    {SECTION_LABEL_KEYS[activeSection]}
-                  </span>
-                  {(format.hiddenSections || []).includes(activeSection) ? (
-                    <EyeOff className='h-3.5 w-3.5 text-slate-300' />
-                  ) : (
-                    <Eye className='h-3.5 w-3.5 text-slate-500' />
-                  )}
-                </div>
-              ) : null}
-            </DragOverlay>,
-            document.body,
-          )}
-      </DndContext>
     </div>
   );
 };
@@ -607,9 +362,6 @@ const TemplateFormat = () => {
                 unit='px'
                 onChange={(value) => updateFormat({ margin: value })}
               />
-
-              {/* Section Order */}
-              <SectionOrderPanel format={format} updateFormat={updateFormat} />
             </AccordionContent>
           </AccordionItem>
 
