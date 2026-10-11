@@ -25,6 +25,8 @@ export function DatePicker({
   placeholder = 'Pick a date',
   className,
 }: DatePickerProps) {
+  const validDate = date && !isNaN(date.getTime()) ? date : undefined;
+
   return (
     <Popover>
       <PopoverTrigger asChild>
@@ -43,17 +45,19 @@ export function DatePicker({
           )}
         >
           <CalendarIcon className='mr-2 h-4 w-4' />
-          {date && !isNaN(date.getTime()) ? (
-            format(date, 'PPP')
-          ) : (
-            <span>{placeholder}</span>
-          )}
+          {validDate ? format(validDate, 'PPP') : <span>{placeholder}</span>}
         </Button>
       </PopoverTrigger>
       <PopoverContent className='w-auto p-0' align='start'>
         <Calendar
           mode='single'
-          selected={date || undefined}
+          // Open on the picked date and allow jumping straight to a year,
+          // since resume dates are often years in the past
+          defaultMonth={validDate}
+          captionLayout='dropdown'
+          startMonth={new Date(1960, 0)}
+          endMonth={new Date(new Date().getFullYear() + 10, 11)}
+          selected={validDate}
           onSelect={setDate}
           autoFocus
         />

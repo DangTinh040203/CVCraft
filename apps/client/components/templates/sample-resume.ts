@@ -15,7 +15,12 @@ export const sampleResume: ResumeData = {
     { id: 'i1', label: 'Email', value: 'alexandra.chen@email.com', order: 0 },
     { id: 'i2', label: 'Phone', value: '+1 (555) 234-1187', order: 1 },
     { id: 'i3', label: 'Location', value: 'San Francisco, CA', order: 2 },
-    { id: 'i4', label: 'LinkedIn', value: 'linkedin.com/in/alexchen', order: 3 },
+    {
+      id: 'i4',
+      label: 'LinkedIn',
+      value: 'linkedin.com/in/alexchen',
+      order: 3,
+    },
     { id: 'i5', label: 'Portfolio', value: 'alexchen.design', order: 4 },
   ],
   educations: [
@@ -64,7 +69,7 @@ export const sampleResume: ResumeData = {
       company: 'Studio Loop',
       position: 'UX/UI Designer',
       description:
-        '• Delivered brand and product design for 12+ early-stage startup clients\n• Established the studio\'s first component library, cutting handoff time by 30%',
+        "• Delivered brand and product design for 12+ early-stage startup clients\n• Established the studio's first component library, cutting handoff time by 30%",
       startDate: '2016-06-01',
       endDate: '2018-06-01',
       order: 2,

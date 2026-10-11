@@ -44,9 +44,11 @@ function Badge({
   children: string;
 }) {
   return (
-    <h2 className={`
-      mb-2 flex items-center gap-2 text-[10.5pt] font-bold text-neutral-900
-    `}>
+    <h2
+      className={`
+        mb-2 flex items-center gap-2 text-[10.5pt] font-bold text-neutral-900
+      `}
+    >
       <span
         className={`
           flex size-6 items-center justify-center rounded-full text-white
@@ -86,157 +88,160 @@ export function Template10({ resume }: TemplateProps) {
   const languages = sortByOrder(resume.languages);
 
   return (
-    <div className={`
-      relative min-h-[297mm] w-[210mm] overflow-hidden bg-white p-[10mm]
-      text-[10pt] text-neutral-800
-    `}>
+    <div
+      className={`
+        relative min-h-[297mm] w-[210mm] overflow-hidden bg-white p-[10mm]
+        text-[10pt] text-neutral-800
+      `}
+    >
       <DotPattern />
 
       <header className='relative mb-5'>
         <h1 className='text-[21pt] font-bold text-neutral-900'>
           {resume.title}
         </h1>
-        <p className='mt-1 text-[10.5pt] text-neutral-500'>
-          {resume.subTitle}
-        </p>
+        <p className='mt-1 text-[10.5pt] text-neutral-500'>{resume.subTitle}</p>
       </header>
 
-      {(resume.information.length > 0) && (
-      <section className='relative mb-5 break-inside-avoid'>
-        <Badge icon={IdCard} color='#0891b2'>
-          Contact Information
-        </Badge>
-        <div className='grid grid-cols-2 gap-x-6'>
-          {information.map((info) => (
-            <TableRow key={info.id} label={info.label} value={info.value} />
-          ))}
-        </div>
-      </section>
-      )}
-
-      {(resume.overview) && (
-      <section className='relative mb-5 break-inside-avoid'>
-        <Badge icon={FileText} color='#059669'>
-          Overview
-        </Badge>
-        <p className='text-[9.5pt] leading-relaxed text-neutral-700'>
-          {resume.overview}
-        </p>
-      </section>
-      )}
-
-      {(resume.skills.length > 0) && (
-      <section className='relative mb-5 break-inside-avoid'>
-        <Badge icon={Layers} color='#2563eb'>
-          Skills
-        </Badge>
-        <div className='grid grid-cols-2 gap-x-6'>
-          {skills.map((skill) => (
-            <TableRow key={skill.id} label={skill.label} value={skill.value} />
-          ))}
-        </div>
-      </section>
-      )}
-
-      {(resume.educations.length > 0) && (
-      <section className='relative mb-5 break-inside-avoid'>
-        <Badge icon={GraduationCap} color='#d97706'>
-          Education
-        </Badge>
-        <div className='space-y-2'>
-          {educations.map((edu) => (
-            <div key={edu.id} className='flex gap-4 text-[9pt]'>
-              <span className='w-[28mm] shrink-0 text-neutral-500'>
-                {formatDateRange(edu.startDate, edu.endDate)}
-              </span>
-              <div>
-                <p className='font-semibold text-neutral-900'>
-                  {edu.school}
-                </p>
-                <p className='text-neutral-600'>
-                  {edu.degree}, {edu.major}
-                </p>
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
-      )}
-
-      {(resume.workExperiences.length > 0) && (
-      <section className='relative mb-5'>
-        <Badge icon={Briefcase} color='#7c3aed'>
-          Work Experience
-        </Badge>
-        <div className='space-y-4'>
-          {workExperiences.map((job) => (
-            <div key={job.id} className={`
-              flex break-inside-avoid gap-4 text-[9pt]
-            `}>
-              <span className='w-[28mm] shrink-0 text-neutral-500'>
-                {formatDateRange(job.startDate, job.endDate)}
-              </span>
-              <div>
-                <p className='font-semibold text-neutral-900'>
-                  {job.position} — {job.company}
-                </p>
-                <p className='mt-1 whitespace-pre-line text-neutral-700'>
-                  {job.description}
-                </p>
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
-      )}
-
-      {(resume.projects.length > 0) && (
-      <section className='relative mb-5'>
-        <Badge icon={FolderKanban} color='#e11d48'>
-          Projects
-        </Badge>
-        <div className='space-y-2.5'>
-          {projects.map((project) => (
-            <div key={project.id} className='break-inside-avoid text-[9pt]'>
-              <p className='font-semibold text-neutral-900'>
-                {project.title}
-              </p>
-              <p className='text-neutral-700'>{project.details}</p>
-            </div>
-          ))}
-        </div>
-      </section>
-      )}
-
-      <div className='relative grid grid-cols-2 gap-6'>
-        {(resume.certifications.length > 0) && (
-        <section className='break-inside-avoid'>
-          <Badge icon={Award} color='#4f46e5'>
-            Certifications
+      {resume.information.length > 0 && (
+        <section className='relative mb-5 break-inside-avoid'>
+          <Badge icon={IdCard} color='#0891b2'>
+            Contact Information
           </Badge>
-          <ul className='space-y-1 text-[9pt] text-neutral-700'>
-            {certifications.map((cert) => (
-              <li key={cert.id}>{cert.name}</li>
+          <div className='grid grid-cols-2 gap-x-6'>
+            {information.map((info) => (
+              <TableRow key={info.id} label={info.label} value={info.value} />
             ))}
-          </ul>
+          </div>
         </section>
+      )}
+
+      {resume.overview && (
+        <section className='relative mb-5 break-inside-avoid'>
+          <Badge icon={FileText} color='#059669'>
+            Overview
+          </Badge>
+          <p className='text-[9.5pt] leading-relaxed text-neutral-700'>
+            {resume.overview}
+          </p>
+        </section>
+      )}
+
+      {resume.skills.length > 0 && (
+        <section className='relative mb-5 break-inside-avoid'>
+          <Badge icon={Layers} color='#2563eb'>
+            Skills
+          </Badge>
+          <div className='grid grid-cols-2 gap-x-6'>
+            {skills.map((skill) => (
+              <TableRow
+                key={skill.id}
+                label={skill.label}
+                value={skill.value}
+              />
+            ))}
+          </div>
+        </section>
+      )}
+
+      {resume.educations.length > 0 && (
+        <section className='relative mb-5 break-inside-avoid'>
+          <Badge icon={GraduationCap} color='#d97706'>
+            Education
+          </Badge>
+          <div className='space-y-2'>
+            {educations.map((edu) => (
+              <div key={edu.id} className='flex gap-4 text-[9pt]'>
+                <span className='w-[28mm] shrink-0 text-neutral-500'>
+                  {formatDateRange(edu.startDate, edu.endDate)}
+                </span>
+                <div>
+                  <p className='font-semibold text-neutral-900'>{edu.school}</p>
+                  <p className='text-neutral-600'>
+                    {edu.degree}, {edu.major}
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
+
+      <div className='relative mb-5 grid grid-cols-2 gap-6'>
+        {resume.certifications.length > 0 && (
+          <section className='break-inside-avoid'>
+            <Badge icon={Award} color='#4f46e5'>
+              Certifications
+            </Badge>
+            <ul className='space-y-1 text-[9pt] text-neutral-700'>
+              {certifications.map((cert) => (
+                <li key={cert.id}>{cert.name}</li>
+              ))}
+            </ul>
+          </section>
         )}
 
-        {(resume.languages.length > 0) && (
-        <section className='break-inside-avoid'>
-          <Badge icon={LanguagesIcon} color='#0d9488'>
-            Languages
-          </Badge>
-          <ul className='space-y-1 text-[9pt] text-neutral-700'>
-            {languages.map((lang) => (
-              <li key={lang.id}>
-                {lang.name} — {lang.description}
-              </li>
-            ))}
-          </ul>
-        </section>
+        {resume.languages.length > 0 && (
+          <section className='break-inside-avoid'>
+            <Badge icon={LanguagesIcon} color='#0d9488'>
+              Languages
+            </Badge>
+            <ul className='space-y-1 text-[9pt] text-neutral-700'>
+              {languages.map((lang) => (
+                <li key={lang.id}>
+                  {lang.name} — {lang.description}
+                </li>
+              ))}
+            </ul>
+          </section>
         )}
       </div>
+
+      {resume.workExperiences.length > 0 && (
+        <section className='relative mb-5'>
+          <Badge icon={Briefcase} color='#7c3aed'>
+            Work Experience
+          </Badge>
+          <div className='space-y-4'>
+            {workExperiences.map((job) => (
+              <div
+                key={job.id}
+                className={`flex break-inside-avoid gap-4 text-[9pt]`}
+              >
+                <span className='w-[28mm] shrink-0 text-neutral-500'>
+                  {formatDateRange(job.startDate, job.endDate)}
+                </span>
+                <div>
+                  <p className='font-semibold text-neutral-900'>
+                    {job.position} — {job.company}
+                  </p>
+                  <p className='mt-1 whitespace-pre-line text-neutral-700'>
+                    {job.description}
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {resume.projects.length > 0 && (
+        <section className='relative mb-5'>
+          <Badge icon={FolderKanban} color='#e11d48'>
+            Projects
+          </Badge>
+          <div className='space-y-2.5'>
+            {projects.map((project) => (
+              <div key={project.id} className='break-inside-avoid text-[9pt]'>
+                <p className='font-semibold text-neutral-900'>
+                  {project.title}
+                </p>
+                <p className='text-neutral-700'>{project.details}</p>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
     </div>
   );
 }

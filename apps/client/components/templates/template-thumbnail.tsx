@@ -1,6 +1,6 @@
 'use client';
 
-import { type ReactNode,useEffect, useRef, useState } from 'react';
+import { type ReactNode, useEffect, useRef, useState } from 'react';
 
 // A4 at 96dpi (1mm = 96/25.4px) — matches the `w-[210mm]` root every
 // template renders at, per the @page rule convention in

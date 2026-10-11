@@ -106,8 +106,8 @@ function SectionTitle({
   return (
     <h2
       className={`
-        mb-3 flex items-center gap-2 border-b border-neutral-300 pb-1
-        text-[11pt] font-bold
+        mb-3 flex items-center gap-2 border-b border-neutral-300 pb-1 font-bold
+        text-(length:--resume-section-title-size,11pt)
       `}
       style={{ color: ACCENT }}
     >
@@ -140,6 +140,29 @@ function toBullets(text: string) {
     .filter(Boolean);
 }
 
+type TextBlock =
+  { type: 'text'; text: string } | { type: 'list'; items: string[] };
+
+// Splits multi-line text into paragraphs and bullet lists, so "• item" lines
+// from the editor render as a real list like the work experience bullets.
+function toTextBlocks(text: string): TextBlock[] {
+  const blocks: TextBlock[] = [];
+  for (const raw of text.split('\n')) {
+    const line = raw.trim();
+    if (!line) continue;
+    const bullet = /^[•\-*]\s*/.exec(line);
+    if (!bullet) {
+      blocks.push({ type: 'text', text: line });
+      continue;
+    }
+    const item = line.slice(bullet[0].length);
+    const last = blocks.at(-1);
+    if (last?.type === 'list') last.items.push(item);
+    else blocks.push({ type: 'list', items: [item] });
+  }
+  return blocks;
+}
+
 /**
  * Template 13 — "Green Network"
  * Green accent name and section headers, label/value contact grid next to a
@@ -158,26 +181,37 @@ export function Template13({ resume }: TemplateProps) {
   return (
     <div
       className={`
-        relative min-h-[297mm] w-[210mm] overflow-hidden bg-white p-[10mm]
-        text-[9.5pt] leading-relaxed text-neutral-800
+        relative min-h-[297mm] w-[210mm] overflow-hidden bg-white
+        p-(--resume-margin,10mm) leading-(--resume-line-height,1.625)
+        text-neutral-800
+        text-(length:--resume-font-size,9.5pt)
       `}
     >
       <NetworkPattern className='top-0 right-[40mm] h-[45mm] w-[45mm]' />
       <NetworkPattern className='right-0 bottom-0 h-[70mm] w-[65mm]' />
 
       <div className='relative'>
-        <header className='mb-5 flex items-start justify-between gap-6'>
+        <header className={`
+          mb-(--resume-section-spacing,1.25rem) flex items-start justify-between
+          gap-6
+        `}>
           <div className='flex-1'>
             <h1
-              className='text-[24pt] leading-tight font-bold'
+              className={`
+                text-(length:--resume-title-size,24pt)
+                leading-tight font-bold
+              `}
               style={{ color: ACCENT }}
             >
               {resume.title}
             </h1>
-            <p className='mb-4 text-[10.5pt] text-neutral-700'>
+            <p className={`
+              mb-4 text-neutral-700
+              text-(length:--resume-subtitle-size,10.5pt)
+            `}>
               {resume.subTitle}
             </p>
-            <dl className='grid grid-cols-2 gap-x-6 gap-y-1.5 text-[8.5pt]'>
+            <dl className='grid grid-cols-2 gap-x-6 gap-y-1.5 text-[0.9em]'>
               {information.map((info) => (
                 <div key={info.id} className='flex gap-3'>
                   <dt className='w-[16mm] shrink-0 font-bold text-neutral-900'>
@@ -191,16 +225,28 @@ export function Template13({ resume }: TemplateProps) {
         </header>
 
         {resume.overview && (
-          <section className='mb-5'>
+          <section className='mb-(--resume-section-spacing,1.25rem)'>
             <SectionTitle icon={ScanFace}>Overview</SectionTitle>
-            <p className='whitespace-pre-line text-neutral-700'>
-              {resume.overview}
-            </p>
+            <div className='space-y-0.5 text-neutral-700'>
+              {toTextBlocks(resume.overview).map((block, i) =>
+                block.type === 'list' ? (
+                  <ul key={i} className='list-disc pl-5'>
+                    {block.items.map((item) => (
+                      <li key={item}>{item}</li>
+                    ))}
+                  </ul>
+                ) : (
+                  <p key={i}>{block.text}</p>
+                ),
+              )}
+            </div>
           </section>
         )}
 
         {resume.skills.length > 0 && (
-          <section className='mb-5 break-inside-avoid'>
+          <section className={`
+            mb-(--resume-section-spacing,1.25rem) break-inside-avoid
+          `}>
             <SectionTitle icon={Layers}>Skills</SectionTitle>
             <ul className='space-y-0.5 text-neutral-700'>
               {skills.map((skill) => (
@@ -214,7 +260,7 @@ export function Template13({ resume }: TemplateProps) {
         )}
 
         {resume.educations.length > 0 && (
-          <section className='mb-5'>
+          <section className='mb-(--resume-section-spacing,1.25rem)'>
             <SectionTitle icon={GraduationCap}>Education</SectionTitle>
             <div className='space-y-3'>
               {educations.map((edu) => (
@@ -237,7 +283,9 @@ export function Template13({ resume }: TemplateProps) {
         )}
 
         {resume.certifications.length > 0 && (
-          <section className='mb-5 break-inside-avoid'>
+          <section className={`
+            mb-(--resume-section-spacing,1.25rem) break-inside-avoid
+          `}>
             <SectionTitle icon={Award}>Certifications</SectionTitle>
             <ul className='space-y-0.5 text-neutral-700'>
               {certifications.map((cert) => (
@@ -251,7 +299,9 @@ export function Template13({ resume }: TemplateProps) {
         )}
 
         {resume.languages.length > 0 && (
-          <section className='mb-5 break-inside-avoid'>
+          <section className={`
+            mb-(--resume-section-spacing,1.25rem) break-inside-avoid
+          `}>
             <SectionTitle icon={LanguagesIcon}>Languages</SectionTitle>
             <ul className='space-y-0.5 text-neutral-700'>
               {languages.map((lang) => (
@@ -265,7 +315,7 @@ export function Template13({ resume }: TemplateProps) {
         )}
 
         {resume.workExperiences.length > 0 && (
-          <section className='mb-5'>
+          <section className='mb-(--resume-section-spacing,1.25rem)'>
             <SectionTitle icon={Briefcase}>Work experience</SectionTitle>
             <div className='space-y-3'>
               {workExperiences.map((job) => (
@@ -291,7 +341,7 @@ export function Template13({ resume }: TemplateProps) {
         )}
 
         {resume.projects.length > 0 && (
-          <section className='mb-5'>
+          <section className='mb-(--resume-section-spacing,1.25rem)'>
             <SectionTitle icon={FolderKanban}>Projects</SectionTitle>
             <div className='space-y-3'>
               {projects.map((project) => (

@@ -24,6 +24,7 @@ import {
   Home,
   LogOut,
   Menu,
+  PenSquare,
   User,
   X,
 } from 'lucide-react';
@@ -35,6 +36,9 @@ const navLinks = [
   { href: '/', label: 'Home', icon: Home },
   { href: '/templates', label: 'Templates', icon: FileText },
 ];
+
+// Only shown while the user is in the builder
+const builderLink = { href: '/builder', label: 'Builder', icon: PenSquare };
 
 const headerVariants = {
   hidden: { y: -100, opacity: 0 },
@@ -107,6 +111,10 @@ const Header = () => {
 
   const isActive = (path: string) => pathname === path;
 
+  const visibleLinks = pathname.startsWith('/builder')
+    ? [...navLinks, builderLink]
+    : navLinks;
+
   return (
     <m.nav
       className={cn(
@@ -158,7 +166,7 @@ const Header = () => {
               md:flex
             `}
           >
-            {navLinks.map((link, i) => (
+            {visibleLinks.map((link, i) => (
               <m.div
                 key={link.href}
                 custom={i}
@@ -205,7 +213,7 @@ const Header = () => {
               <>
                 <SignedIn>
                   <m.div
-                    custom={navLinks.length}
+                    custom={visibleLinks.length}
                     variants={navItemVariants}
                     initial='hidden'
                     animate='visible'
@@ -255,7 +263,7 @@ const Header = () => {
 
                 <SignedOut>
                   <m.div
-                    custom={navLinks.length}
+                    custom={visibleLinks.length}
                     variants={navItemVariants}
                     initial='hidden'
                     animate='visible'
@@ -275,7 +283,7 @@ const Header = () => {
                   </m.div>
 
                   <m.div
-                    custom={navLinks.length + 1}
+                    custom={visibleLinks.length + 1}
                     variants={navItemVariants}
                     initial='hidden'
                     animate='visible'
@@ -355,7 +363,7 @@ const Header = () => {
               exit='exit'
             >
               <div className='flex flex-col gap-1 pt-4 pb-2'>
-                {navLinks.map((link, i) => (
+                {visibleLinks.map((link, i) => (
                   <m.div
                     key={link.href}
                     custom={i}
@@ -378,7 +386,7 @@ const Header = () => {
                   </m.div>
                 ))}
                 <m.div
-                  custom={navLinks.length}
+                  custom={visibleLinks.length}
                   variants={mobileItemVariants}
                   initial='hidden'
                   animate='visible'

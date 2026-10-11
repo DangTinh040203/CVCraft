@@ -5,26 +5,54 @@ import { type ResumeData } from '@/components/templates/resume.types';
 import { getFontFamily, resumeFontVariables } from '@/configs/font.config';
 import {
   defaultFormat,
+  type FontWeight,
   type Format,
   TEMPLATE_DEFAULT,
 } from '@/stores/features/template.slice';
 
 // How much of the accent each palette step keeps (rest is white below 500,
 // black above it), so a single picked color yields a full Tailwind scale.
-const SHADES: Array<[step: number, mixWith: 'white' | 'black', pct: number]> =
-  [
-    [50, 'white', 10],
-    [100, 'white', 20],
-    [200, 'white', 35],
-    [300, 'white', 55],
-    [400, 'white', 78],
-    [500, 'white', 100],
-    [600, 'black', 100],
-    [700, 'black', 82],
-    [800, 'black', 66],
-    [900, 'black', 52],
-    [950, 'black', 38],
-  ];
+const SHADES: Array<[step: number, mixWith: 'white' | 'black', pct: number]> = [
+  [50, 'white', 10],
+  [100, 'white', 20],
+  [200, 'white', 35],
+  [300, 'white', 55],
+  [400, 'white', 78],
+  [500, 'white', 100],
+  [600, 'black', 100],
+  [700, 'black', 82],
+  [800, 'black', 66],
+  [900, 'black', 52],
+  [950, 'black', 38],
+];
+
+type NumericFormatKey =
+  | 'fontSize'
+  | 'titleSize'
+  | 'sectionTitleSize'
+  | 'subTitleSize'
+  | 'lineHeight'
+  | 'sectionSpacing'
+  | 'margin';
+
+const FORMAT_VARS: Array<
+  [key: NumericFormatKey, cssVar: string, unit: string]
+> = [
+  ['fontSize', '--resume-font-size', 'px'],
+  ['titleSize', '--resume-title-size', 'px'],
+  ['sectionTitleSize', '--resume-section-title-size', 'px'],
+  ['subTitleSize', '--resume-subtitle-size', 'px'],
+  ['lineHeight', '--resume-line-height', ''],
+  ['sectionSpacing', '--resume-section-spacing', 'px'],
+  ['margin', '--resume-margin', 'px'],
+];
+
+const FONT_WEIGHTS: Record<FontWeight, string> = {
+  normal: '400',
+  medium: '500',
+  semibold: '600',
+  bold: '700',
+};
 
 function formatStyle(
   format: Partial<Format>,
@@ -41,6 +69,24 @@ function formatStyle(
     style['--font-serif'] = fontFamily;
   }
 
+  // Each slider only kicks in once it moves off its default, so an untouched
+  // panel keeps the template's own sizes. Templates read these as
+  // `var(--resume-*, <own value>)`.
+  for (const [key, cssVar, unit] of FORMAT_VARS) {
+    const value = format[key];
+    if (value !== undefined && value !== defaultFormat[key]) {
+      style[cssVar] = `${value}${unit}`;
+    }
+  }
+
+  // These inherit, so they work in every template without markup changes
+  if (format.letterSpacing !== undefined && format.letterSpacing !== 0) {
+    style.letterSpacing = `${format.letterSpacing}px`;
+  }
+  if (format.fontWeight && format.fontWeight !== defaultFormat.fontWeight) {
+    style.fontWeight = FONT_WEIGHTS[format.fontWeight];
+  }
+
   const color = format.color;
   if (color && color !== TEMPLATE_DEFAULT) {
     style['--resume-accent'] = color;
@@ -49,7 +95,9 @@ function formatStyle(
     if (accentPalette) {
       for (const [step, mixWith, pct] of SHADES) {
         style[`--color-${accentPalette}-${step}`] =
-          pct === 100 ? color : `color-mix(in oklab, ${color} ${pct}%, ${mixWith})`;
+          pct === 100
+            ? color
+            : `color-mix(in oklab, ${color} ${pct}%, ${mixWith})`;
       }
     }
   }

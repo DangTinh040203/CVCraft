@@ -89,85 +89,88 @@ export function Template09({ resume }: TemplateProps) {
           </p>
         </header>
 
-        {(resume.overview) && (
-        <section className='mb-5 break-inside-avoid'>
-          <h2
-            className={`
-              mb-1.5 flex items-center gap-2 text-[10pt] font-bold
-              text-neutral-900
-            `}
-          >
-            <User className='size-3.5 text-rose-700' />
-            Professional Summary
-          </h2>
-          <p className='text-[9.5pt] leading-relaxed text-neutral-700'>
-            {resume.overview}
-          </p>
-        </section>
+        {resume.overview && (
+          <section className='mb-5 break-inside-avoid'>
+            <h2
+              className={`
+                mb-1.5 flex items-center gap-2 text-[10pt] font-bold
+                text-neutral-900
+              `}
+            >
+              <User className='size-3.5 text-rose-700' />
+              Professional Summary
+            </h2>
+            <p className='text-[9.5pt] leading-relaxed text-neutral-700'>
+              {resume.overview}
+            </p>
+          </section>
         )}
 
-        {(resume.workExperiences.length > 0) && (
-        <section className='mb-5'>
-          <h2
-            className={`
-              mb-2 flex items-center gap-2 text-[10pt] font-bold
-              text-neutral-900
-            `}
-          >
-            <Briefcase className='size-3.5 text-rose-700' />
-            Work Experience
-          </h2>
-          <div className='space-y-4'>
-            {workExperiences.map((job) => (
-              <div key={job.id} className='break-inside-avoid'>
-                <div className='flex items-baseline justify-between'>
-                  <h3 className='text-[10pt] font-semibold text-neutral-900'>
-                    {job.position}
+        {resume.educations.length > 0 && (
+          <section className='mb-5 break-inside-avoid'>
+            <h2
+              className={`
+                mb-2 flex items-center gap-2 text-[10pt] font-bold
+                text-neutral-900
+              `}
+            >
+              <GraduationCap className='size-3.5 text-rose-700' />
+              Education
+            </h2>
+            <div className='space-y-2'>
+              {educations.map((edu) => (
+                <div
+                  key={edu.id}
+                  className='flex items-baseline justify-between'
+                >
+                  <h3 className='text-[9.5pt] font-semibold text-neutral-900'>
+                    {edu.degree}, {edu.major} — {edu.school}
                   </h3>
                   <span className='text-[8.5pt] text-neutral-500'>
-                    {formatDateRange(job.startDate, job.endDate)}
+                    {formatDateRange(edu.startDate, edu.endDate)}
                   </span>
                 </div>
-                <p className='text-[9pt] font-medium text-neutral-500'>
-                  {job.company}
-                </p>
-                <p
-                  className={`
-                    mt-1 text-[9pt] whitespace-pre-line text-neutral-700
-                  `}
-                >
-                  {job.description}
-                </p>
-              </div>
-            ))}
-          </div>
-        </section>
+              ))}
+            </div>
+          </section>
         )}
 
-        {(resume.educations.length > 0) && (
-        <section className='break-inside-avoid'>
-          <h2
-            className={`
-              mb-2 flex items-center gap-2 text-[10pt] font-bold
-              text-neutral-900
-            `}
-          >
-            <GraduationCap className='size-3.5 text-rose-700' />
-            Education
-          </h2>
-          <div className='space-y-2'>
-            {educations.map((edu) => (
-              <div key={edu.id} className='flex items-baseline justify-between'>
-                <h3 className='text-[9.5pt] font-semibold text-neutral-900'>
-                  {edu.degree}, {edu.major} — {edu.school}
-                </h3>
-                <span className='text-[8.5pt] text-neutral-500'>
-                  {formatDateRange(edu.startDate, edu.endDate)}
-                </span>
-              </div>
-            ))}
-          </div>
-        </section>
+        {resume.workExperiences.length > 0 && (
+          <section className='mb-5'>
+            <h2
+              className={`
+                mb-2 flex items-center gap-2 text-[10pt] font-bold
+                text-neutral-900
+              `}
+            >
+              <Briefcase className='size-3.5 text-rose-700' />
+              Work Experience
+            </h2>
+            <div className='space-y-4'>
+              {workExperiences.map((job) => (
+                <div key={job.id} className='break-inside-avoid'>
+                  <div className='flex items-baseline justify-between'>
+                    <h3 className='text-[10pt] font-semibold text-neutral-900'>
+                      {job.position}
+                    </h3>
+                    <span className='text-[8.5pt] text-neutral-500'>
+                      {formatDateRange(job.startDate, job.endDate)}
+                    </span>
+                  </div>
+                  <p className='text-[9pt] font-medium text-neutral-500'>
+                    {job.company}
+                  </p>
+                  <p
+                    className={`
+                      mt-1 text-[9pt] whitespace-pre-line text-neutral-700
+                    `}
+                  >
+                    {job.description}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </section>
         )}
       </main>
 
@@ -189,89 +192,89 @@ export function Template09({ resume }: TemplateProps) {
           </div>
         )}
 
-        {(resume.information.length > 0) && (
-        <div className='mb-6 break-inside-avoid'>
-          <h2
-            className={`
-              mb-2 text-[8.5pt] font-bold tracking-[0.15em] text-rose-200
-              uppercase
-            `}
-          >
-            Contact
-          </h2>
-          <ul className='space-y-1.5 text-[8pt] text-rose-100'>
-            {information.map((info) => (
-              <li key={info.id}>{info.value}</li>
-            ))}
-          </ul>
-        </div>
-        )}
-
-        {(resume.skills.length > 0) && (
-        <div className='mb-6 break-inside-avoid'>
-          <h2
-            className={`
-              mb-2 flex items-center gap-1.5 text-[8.5pt] font-bold
-              tracking-[0.15em] text-rose-200 uppercase
-            `}
-          >
-            <Sparkles className='size-3' />
-            Skills
-          </h2>
-          <div className='flex flex-wrap gap-1.5'>
-            {skills.map((skill) => (
-              <span
-                key={skill.id}
-                className={`
-                  rounded-full bg-white/10 px-2.5 py-1 text-[7.5pt] text-white
-                `}
-              >
-                {skill.label}
-              </span>
-            ))}
+        {resume.information.length > 0 && (
+          <div className='mb-6 break-inside-avoid'>
+            <h2
+              className={`
+                mb-2 text-[8.5pt] font-bold tracking-[0.15em] text-rose-200
+                uppercase
+              `}
+            >
+              Contact
+            </h2>
+            <ul className='space-y-1.5 text-[8pt] text-rose-100'>
+              {information.map((info) => (
+                <li key={info.id}>{info.value}</li>
+              ))}
+            </ul>
           </div>
-        </div>
         )}
 
-        {(resume.certifications.length > 0) && (
-        <div className='mb-6 break-inside-avoid'>
-          <h2
-            className={`
-              mb-2 text-[8.5pt] font-bold tracking-[0.15em] text-rose-200
-              uppercase
-            `}
-          >
-            Certifications
-          </h2>
-          <ul className='space-y-1 text-[8pt] text-rose-100'>
-            {certifications.map((cert) => (
-              <li key={cert.id}>{cert.name}</li>
-            ))}
-          </ul>
-        </div>
-        )}
-
-        {(resume.languages.length > 0) && (
-        <div className='break-inside-avoid'>
-          <h2
-            className={`
-              mb-4 flex items-center gap-1.5 text-[8.5pt] font-bold
-              tracking-[0.15em] text-rose-200 uppercase
-            `}
-          >
-            <Languages className='size-3' />
-            Languages
-          </h2>
-          <div className='flex flex-wrap justify-center gap-3'>
-            {languages.map((lang) => (
-              <LanguageRing
-                key={lang.id}
-                name={lang.name}
-                level={lang.description}
-              />
-            ))}
+        {resume.skills.length > 0 && (
+          <div className='mb-6 break-inside-avoid'>
+            <h2
+              className={`
+                mb-2 flex items-center gap-1.5 text-[8.5pt] font-bold
+                tracking-[0.15em] text-rose-200 uppercase
+              `}
+            >
+              <Sparkles className='size-3' />
+              Skills
+            </h2>
+            <div className='flex flex-wrap gap-1.5'>
+              {skills.map((skill) => (
+                <span
+                  key={skill.id}
+                  className={`
+                    rounded-full bg-white/10 px-2.5 py-1 text-[7.5pt] text-white
+                  `}
+                >
+                  {skill.label}
+                </span>
+              ))}
+            </div>
           </div>
-        </div>
+        )}
+
+        {resume.certifications.length > 0 && (
+          <div className='mb-6 break-inside-avoid'>
+            <h2
+              className={`
+                mb-2 text-[8.5pt] font-bold tracking-[0.15em] text-rose-200
+                uppercase
+              `}
+            >
+              Certifications
+            </h2>
+            <ul className='space-y-1 text-[8pt] text-rose-100'>
+              {certifications.map((cert) => (
+                <li key={cert.id}>{cert.name}</li>
+              ))}
+            </ul>
+          </div>
+        )}
+
+        {resume.languages.length > 0 && (
+          <div className='break-inside-avoid'>
+            <h2
+              className={`
+                mb-4 flex items-center gap-1.5 text-[8.5pt] font-bold
+                tracking-[0.15em] text-rose-200 uppercase
+              `}
+            >
+              <Languages className='size-3' />
+              Languages
+            </h2>
+            <div className='flex flex-wrap justify-center gap-3'>
+              {languages.map((lang) => (
+                <LanguageRing
+                  key={lang.id}
+                  name={lang.name}
+                  level={lang.description}
+                />
+              ))}
+            </div>
+          </div>
         )}
       </aside>
     </div>

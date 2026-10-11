@@ -148,13 +148,9 @@ function Calendar({
         ),
         range_middle: cn('rounded-none', defaultClassNames.range_middle),
         range_end: cn('bg-accent rounded-r-md', defaultClassNames.range_end),
-        today: cn(
-          `
-            bg-accent text-accent-foreground rounded-md
-            data-[selected=true]:rounded-none
-          `,
-          defaultClassNames.today,
-        ),
+        // Marked on the day button instead, so the cell and the button don't
+        // paint two overlapping backgrounds
+        today: defaultClassNames.today,
         outside: cn(
           `
             text-muted-foreground
@@ -247,13 +243,19 @@ function CalendarDayButton({
         !modifiers.range_end &&
         !modifiers.range_middle
       }
+      data-today={modifiers.today}
       data-range-start={modifiers.range_start}
       data-range-end={modifiers.range_end}
       data-range-middle={modifiers.range_middle}
       className={cn(
         `
+          hover:bg-primary/10 hover:text-primary hover:scale-100
+          hover:shadow-none
+          data-[today=true]:text-primary data-[today=true]:font-semibold
           data-[selected-single=true]:bg-primary
           data-[selected-single=true]:text-primary-foreground
+          data-[selected-single=true]:hover:bg-primary
+          data-[selected-single=true]:hover:text-primary-foreground
           data-[range-middle=true]:bg-accent
           data-[range-middle=true]:text-accent-foreground
           data-[range-middle=true]:rounded-none
@@ -265,13 +267,13 @@ function CalendarDayButton({
           data-[range-end=true]:text-primary-foreground
           data-[range-end=true]:rounded-md data-[range-end=true]:rounded-r-md
           group-data-[focused=true]/day:border-ring
-          group-data-[focused=true]/day:ring-ring/50
+          group-data-[focused=true]/day:ring-primary/30
           group-data-[focused=true]/day:relative
           group-data-[focused=true]/day:z-10
           group-data-[focused=true]/day:ring-[3px]
           dark:hover:text-accent-foreground
           flex aspect-square size-auto w-full min-w-(--cell-size) flex-col gap-1
-          leading-none font-normal
+          rounded-md leading-none font-normal
           [&>span]:text-xs [&>span]:opacity-70
         `,
         defaultClassNames.day,

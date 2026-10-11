@@ -96,9 +96,9 @@ export function TemplateCard({ templateKey }: { templateKey: string }) {
       </div>
 
       <Dialog open={previewOpen} onOpenChange={setPreviewOpen} modal>
-        <DialogContent className={`
-          max-h-[90vh] max-w-2xl scrollbar-none overflow-y-auto p-0
-        `}>
+        <DialogContent
+          className={`max-h-[90vh] max-w-2xl scrollbar-none overflow-y-auto p-0`}
+        >
           <DialogTitle className='sr-only'>{template.name} preview</DialogTitle>
           <div className='bg-neutral-100 p-6'>
             <div className='mx-auto max-w-[480px] shadow-xl'>

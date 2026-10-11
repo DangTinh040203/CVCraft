@@ -129,7 +129,8 @@ export const TEMPLATES: TemplateMeta[] = [
     key: 'template-11',
     slug: 'framed-centered-11',
     name: 'Framed Centered',
-    description: 'Dotted frame around the page, centered header, plain headings.',
+    description:
+      'Dotted frame around the page, centered header, plain headings.',
     isPremium: false,
     component: Template11,
   },
