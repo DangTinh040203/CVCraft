@@ -5,6 +5,7 @@ import {
   type ResumeData,
   sortByOrder,
 } from '@/components/templates/resume.types';
+import { RichText } from '@/components/templates/rich-text';
 
 interface TemplateProps {
   resume: ResumeData;
@@ -67,17 +68,18 @@ export function Template08({ resume }: TemplateProps) {
             >
               Profile
             </h2>
-            <p className='text-[9.5pt] leading-relaxed text-neutral-700'>
-              {resume.overview}
-            </p>
+            <RichText
+              value={resume.overview}
+              className='text-[9.5pt] leading-relaxed text-neutral-700'
+            />
           </section>
         )}
 
         {resume.workExperiences.length > 0 && (
           <section className='mb-5'>
-            <h2 className={`
-              mb-2 text-[10pt] font-bold text-neutral-900 uppercase
-            `}>
+            <h2
+              className={`mb-2 text-[10pt] font-bold text-neutral-900 uppercase`}
+            >
               Employment History
             </h2>
             <div className='space-y-4'>
@@ -91,13 +93,10 @@ export function Template08({ resume }: TemplateProps) {
                       {formatDateRange(job.startDate, job.endDate)}
                     </span>
                   </div>
-                  <p
-                    className={`
-                      mt-1 text-[9pt] whitespace-pre-line text-neutral-700
-                    `}
-                  >
-                    {job.description}
-                  </p>
+                  <RichText
+                    value={job.description}
+                    className={`mt-1 text-[9pt] text-neutral-700`}
+                  />
                 </div>
               ))}
             </div>
@@ -106,9 +105,9 @@ export function Template08({ resume }: TemplateProps) {
 
         {resume.projects.length > 0 && (
           <section className='break-inside-avoid'>
-            <h2 className={`
-              mb-2 text-[10pt] font-bold text-neutral-900 uppercase
-            `}>
+            <h2
+              className={`mb-2 text-[10pt] font-bold text-neutral-900 uppercase`}
+            >
               Projects
             </h2>
             <div className='space-y-2.5'>
@@ -117,9 +116,10 @@ export function Template08({ resume }: TemplateProps) {
                   <h3 className='text-[9.5pt] font-semibold text-neutral-900'>
                     {project.title}
                   </h3>
-                  <p className='text-[9pt] text-neutral-700'>
-                    {project.details}
-                  </p>
+                  <RichText
+                    value={project.details}
+                    className='text-[9pt] text-neutral-700'
+                  />
                 </div>
               ))}
             </div>

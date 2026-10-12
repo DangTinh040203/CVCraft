@@ -4,12 +4,24 @@ import 'react-quill-new/dist/quill.snow.css';
 
 import { cn } from '@repo/ui/lib/utils';
 import dynamic from 'next/dynamic';
-import { useCallback, useMemo } from 'react';
-import type { QuillOptionsStatic } from 'react-quill-new';
+import { type QuillOptionsStatic } from 'react-quill-new';
 
 const ReactQuill = dynamic(() => import('react-quill-new'), {
   ssr: false,
 });
+
+// Module-level so they keep their identity: react-quill rebuilds the whole
+// editor whenever `modules` or `formats` change.
+const MODULES: QuillOptionsStatic['modules'] = {
+  toolbar: [
+    ['bold', 'italic', 'underline'],
+    [{ list: 'ordered' }, { list: 'bullet' }],
+    ['link'],
+    [{ color: [] }],
+  ],
+};
+
+const FORMATS = ['bold', 'italic', 'underline', 'list', 'link', 'color'];
 
 interface EditorProps {
   value: string;
@@ -27,30 +39,6 @@ const Editor = ({
   placeholder,
   className,
 }: EditorProps) => {
-  const modules = useMemo<QuillOptionsStatic['modules']>(
-    () => ({
-      toolbar: [
-        ['bold', 'italic', 'underline'],
-        [{ list: 'ordered' }, { list: 'bullet' }],
-        ['link'],
-        [{ color: [] }],
-      ],
-    }),
-    [],
-  );
-
-  const formats = useMemo<string[]>(
-    () => ['bold', 'italic', 'underline', 'list', 'link', 'color'],
-    [],
-  );
-
-  const handleChange = useCallback(
-    (content: string) => {
-      onChange(content);
-    },
-    [onChange],
-  );
-
   return (
     <div
       onBlur={onBlur}
@@ -73,9 +61,10 @@ const Editor = ({
       <ReactQuill
         theme='snow'
         value={value}
-        onChange={handleChange}
-        modules={modules}
-        formats={formats}
+        onChange={onChange}
+        modules={MODULES}
+        formats={FORMATS}
+        useSemanticHTML={false}
         placeholder={placeholder || 'Write something...'}
       />
     </div>

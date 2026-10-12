@@ -19,7 +19,7 @@ export interface WorkExperienceItem {
   id: string;
   company: string;
   position: string;
-  description: string; // multi-line, bullet-style ("• ..." per line)
+  description: string; // rich text: editor HTML, or plain lines ("• ..." = bullet)
   startDate: string;
   endDate: string | null; // null = "Present"
   order: number;
@@ -29,10 +29,10 @@ export interface ProjectItem {
   id: string;
   title: string;
   subTitle: string;
-  details: string;
+  details: string; // rich text, see description
   technologies: string;
   position: string;
-  responsibilities: string;
+  responsibilities: string; // rich text, see description
   domain: string;
   demo?: string;
   order: number;
@@ -63,7 +63,7 @@ export interface LanguageItem {
 export interface ResumeData {
   title: string; // full name
   subTitle: string; // headline / target role
-  overview: string; // professional summary
+  overview: string; // professional summary, rich text
   avatar?: string;
   information: ResumeInformationItem[];
   educations: EducationItem[];

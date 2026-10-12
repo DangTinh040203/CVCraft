@@ -3,6 +3,7 @@ import {
   type ResumeData,
   sortByOrder,
 } from '@/components/templates/resume.types';
+import { RichText } from '@/components/templates/rich-text';
 
 interface TemplateProps {
   resume: ResumeData;
@@ -50,7 +51,10 @@ export function Template01({ resume }: TemplateProps) {
 
       {resume.overview && (
         <section className='mb-5'>
-          <p className='text-[10pt] text-neutral-700'>{resume.overview}</p>
+          <RichText
+            value={resume.overview}
+            className='text-[10pt] text-neutral-700'
+          />
         </section>
       )}
 
@@ -170,13 +174,10 @@ export function Template01({ resume }: TemplateProps) {
                     {formatDateRange(job.startDate, job.endDate)}
                   </span>
                 </div>
-                <p
-                  className={`
-                    mt-1 text-[9.5pt] whitespace-pre-line text-neutral-700
-                  `}
-                >
-                  {job.description}
-                </p>
+                <RichText
+                  value={job.description}
+                  className={`mt-1 text-[9.5pt] text-neutral-700`}
+                />
               </div>
             ))}
           </div>
@@ -202,9 +203,10 @@ export function Template01({ resume }: TemplateProps) {
                     — {project.subTitle}
                   </span>
                 </h3>
-                <p className='text-[9.5pt] text-neutral-700'>
-                  {project.details}
-                </p>
+                <RichText
+                  value={project.details}
+                  className='text-[9.5pt] text-neutral-700'
+                />
               </div>
             ))}
           </div>

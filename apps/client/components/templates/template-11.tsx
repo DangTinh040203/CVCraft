@@ -3,6 +3,7 @@ import {
   type ResumeData,
   sortByOrder,
 } from '@/components/templates/resume.types';
+import { RichText } from '@/components/templates/rich-text';
 
 interface TemplateProps {
   resume: ResumeData;
@@ -77,9 +78,10 @@ export function Template11({ resume }: TemplateProps) {
         {resume.overview && (
           <section className='mb-5 break-inside-avoid'>
             <PlainHeading>Overview</PlainHeading>
-            <p className='text-[9.5pt] leading-relaxed text-neutral-700'>
-              {resume.overview}
-            </p>
+            <RichText
+              value={resume.overview}
+              className='text-[9.5pt] leading-relaxed text-neutral-700'
+            />
           </section>
         )}
 
@@ -147,17 +149,10 @@ export function Template11({ resume }: TemplateProps) {
                     <p className='text-[9.5pt] font-semibold text-neutral-900'>
                       {job.position} — {job.company}
                     </p>
-                    <ul className='mt-1 space-y-0.5 text-[9pt] text-neutral-700'>
-                      {job.description
-                        .split('\n')
-                        .filter(Boolean)
-                        .map((line) => (
-                          <li key={line} className='flex gap-1.5'>
-                            <span>•</span>
-                            <span>{line.replace(/^•\s*/, '')}</span>
-                          </li>
-                        ))}
-                    </ul>
+                    <RichText
+                      value={job.description}
+                      className='mt-1 text-[9pt] text-neutral-700'
+                    />
                   </div>
                 </div>
               ))}
@@ -174,9 +169,10 @@ export function Template11({ resume }: TemplateProps) {
                   <p className='text-[9.5pt] font-semibold text-neutral-900'>
                     {project.title}
                   </p>
-                  <p className='text-[9pt] text-neutral-700'>
-                    {project.details}
-                  </p>
+                  <RichText
+                    value={project.details}
+                    className='text-[9pt] text-neutral-700'
+                  />
                 </div>
               ))}
             </div>

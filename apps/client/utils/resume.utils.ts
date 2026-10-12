@@ -1,4 +1,5 @@
 import { type ResumeData } from '@/components/templates/resume.types';
+import { hasRichText } from '@/components/templates/rich-text';
 import {
   defaultFormat,
   type Format,
@@ -6,39 +7,14 @@ import {
 } from '@/stores/features/template.slice';
 import { type Resume, type UpdateResumeDto } from '@/types/resume.type';
 
-const ENTITIES: Record<string, string> = {
-  amp: '&',
-  lt: '<',
-  gt: '>',
-  quot: '"',
-  '#39': "'",
-  nbsp: ' ',
-};
-
-/**
- * Turns editor (Quill) HTML into the plain multi-line text the templates
- * render: list items become "• item" lines, paragraphs/line breaks become
- * newlines. Plain text passes through unchanged.
- */
-export function htmlToPlainText(value: string | null | undefined): string {
-  if (!value) return '';
-  if (!/<[a-z][\s\S]*>/i.test(value)) return value;
-
-  return value
-    .replace(/<li[^>]*>/gi, '\n• ')
-    .replace(/<br\s*\/?>/gi, '\n')
-    .replace(/<\/(p|div|li|ul|ol|h[1-6])>/gi, '\n')
-    .replace(/<[^>]+>/g, '')
-    .replace(/&(#?\w+);/g, (m, code: string) => ENTITIES[code] ?? m)
-    .split('\n')
-    .map((line) => line.trim())
-    .filter(Boolean)
-    .join('\n');
+/** Editor HTML as-is, or an empty string when it is only empty paragraphs. */
+function richText(value: string | null | undefined): string {
+  return hasRichText(value) ? value! : '';
 }
 
 /**
  * Maps the editor's resume to the shape every template takes. Array position
- * becomes `order`, rich text becomes plain text, and sections hidden in the
+ * becomes `order`, rich text stays HTML (rendered by `RichText`), and sections hidden in the
  * Customize panel are emptied so every template drops them.
  */
 export function toResumeData(
@@ -54,7 +30,7 @@ export function toResumeData(
   return {
     title: resume.title,
     subTitle: resume.subTitle,
-    overview: hidden.has('summary') ? '' : htmlToPlainText(resume.overview),
+    overview: hidden.has('summary') ? '' : richText(resume.overview),
     avatar: resume.avatar ?? undefined,
     information: shown('personal', ordered(resume.information)),
     educations: shown('education', ordered(resume.educations)),
@@ -63,7 +39,7 @@ export function toResumeData(
       ordered(
         resume.workExperiences.map((job) => ({
           ...job,
-          description: htmlToPlainText(job.description),
+          description: richText(job.description),
         })),
       ),
     ),
@@ -72,8 +48,8 @@ export function toResumeData(
       ordered(
         resume.projects.map((project) => ({
           ...project,
-          details: htmlToPlainText(project.details),
-          responsibilities: htmlToPlainText(project.responsibilities),
+          details: richText(project.details),
+          responsibilities: richText(project.responsibilities),
           demo: project.demo ?? undefined,
         })),
       ),

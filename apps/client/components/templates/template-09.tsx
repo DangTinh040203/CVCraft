@@ -12,6 +12,7 @@ import {
   type ResumeData,
   sortByOrder,
 } from '@/components/templates/resume.types';
+import { RichText } from '@/components/templates/rich-text';
 
 interface TemplateProps {
   resume: ResumeData;
@@ -100,9 +101,10 @@ export function Template09({ resume }: TemplateProps) {
               <User className='size-3.5 text-rose-700' />
               Professional Summary
             </h2>
-            <p className='text-[9.5pt] leading-relaxed text-neutral-700'>
-              {resume.overview}
-            </p>
+            <RichText
+              value={resume.overview}
+              className='text-[9.5pt] leading-relaxed text-neutral-700'
+            />
           </section>
         )}
 
@@ -160,13 +162,10 @@ export function Template09({ resume }: TemplateProps) {
                   <p className='text-[9pt] font-medium text-neutral-500'>
                     {job.company}
                   </p>
-                  <p
-                    className={`
-                      mt-1 text-[9pt] whitespace-pre-line text-neutral-700
-                    `}
-                  >
-                    {job.description}
-                  </p>
+                  <RichText
+                    value={job.description}
+                    className={`mt-1 text-[9pt] text-neutral-700`}
+                  />
                 </div>
               ))}
             </div>
