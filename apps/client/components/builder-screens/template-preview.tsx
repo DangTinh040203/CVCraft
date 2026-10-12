@@ -3,7 +3,7 @@
 import { Button } from '@repo/ui/components/button';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 
-import { ResumeDocument } from '@/components/templates/resume-document';
+import { PagedResume } from '@/components/templates/paged-resume';
 import { useSyncResume } from '@/hooks/use-sync-resume';
 import {
   templateConfigSelector,
@@ -57,7 +57,7 @@ const TemplatePreview = () => {
       <div
         ref={frameRef}
         className={`
-          bg-background relative z-10 w-full scrollbar-none overflow-hidden
+          bg-muted relative z-10 w-full scrollbar-none overflow-hidden
           overflow-y-auto rounded-lg border shadow-xl select-none
         `}
         style={{ aspectRatio: `${PAGE_WIDTH_PX} / ${PAGE_HEIGHT_PX}` }}
@@ -65,10 +65,10 @@ const TemplatePreview = () => {
         <div style={{ height: contentHeight * scale }}>
           <div
             ref={pageRef}
-            className='origin-top-left bg-white text-left'
+            className='origin-top-left text-left'
             style={{ width: PAGE_WIDTH_PX, transform: `scale(${scale})` }}
           >
-            <ResumeDocument
+            <PagedResume
               templateKey={templateSelected}
               resume={resumeData}
               format={templateFormat}

@@ -153,7 +153,7 @@ export function Template13({ resume }: TemplateProps) {
     <div
       className={`
         relative min-h-[297mm] w-[210mm] overflow-hidden bg-white
-        p-(--resume-margin,10mm) leading-(--resume-line-height,1.625)
+        p-(--resume-margin,10mm) leading-(--resume-line-height,1.6)
         text-neutral-800
         text-(length:--resume-font-size,9.5pt)
       `}
@@ -164,8 +164,8 @@ export function Template13({ resume }: TemplateProps) {
       <div className='relative'>
         <header
           className={`
-            mb-(--resume-section-spacing,1.25rem) flex items-start
-            justify-between gap-6
+            mb-(--resume-section-spacing,15pt) flex items-start justify-between
+            gap-6
           `}
         >
           <div className='flex-1'>
@@ -200,7 +200,7 @@ export function Template13({ resume }: TemplateProps) {
         </header>
 
         {resume.overview && (
-          <section className='mb-(--resume-section-spacing,1.25rem)'>
+          <section className='mb-(--resume-section-spacing,15pt)'>
             <SectionTitle icon={ScanFace}>Overview</SectionTitle>
             <RichText value={resume.overview} className='text-neutral-700' />
           </section>
@@ -208,9 +208,7 @@ export function Template13({ resume }: TemplateProps) {
 
         {resume.skills.length > 0 && (
           <section
-            className={`
-              mb-(--resume-section-spacing,1.25rem) break-inside-avoid
-            `}
+            className={`mb-(--resume-section-spacing,15pt) break-inside-avoid`}
           >
             <SectionTitle icon={Layers}>Skills</SectionTitle>
             <ul className='space-y-0.5 text-neutral-700'>
@@ -225,7 +223,7 @@ export function Template13({ resume }: TemplateProps) {
         )}
 
         {resume.educations.length > 0 && (
-          <section className='mb-(--resume-section-spacing,1.25rem)'>
+          <section className='mb-(--resume-section-spacing,15pt)'>
             <SectionTitle icon={GraduationCap}>Education</SectionTitle>
             <div className='space-y-3'>
               {educations.map((edu) => (
@@ -249,9 +247,7 @@ export function Template13({ resume }: TemplateProps) {
 
         {resume.certifications.length > 0 && (
           <section
-            className={`
-              mb-(--resume-section-spacing,1.25rem) break-inside-avoid
-            `}
+            className={`mb-(--resume-section-spacing,15pt) break-inside-avoid`}
           >
             <SectionTitle icon={Award}>Certifications</SectionTitle>
             <ul className='space-y-0.5 text-neutral-700'>
@@ -267,9 +263,7 @@ export function Template13({ resume }: TemplateProps) {
 
         {resume.languages.length > 0 && (
           <section
-            className={`
-              mb-(--resume-section-spacing,1.25rem) break-inside-avoid
-            `}
+            className={`mb-(--resume-section-spacing,15pt) break-inside-avoid`}
           >
             <SectionTitle icon={LanguagesIcon}>Languages</SectionTitle>
             <ul className='space-y-0.5 text-neutral-700'>
@@ -284,7 +278,7 @@ export function Template13({ resume }: TemplateProps) {
         )}
 
         {resume.workExperiences.length > 0 && (
-          <section className='mb-(--resume-section-spacing,1.25rem)'>
+          <section className='mb-(--resume-section-spacing,15pt)'>
             <SectionTitle icon={Briefcase}>Work experience</SectionTitle>
             <div className='space-y-3'>
               {workExperiences.map((job) => (
@@ -309,7 +303,7 @@ export function Template13({ resume }: TemplateProps) {
         )}
 
         {resume.projects.length > 0 && (
-          <section className='mb-(--resume-section-spacing,1.25rem)'>
+          <section className='mb-(--resume-section-spacing,15pt)'>
             <SectionTitle icon={FolderKanban}>Projects</SectionTitle>
             <div className='space-y-3'>
               {projects.map((project) => (

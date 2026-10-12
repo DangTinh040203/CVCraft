@@ -21,7 +21,14 @@ export type SectionType =
 /** Sentinel for "keep the template's own font/color". */
 export const TEMPLATE_DEFAULT = 'default';
 
+/**
+ * Sizes are print units: font sizes, letter and section spacing in pt, the
+ * page margin in mm. Formats saved before `sizeUnit` existed hold px (see
+ * `normalizeFormat`).
+ */
 export interface Format {
+  sizeUnit?: 'pt';
+
   // Typography
   fontSize: number;
   fontFamily: string;
@@ -69,20 +76,23 @@ export const defaultSectionOrder: SectionType[] = [
   'projects',
 ];
 
+// Matches the templates' own sizes, so an untouched slider shows the real value
 export const defaultFormat: Format = {
+  sizeUnit: 'pt',
+
   // Typography
-  fontSize: 11,
+  fontSize: 9.5,
   fontFamily: TEMPLATE_DEFAULT,
-  titleSize: 30,
-  sectionTitleSize: 14,
-  subTitleSize: 14,
-  lineHeight: 1.8,
+  titleSize: 24,
+  sectionTitleSize: 11,
+  subTitleSize: 10.5,
+  lineHeight: 1.6,
   fontWeight: 'normal',
   letterSpacing: 0,
 
   // Layout
-  sectionSpacing: 10,
-  margin: 20,
+  sectionSpacing: 15,
+  margin: 10,
   pageFormat: 'A4',
   columnLayout: 'single',
   sectionOrder: defaultSectionOrder,
@@ -95,6 +105,47 @@ export const defaultFormat: Format = {
   borderStyle: 'none',
   dateFormat: 'MM/YYYY',
 };
+
+const PX_TO_PT = 0.75;
+const PX_TO_MM = 25.4 / 96;
+
+// The px-era defaults: a saved value equal to one meant "untouched"
+const LEGACY_PX_DEFAULTS = {
+  fontSize: 11,
+  titleSize: 30,
+  sectionTitleSize: 14,
+  subTitleSize: 14,
+  lineHeight: 1.8,
+  letterSpacing: 0,
+  sectionSpacing: 10,
+  margin: 20,
+} as const;
+
+const round = (value: number, step: number) =>
+  Math.round(value / step) * step;
+
+/**
+ * Fills a saved format with defaults and converts one saved in px to pt/mm:
+ * untouched values become today's defaults, changed ones keep their size.
+ */
+export function normalizeFormat(saved: Partial<Format> | null | undefined) {
+  const format: Format = { ...defaultFormat, ...saved };
+  if (!saved || saved.sizeUnit === 'pt') return format;
+
+  for (const [key, legacyDefault] of Object.entries(LEGACY_PX_DEFAULTS)) {
+    const name = key as keyof typeof LEGACY_PX_DEFAULTS;
+    const value = saved[name];
+    if (value === undefined || value === legacyDefault) {
+      format[name] = defaultFormat[name];
+    } else if (name === 'margin') {
+      format.margin = round(value * PX_TO_MM, 1);
+    } else if (name !== 'lineHeight') {
+      format[name] = round(value * PX_TO_PT, 0.5);
+    }
+  }
+  format.sizeUnit = 'pt';
+  return format;
+}
 
 const initialState: TemplateState = {
   templateConfig: {

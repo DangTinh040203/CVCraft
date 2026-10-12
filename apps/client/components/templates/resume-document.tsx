@@ -7,6 +7,7 @@ import {
   defaultFormat,
   type FontWeight,
   type Format,
+  normalizeFormat,
   TEMPLATE_DEFAULT,
 } from '@/stores/features/template.slice';
 
@@ -38,13 +39,13 @@ type NumericFormatKey =
 const FORMAT_VARS: Array<
   [key: NumericFormatKey, cssVar: string, unit: string]
 > = [
-  ['fontSize', '--resume-font-size', 'px'],
-  ['titleSize', '--resume-title-size', 'px'],
-  ['sectionTitleSize', '--resume-section-title-size', 'px'],
-  ['subTitleSize', '--resume-subtitle-size', 'px'],
+  ['fontSize', '--resume-font-size', 'pt'],
+  ['titleSize', '--resume-title-size', 'pt'],
+  ['sectionTitleSize', '--resume-section-title-size', 'pt'],
+  ['subTitleSize', '--resume-subtitle-size', 'pt'],
   ['lineHeight', '--resume-line-height', ''],
-  ['sectionSpacing', '--resume-section-spacing', 'px'],
-  ['margin', '--resume-margin', 'px'],
+  ['sectionSpacing', '--resume-section-spacing', 'pt'],
+  ['margin', '--resume-margin', 'mm'],
 ];
 
 const FONT_WEIGHTS: Record<FontWeight, string> = {
@@ -59,8 +60,12 @@ function formatStyle(
   accentPalette?: string,
 ): CSSProperties {
   // Keep line breaks from multi-line fields (summary bullets, descriptions) in
-  // every template, including ones that render them in a plain <p>.
-  const style: Record<string, string> = { whiteSpace: 'pre-line' };
+  // every template, including ones that render them in a plain <p>, and wrap
+  // long URLs and other unbroken strings instead of running off the page.
+  const style: Record<string, string> = {
+    whiteSpace: 'pre-line',
+    overflowWrap: 'anywhere',
+  };
 
   const fontFamily = getFontFamily(format.fontFamily ?? TEMPLATE_DEFAULT);
   if (fontFamily) {
@@ -81,7 +86,7 @@ function formatStyle(
 
   // These inherit, so they work in every template without markup changes
   if (format.letterSpacing !== undefined && format.letterSpacing !== 0) {
-    style.letterSpacing = `${format.letterSpacing}px`;
+    style.letterSpacing = `${format.letterSpacing}pt`;
   }
   if (format.fontWeight && format.fontWeight !== defaultFormat.fontWeight) {
     style.fontWeight = FONT_WEIGHTS[format.fontWeight];
@@ -128,7 +133,7 @@ export function ResumeDocument({
   return (
     <div
       className={resumeFontVariables}
-      style={formatStyle(format ?? defaultFormat, template.accentPalette)}
+      style={formatStyle(normalizeFormat(format), template.accentPalette)}
     >
       <Template resume={resume} />
     </div>

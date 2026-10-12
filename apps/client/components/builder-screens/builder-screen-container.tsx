@@ -28,7 +28,7 @@ import { useSyncResume } from '@/hooks/use-sync-resume';
 import { ResumeService } from '@/services/resume.service';
 import { setResume } from '@/stores/features/resume.slice';
 import {
-  defaultFormat,
+  normalizeFormat,
   setTemplateSelected,
   templateConfigSelector,
   templateSelectedSelector,
@@ -104,10 +104,7 @@ const BuilderScreenContainer = () => {
             dispatch(setResume(resumeRes));
             if (resumeRes.format) {
               dispatch(
-                updateTemplateConfigFormat({
-                  ...defaultFormat,
-                  ...resumeRes.format,
-                }),
+                updateTemplateConfigFormat(normalizeFormat(resumeRes.format)),
               );
             }
           }

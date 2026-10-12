@@ -243,10 +243,10 @@ const TemplateFormat = () => {
                 icon={<ALargeSmall className='h-4 w-4' />}
                 label={'Font Size'}
                 value={format.fontSize}
-                min={8}
-                max={20}
+                min={7}
+                max={14}
                 step={0.5}
-                unit='px'
+                unit='pt'
                 onChange={(value) => updateFormat({ fontSize: value })}
               />
 
@@ -254,10 +254,10 @@ const TemplateFormat = () => {
                 icon={<Heading1 className='h-4 w-4' />}
                 label={'Title Size'}
                 value={format.titleSize}
-                min={20}
-                max={52}
+                min={16}
+                max={40}
                 step={0.5}
-                unit='px'
+                unit='pt'
                 onChange={(value) => updateFormat({ titleSize: value })}
               />
 
@@ -265,10 +265,10 @@ const TemplateFormat = () => {
                 icon={<Heading2 className='h-4 w-4' />}
                 label={'Section Title Size'}
                 value={format.sectionTitleSize}
-                min={10}
-                max={40}
+                min={8}
+                max={20}
                 step={0.5}
-                unit='px'
+                unit='pt'
                 onChange={(value) => updateFormat({ sectionTitleSize: value })}
               />
 
@@ -276,10 +276,10 @@ const TemplateFormat = () => {
                 icon={<Heading2 className='h-4 w-4' />}
                 label={'Subtitle Size'}
                 value={format.subTitleSize}
-                min={10}
-                max={30}
+                min={8}
+                max={18}
                 step={0.5}
-                unit='px'
+                unit='pt'
                 onChange={(value) => updateFormat({ subTitleSize: value })}
               />
 
@@ -287,8 +287,8 @@ const TemplateFormat = () => {
                 icon={<MoveVertical className='h-4 w-4' />}
                 label={'Line Height'}
                 value={format.lineHeight}
-                min={1.5}
-                max={2.5}
+                min={1.2}
+                max={2.2}
                 step={0.1}
                 onChange={(value) => updateFormat({ lineHeight: value })}
               />
@@ -297,10 +297,10 @@ const TemplateFormat = () => {
                 icon={<LetterText className='h-4 w-4' />}
                 label={'Letter Spacing'}
                 value={format.letterSpacing}
-                min={-1}
-                max={3}
+                min={-0.5}
+                max={2}
                 step={0.1}
-                unit='px'
+                unit='pt'
                 onChange={(value) => updateFormat({ letterSpacing: value })}
               />
 
@@ -346,9 +346,9 @@ const TemplateFormat = () => {
                 label={'Section Spacing'}
                 value={format.sectionSpacing}
                 min={4}
-                max={24}
-                step={2}
-                unit='px'
+                max={30}
+                step={1}
+                unit='pt'
                 onChange={(value) => updateFormat({ sectionSpacing: value })}
               />
 
@@ -356,10 +356,10 @@ const TemplateFormat = () => {
                 icon={<Maximize2 className='h-4 w-4' />}
                 label={'Page Margin'}
                 value={format.margin}
-                min={10}
-                max={40}
-                step={2}
-                unit='px'
+                min={5}
+                max={30}
+                step={1}
+                unit='mm'
                 onChange={(value) => updateFormat({ margin: value })}
               />
             </AccordionContent>
