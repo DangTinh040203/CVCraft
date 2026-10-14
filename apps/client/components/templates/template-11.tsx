@@ -54,7 +54,7 @@ export function Template11({ resume }: TemplateProps) {
         min-h-[297mm] w-[210mm] bg-white p-[8mm] text-[10pt] text-neutral-800
       `}
     >
-      <div className='h-full border-2 border-dotted border-neutral-400 p-[10mm]'>
+      <div className='h-full p-[10mm]'>
         <header className='mb-6 text-center'>
           <h1 className='text-[21pt] font-bold text-neutral-900'>
             {resume.title}

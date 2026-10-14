@@ -34,7 +34,7 @@ export function Template05({ resume }: TemplateProps) {
         min-h-[297mm] w-[210mm] bg-white p-[10mm] text-[10pt] text-neutral-800
       `}
     >
-      <div className='h-full border border-neutral-300 p-[10mm]'>
+      <div className='h-full p-[10mm]'>
         <header className='mb-6 flex items-start justify-between gap-6'>
           <div>
             <h1 className='text-[22pt] font-bold tracking-tight text-blue-900'>

@@ -36,6 +36,7 @@ export function DatePicker({
             'h-10 w-full justify-start text-left font-normal',
             'rounded-lg border-slate-200 bg-slate-50 text-sm',
             'hover:bg-slate-100 hover:text-slate-900',
+            'hover:scale-100 hover:shadow-none active:scale-100',
             `
               dark:border-slate-700 dark:bg-slate-700 dark:text-slate-200
               dark:hover:bg-slate-600

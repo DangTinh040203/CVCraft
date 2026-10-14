@@ -69,6 +69,8 @@ function Calendar({
           buttonVariants({ variant: buttonVariant }),
           `
             size-(--cell-size) p-0 select-none
+            hover:scale-100 hover:shadow-none
+            active:scale-100
             aria-disabled:opacity-50
           `,
           defaultClassNames.button_previous,
@@ -77,6 +79,8 @@ function Calendar({
           buttonVariants({ variant: buttonVariant }),
           `
             size-(--cell-size) p-0 select-none
+            hover:scale-100 hover:shadow-none
+            active:scale-100
             aria-disabled:opacity-50
           `,
           defaultClassNames.button_next,
@@ -251,6 +255,7 @@ function CalendarDayButton({
         `
           hover:bg-primary/10 hover:text-primary hover:scale-100
           hover:shadow-none
+          active:scale-100
           data-[today=true]:text-primary data-[today=true]:font-semibold
           data-[selected-single=true]:bg-primary
           data-[selected-single=true]:text-primary-foreground
