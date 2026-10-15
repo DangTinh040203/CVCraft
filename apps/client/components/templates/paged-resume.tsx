@@ -119,33 +119,78 @@ function findColumns(root: Element) {
 
 const TRANSPARENT = /^(transparent|rgba\(.*,\s*0\))$/;
 
+interface Backdrop {
+  left: number;
+  width: number;
+  color: string;
+}
+
 /**
- * A sidebar template's colored columns as a page background (CSS
- * `background-image`), or '' for any other template.
+ * A sidebar template's colored columns, measured (accent applied): where
+ * each one sits across the page and its color. Empty for other templates.
  *
  * The columns only fill each page's content box: the vertical padding became
  * the page margin (see pageMargins), and print leaves some slack at the foot,
  * so a dark sidebar would stop short of the sheet's top and bottom edges.
- * Painted on the page itself, at the column's measured position and color
- * (accent applied), it runs edge to edge.
+ * `paintBackdrops` repeats them on every page, edge to edge.
  */
-function sidebarBackdrop(root: Element) {
+function sidebarBackdrops(root: Element): Backdrop[] {
   const { display, flexDirection } = getComputedStyle(root);
-  if (display !== 'flex' || flexDirection !== 'row') return '';
+  if (display !== 'flex' || flexDirection !== 'row') return [];
 
-  const left = root.getBoundingClientRect().left;
-  return Array.from(root.children)
-    .flatMap((column) => {
-      const { backgroundColor: color, position } = getComputedStyle(column);
-      if (position === 'absolute' || TRANSPARENT.test(color)) return [];
-      const box = column.getBoundingClientRect();
-      const from = box.left - left;
-      const to = from + box.width;
-      return [
-        `linear-gradient(to right, transparent ${from}px, ${color} ${from}px, ${color} ${to}px, transparent ${to}px)`,
-      ];
-    })
-    .join(', ');
+  // The builder scales its preview down with a CSS transform, which client
+  // rects include; dividing it out gives the template's own px
+  const rootBox = root.getBoundingClientRect();
+  const scale = rootBox.width / (root as HTMLElement).offsetWidth || 1;
+  return Array.from(root.children).flatMap((column) => {
+    const { backgroundColor: color, position } = getComputedStyle(column);
+    if (position === 'absolute' || TRANSPARENT.test(color)) return [];
+    const box = column.getBoundingClientRect();
+    return [
+      {
+        left: (box.left - rootBox.left) / scale,
+        width: box.width / scale,
+        color,
+      },
+    ];
+  });
+}
+
+/**
+ * Puts the backdrops behind each page's content as plain colored boxes, so
+ * every PDF renderer and printer shows them (a hard-stop gradient on the page
+ * got lost on the way to PDF).
+ */
+function paintBackdrops(pages: HTMLElement[], backdrops: Backdrop[]) {
+  if (!backdrops.length) return;
+  const colors = new Set(backdrops.map(({ color }) => color));
+  for (const page of pages) {
+    // The backdrop alone carries the color: a column painting the same color
+    // over it would leave a hairline seam where their (subpixel) edges meet,
+    // at the page margins and wherever the preview is scaled
+    const root = page.querySelector<HTMLElement>(`[${ROOT_ATTR}]`);
+    if (!root) continue;
+    // The root's own background (white) would cover the backdrop over the
+    // whole content box; the page takes it instead, beneath the backdrop
+    const { backgroundColor: rootColor } = getComputedStyle(root);
+    if (!TRANSPARENT.test(rootColor)) page.style.backgroundColor = rootColor;
+    root.style.backgroundColor = 'transparent';
+    for (const column of Array.from(root.children)) {
+      if (colors.has(getComputedStyle(column).backgroundColor)) {
+        (column as HTMLElement).style.backgroundColor = 'transparent';
+      }
+    }
+    // Its own stacking context: the boxes sit above the page's white
+    // background but below the content
+    page.style.position = 'relative';
+    page.style.isolation = 'isolate';
+    for (const { left, width, color } of backdrops) {
+      const box = document.createElement('div');
+      box.setAttribute('aria-hidden', 'true');
+      box.style.cssText = `position:absolute;top:0;bottom:0;left:${left}px;width:${width}px;background:${color};z-index:-1`;
+      page.prepend(box);
+    }
+  }
 }
 
 /**
@@ -385,7 +430,7 @@ export function PagedResume({
           await document.fonts.ready;
           const margins = pageMargins(root);
           const css = pageCss(margins);
-          const backdrop = sidebarBackdrop(root);
+          const backdrops = sidebarBackdrops(root);
           const { contents, decorations } = prepareContent(
             root,
             PAGE_HEIGHT_PX - margins.top - margins.bottom - PRINT_SLACK_PX,
@@ -424,11 +469,12 @@ export function PagedResume({
                 ?.insertAdjacentHTML('afterbegin', html);
             }
             const merged = runs.find(({ stage }) => stage.contains(roots[0]!));
-            if (backdrop) {
-              merged!.stage
-                .querySelectorAll<HTMLElement>('.pagedjs_page')
-                .forEach((page) => (page.style.backgroundImage = backdrop));
-            }
+            paintBackdrops(
+              Array.from(
+                merged!.stage.querySelectorAll<HTMLElement>('.pagedjs_page'),
+              ),
+              backdrops,
+            );
             target.replaceChildren(...Array.from(merged!.stage.childNodes));
             pages = roots.length;
           } catch (error) {
