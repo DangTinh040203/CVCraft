@@ -156,8 +156,4 @@ export class PrismaAdapterResumeRepository implements IResumeRepository {
     });
     return new Resume(resume);
   }
-
-  async delete(id: string): Promise<void> {
-    await this.prisma.resume.delete({ where: { id } });
-  }
 }

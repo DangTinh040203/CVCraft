@@ -1,4 +1,4 @@
-import { Logger, Module } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 
 import {
   CLERK_STRATEGY,
@@ -20,7 +20,6 @@ import { UserController } from '@/modules/user/presentation/controllers';
   providers: [
     ClerkWebhookService,
     UserService,
-    Logger,
 
     // Repository
     {

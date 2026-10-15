@@ -5,10 +5,10 @@ import {
   LLM_PROVIDER_TOKEN,
   type LLMProvider,
   type LLMSendOptions,
-} from '@/modules/rag/application/interfaces/llm-provider.interface';
+} from '@/modules/llm/application/interfaces';
 
 @Injectable()
-export class RagService {
+export class LlmService {
   constructor(
     @Inject(LLM_PROVIDER_TOKEN)
     private readonly llmProvider: LLMProvider,

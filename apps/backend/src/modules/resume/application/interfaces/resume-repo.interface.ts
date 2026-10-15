@@ -12,5 +12,4 @@ export interface IResumeRepository {
   findOwner(id: string): Promise<{ id: string; userId: string } | null>;
   findByUserId(userId: string): Promise<Resume | null>;
   update(id: string, payload: UpdateResumeCommand): Promise<Resume>;
-  delete(id: string): Promise<void>;
 }

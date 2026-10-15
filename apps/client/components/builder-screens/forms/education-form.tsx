@@ -167,9 +167,9 @@ function SortableEducationItem({
       <div className='grid gap-3'>
         <div
           className={`
-          grid gap-3
-          sm:grid-cols-2
-        `}
+            grid gap-3
+            sm:grid-cols-2
+          `}
         >
           <div className='space-y-1'>
             <Input
@@ -277,9 +277,9 @@ function SortableEducationItem({
         />
         <div
           className={`
-          grid gap-3
-          sm:grid-cols-2
-        `}
+            grid gap-3
+            sm:grid-cols-2
+          `}
         >
           <div>
             <Label className='mb-1.5 block text-xs text-slate-500'>

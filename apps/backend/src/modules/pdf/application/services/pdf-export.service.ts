@@ -15,9 +15,7 @@ export interface PrintPayload {
   resume: Record<string, unknown>;
 }
 
-/** Global the FE /print page reads its data from (see apps/client/app/print). */
 const PRINT_DATA_KEY = '__CRAFTCV_PRINT__';
-/** Set by the /print page once the template and its fonts have rendered. */
 const READY_SELECTOR = '[data-print-ready="true"]';
 const RENDER_TIMEOUT_MS = 20_000;
 
@@ -72,8 +70,10 @@ export class PdfExportService implements OnModuleDestroy {
         preferCSSPageSize: true,
       });
     } catch (error) {
-      this.logger.error('PDF render failed', error);
-      throw new InternalServerErrorException('Could not generate the PDF');
+      // Logged (with this cause) by GlobalExceptionFilter
+      throw new InternalServerErrorException('Could not generate the PDF', {
+        cause: error,
+      });
     } finally {
       await page.close().catch(() => undefined);
     }
@@ -88,7 +88,8 @@ export class PdfExportService implements OnModuleDestroy {
     const url = req.url();
     const type = req.resourceType();
 
-    const sameOrigin = url.startsWith(`${allowedOrigin}/`) || url === allowedOrigin;
+    const sameOrigin =
+      url.startsWith(`${allowedOrigin}/`) || url === allowedOrigin;
     const isInline = url.startsWith('data:') || url.startsWith('blob:');
     const isAsset = type === 'image' || type === 'font';
 

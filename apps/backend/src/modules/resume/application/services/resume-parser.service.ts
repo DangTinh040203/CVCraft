@@ -6,7 +6,7 @@ import {
 } from '@nestjs/common';
 import { PDFParse } from 'pdf-parse';
 
-import { RagService } from '@/modules/rag/application/services/rag.service';
+import { LlmService } from '@/modules/llm/application/services';
 import {
   RESUME_PARSER_PROMPT,
   RESUME_SCHEMA,
@@ -17,7 +17,7 @@ type Entry = Record<string, unknown>;
 
 @Injectable()
 export class ResumeParserService {
-  constructor(private readonly ragService: RagService) {}
+  constructor(private readonly llmService: LlmService) {}
 
   async parse(file: Express.Multer.File): Promise<Record<string, unknown>> {
     const parser = new PDFParse({ data: file.buffer });
@@ -40,16 +40,17 @@ export class ResumeParserService {
     // A function replacement, so `$&`-style patterns in the CV stay literal
     const prompt = RESUME_PARSER_PROMPT.replace('{cv_text}', () => text);
 
-    const response = await this.ragService.sendMessage(prompt, RESUME_SCHEMA, {
+    const response = await this.llmService.sendMessage(prompt, RESUME_SCHEMA, {
       thinkingConfig: { thinkingLevel: ThinkingLevel.MINIMAL },
     });
 
     let parsed: Entry;
     try {
       parsed = JSON.parse(response) as Entry;
-    } catch {
+    } catch (error) {
       throw new InternalServerErrorException(
         'Failed to parse LLM response as JSON',
+        { cause: error },
       );
     }
     return this.normalizeDates(parsed);

@@ -31,7 +31,7 @@ export class ResumeService {
   ): Promise<Resume> {
     await this.authorizeOwner(id, userId);
     const resume = await this.resumeRepository.update(id, payload);
-    await this.invalidateResumeCache(userId, id);
+    await this.invalidateResumeCache(userId);
     return resume;
   }
 
@@ -59,28 +59,14 @@ export class ResumeService {
     return resume;
   }
 
-  async delete(id: string, userId: string): Promise<void> {
-    await this.authorizeOwner(id, userId);
-    await this.resumeRepository.delete(id);
-    await this.invalidateResumeCache(userId, id);
-  }
-
-  private async invalidateResumeCache(
-    userId: string,
-    resumeId: string,
-  ): Promise<void> {
-    await Promise.all([
-      this.cacheService.del(CacheKeys.resume.byUserId(userId)),
-      this.cacheService.del(CacheKeys.resume.byId(resumeId)),
-    ]);
-    this.logger.debug(
-      `Cache invalidated for resume — userId: ${userId}, resumeId: ${resumeId}`,
-    );
+  async invalidateResumeCache(userId: string): Promise<void> {
+    await this.cacheService.del(CacheKeys.resume.byUserId(userId));
+    this.logger.debug(`Cache invalidated for resume of user ${userId}`);
   }
 
   /**
    * Lightweight ownership check — only selects id + userId.
-   * Use this when you don't need the full resume data (e.g., before update/delete).
+   * Use this when you don't need the full resume data (e.g., before update).
    */
   private async authorizeOwner(id: string, userId: string): Promise<void> {
     const owner = await this.resumeRepository.findOwner(id);

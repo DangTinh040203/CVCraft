@@ -7,10 +7,9 @@ import { ClerkWebhookGuard } from '@/modules/user/presentation/guards/clerk-webh
 
 @Controller('users')
 export class UserController {
-  constructor(
-    private readonly logger: Logger,
-    private readonly clerkWebhookService: ClerkWebhookService,
-  ) {}
+  private readonly logger = new Logger(UserController.name);
+
+  constructor(private readonly clerkWebhookService: ClerkWebhookService) {}
 
   @Public()
   @UseGuards(ClerkWebhookGuard)

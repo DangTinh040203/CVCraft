@@ -24,8 +24,4 @@ export class User {
     }
     return this.firstName || this.lastName || '';
   }
-
-  get isProfileComplete(): boolean {
-    return !!(this.firstName && this.lastName && this.avatar);
-  }
 }

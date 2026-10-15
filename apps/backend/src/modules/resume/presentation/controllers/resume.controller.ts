@@ -1,7 +1,6 @@
 import {
   Body,
   Controller,
-  Delete,
   Get,
   MaxFileSizeValidator,
   Param,
@@ -19,7 +18,7 @@ import {
   ResumeParserService,
   ResumeService,
 } from '@/modules/resume/application/services';
-import { UpdateResumeDto } from '@/modules/resume/presentation/DTOs';
+import { UpdateResumeDto } from '@/modules/resume/presentation/dtos';
 import { User } from '@/modules/user/domain';
 
 @Controller('resumes')
@@ -62,10 +61,5 @@ export class ResumeController {
     @CurrentDbUser() user: User,
   ) {
     return this.resumeService.update(id, payload, user.id);
-  }
-
-  @Delete('/:id')
-  async remove(@Param('id') id: string, @CurrentDbUser() user: User) {
-    return this.resumeService.delete(id, user.id);
   }
 }

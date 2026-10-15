@@ -22,8 +22,10 @@ export class UserService {
 
     const cachedUser = await this.cacheService.get<User | null>(cacheKey);
 
-    if (cachedUser) {
-      return cachedUser;
+    // A cached null is a hit too: that's what stops repeated DB lookups for
+    // users who don't exist (yet)
+    if (cachedUser !== undefined) {
+      return cachedUser ? new User(cachedUser) : null;
     }
 
     this.logger.debug(`Cache MISS for user: ${providerId}`);

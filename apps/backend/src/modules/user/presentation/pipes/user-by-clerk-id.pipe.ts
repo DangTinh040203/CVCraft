@@ -1,7 +1,7 @@
 import { type JwtPayload } from '@clerk/types';
 import {
-  BadRequestException,
   Injectable,
+  NotFoundException,
   type PipeTransform,
   UnauthorizedException,
 } from '@nestjs/common';
@@ -22,8 +22,12 @@ export class UserByClerkIdPipe implements PipeTransform {
 
     const user = await this.userService.findByProviderId(providerId);
 
+    // Signed in with Clerk, but the user.created webhook hasn't reached us
+    // (yet). Not the request's fault (400) nor a bad session (401)
     if (!user) {
-      throw new BadRequestException('User not found');
+      throw new NotFoundException(
+        'Your account is still being set up. Please try again in a moment.',
+      );
     }
 
     return user;

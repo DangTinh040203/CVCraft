@@ -1,5 +1,6 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
 
+import { CacheKeys, CacheService } from '@/libs/cache';
 import {
   type IClerkWebhookStrategy,
   type IUserRepository,
@@ -16,6 +17,7 @@ export class UserDeletedStrategy implements IClerkWebhookStrategy {
     @Inject(USER_REPOSITORY_TOKEN)
     private readonly userRepository: IUserRepository,
     private readonly userService: UserService,
+    private readonly cacheService: CacheService,
   ) {}
 
   getType(): ClerkUserWebhook {
@@ -42,7 +44,11 @@ export class UserDeletedStrategy implements IClerkWebhookStrategy {
 
     await this.userRepository.delete(user.id);
 
-    await this.userService.invalidateUserCache(data.id);
+    // The resume goes with the user (onDelete: Cascade), so does its cache
+    await Promise.all([
+      this.userService.invalidateUserCache(data.id),
+      this.cacheService.del(CacheKeys.resume.byUserId(user.id)),
+    ]);
 
     const duration = Date.now() - start;
     this.logger.log(

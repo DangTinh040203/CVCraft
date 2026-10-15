@@ -1,8 +1,8 @@
 import { Body, Controller, Post, StreamableFile } from '@nestjs/common';
 import { Throttle } from '@nestjs/throttler';
 
-import { PdfExportService } from '@/modules/pdf/application/services/pdf-export.service';
-import { ExportPdfDto } from '@/modules/pdf/presentation/DTOs/export-pdf.dto';
+import { PdfExportService } from '@/modules/pdf/application/services';
+import { ExportPdfDto } from '@/modules/pdf/presentation/dtos';
 
 @Controller('pdf')
 export class PdfController {

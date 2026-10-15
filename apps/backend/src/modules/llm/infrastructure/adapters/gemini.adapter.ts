@@ -16,7 +16,7 @@ import { Env } from '@/libs/configs/env.config';
 import {
   type LLMProvider,
   type LLMSendOptions,
-} from '@/modules/rag/application/interfaces/llm-provider.interface';
+} from '@/modules/llm/application/interfaces';
 
 /** Rate limits and overload ("high demand") are usually gone within seconds. */
 const RETRYABLE_STATUSES = new Set([429, 500, 503]);
@@ -66,16 +66,22 @@ export class GeminiAdapter implements LLMProvider {
       return !!model && all.indexOf(model) === index;
     });
 
+    let lastError: unknown;
     for (const model of models) {
       try {
         return await this.generate(model, content, config);
       } catch (error) {
-        this.logger.error(`Gemini request failed (${model})`, error);
+        // Anything else is a real fault: GlobalExceptionFilter logs it
         if (!isUnavailable(error)) throw error;
+        lastError = error;
+        this.logger.warn(
+          `${model} unavailable: ${error instanceof Error ? error.message : String(error)}`,
+        );
       }
     }
     throw new ServiceUnavailableException(
       'The AI service is busy right now. Please try again in a minute.',
+      { cause: lastError },
     );
   }
 

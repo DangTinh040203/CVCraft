@@ -8,13 +8,14 @@ import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import cookieParser from 'cookie-parser';
+import { type Request } from 'express';
 import helmet from 'helmet';
 import morgan from 'morgan';
 
 import { AppModule } from '@/app/app.module';
 import { Env } from '@/libs/configs/env.config';
 import { loggerConfig } from '@/libs/configs/logger.config';
-import { formatError } from '@/libs/utils/formatError.util';
+import { formatError } from '@/libs/utils/format-error.util';
 
 class BootstrapApplication {
   private app: INestApplication;
@@ -23,7 +24,11 @@ class BootstrapApplication {
   async run() {
     this.app = await NestFactory.create(AppModule, {
       logger: loggerConfig,
+      // Svix signs the exact bytes Clerk sent (see ClerkWebhookGuard)
+      rawBody: true,
     });
+    // Runs onModuleDestroy on SIGTERM/SIGINT: closes Chromium and DB pools
+    this.app.enableShutdownHooks();
 
     this.configService = this.app.get(ConfigService);
     const port = this.configService.getOrThrow<number>(Env.PORT);
@@ -82,8 +87,20 @@ class BootstrapApplication {
 
     const isProduction =
       this.configService.get<string>(Env.NODE_ENV) === 'production';
-    this.app.use(morgan(isProduction ? 'combined' : 'dev'));
+    // The request id ties each access line to the app logs of that request
+    // (set by RequestIdMiddleware, which has run by the time this logs)
+    morgan.token('request-id', (req: Request) => req.requestId ?? '-');
+    this.app.use(
+      morgan(
+        isProduction
+          ? ':remote-addr - :remote-user [:date[clf]] ":method :url HTTP/:http-version" :status :res[content-length] ":referrer" ":user-agent" :request-id'
+          : ':method :url :status :response-time ms - :res[content-length] [:request-id]',
+      ),
+    );
   }
 }
 
-void new BootstrapApplication().run();
+new BootstrapApplication().run().catch((error: unknown) => {
+  Logger.error('Failed to start the server', error, 'BootstrapApplication');
+  process.exit(1);
+});

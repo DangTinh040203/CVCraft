@@ -14,13 +14,13 @@ import { ClerkUserWebhook, ClerkWebhook } from '@/modules/user/domain';
 
 @Injectable()
 export class ClerkWebhookService implements OnModuleInit {
+  private readonly logger = new Logger(ClerkWebhookService.name);
   private strategiesMap: Map<ClerkUserWebhook, IClerkWebhookStrategy> =
     new Map();
 
   constructor(
     @Inject(CLERK_STRATEGY)
     private readonly strategies: IClerkWebhookStrategy[],
-    private readonly logger: Logger,
   ) {}
 
   onModuleInit() {
@@ -39,10 +39,7 @@ export class ClerkWebhookService implements OnModuleInit {
     if (strategy) {
       await strategy.handle(evt);
     } else {
-      this.logger.warn(
-        `No strategy found for event type: ${evt.type}`,
-        ClerkWebhookService.name,
-      );
+      this.logger.warn(`No strategy found for event type: ${evt.type}`);
     }
   }
 }

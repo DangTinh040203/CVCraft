@@ -11,6 +11,7 @@ import { ConfigService } from '@nestjs/config';
 import { type Request, type Response } from 'express';
 
 import { Env } from '@/libs/configs/env.config';
+import { Prisma } from '@/libs/databases/prisma/generated/client';
 
 export interface ApiErrorResponse {
   statusCode: number; // HTTP Status Code (e.g., 400, 404, 500)
@@ -21,6 +22,33 @@ export interface ApiErrorResponse {
   requestId?: string; // Correlation ID for tracing this request across logs
 }
 
+interface ParsedException {
+  statusCode: HttpStatus;
+  message: string | string[] | object;
+  error?: string;
+}
+
+/** Prisma errors the client caused, rather than server faults. */
+const PRISMA_ERRORS: Record<string, ParsedException> = {
+  // Unique constraint failed
+  P2002: {
+    statusCode: HttpStatus.CONFLICT,
+    message: 'This record already exists',
+    error: 'Conflict',
+  },
+  // Record to update/delete not found (e.g. deleted meanwhile)
+  P2025: {
+    statusCode: HttpStatus.NOT_FOUND,
+    message: 'Record not found',
+    error: 'Not Found',
+  },
+};
+
+/**
+ * The single place request errors are logged: every 5xx with its stack (as
+ * error), client errors as one warn line. Services that throw shouldn't log
+ * the same error again. The request id is added to each line by the logger.
+ */
 @Catch()
 export class GlobalExceptionFilter implements ExceptionFilter {
   private readonly logger = new Logger(GlobalExceptionFilter.name);
@@ -33,80 +61,90 @@ export class GlobalExceptionFilter implements ExceptionFilter {
       this.configService.get<string>(Env.NODE_ENV) === 'production';
   }
 
-  /**
-   * Entry point: Called by NestJS whenever an exception is thrown.
-   * @param exception The exception object
-   * @param host The arguments host (contains request/response contexts)
-   */
   catch(exception: unknown, host: ArgumentsHost): void {
     const ctx = host.switchToHttp();
     const response = ctx.getResponse<Response>();
     const request = ctx.getRequest<Request>();
 
-    // Normalize and create the error response
-    const errorResponse = this.createErrorResponse(exception, request);
+    const parsed = this.parseException(exception);
+    this.log(exception, parsed, request);
 
-    // Send the JSON response to the client
-    response.status(errorResponse.statusCode).json(errorResponse);
+    response
+      .status(parsed.statusCode)
+      .json(this.createErrorResponse(parsed, request));
   }
 
-  /**
-   * Constructs the standard ApiErrorResponse payload.
-   */
+  private parseException(exception: unknown): ParsedException {
+    if (exception instanceof HttpException) {
+      return this.parseHttpException(exception);
+    }
+    if (
+      exception instanceof Prisma.PrismaClientKnownRequestError &&
+      PRISMA_ERRORS[exception.code]
+    ) {
+      return PRISMA_ERRORS[exception.code];
+    }
+    return {
+      statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
+      message: 'Internal Server Error',
+    };
+  }
+
+  private log(exception: unknown, parsed: ParsedException, request: Request) {
+    const route = `${request.method} ${request.originalUrl}`;
+    if (parsed.statusCode >= HttpStatus.INTERNAL_SERVER_ERROR) {
+      const message =
+        exception instanceof Error ? exception.message : String(exception);
+      // A wrapped error (`{ cause }`) keeps the original failure in the log.
+      // `cause` isn't in the ES2021 Error type the backend targets
+      const { cause: original } = (exception ?? {}) as { cause?: unknown };
+      const cause =
+        original instanceof Error
+          ? `\nCaused by: ${original.stack ?? original.message}`
+          : '';
+      const stack = exception instanceof Error ? exception.stack : undefined;
+      this.logger.error(
+        `${route} → ${parsed.statusCode}: ${message}`,
+        `${stack ?? ''}${cause}`,
+      );
+    } else if (parsed.statusCode !== HttpStatus.UNAUTHORIZED) {
+      // 401s are routine (expired sessions) and would drown the rest
+      this.logger.warn(
+        `${route} → ${parsed.statusCode}: ${JSON.stringify(parsed.message)}`,
+      );
+    }
+  }
+
   private createErrorResponse(
-    exception: unknown,
+    parsed: ParsedException,
     request: Request,
   ): ApiErrorResponse {
-    let statusCode = HttpStatus.INTERNAL_SERVER_ERROR;
-    let message: string | string[] | object = 'Internal Server Error';
-    let error: string | undefined = undefined;
+    let { message, error } = parsed;
 
-    // 1. Handle standard HTTP Exceptions (e.g., NotFoundException, BadRequestException)
-    if (exception instanceof HttpException) {
-      const httpExceptionResponse = this.parseHttpException(exception);
-      statusCode = httpExceptionResponse.statusCode;
-      message = httpExceptionResponse.message;
-      error = httpExceptionResponse.error;
-    }
-    // 2. Handle Unknown/System Exceptions (e.g., Database errors, TypeErrors)
-    else {
-      this.handleUnknownException(exception);
-    }
-
-    // --- SECURITY: Mask internal errors in Production ---
-    // In production, we should not leak stack traces or internal logic details for 500 errors.
-    const isProduction = this.isProduction;
-    if (statusCode === HttpStatus.INTERNAL_SERVER_ERROR && isProduction) {
+    // In production, a 500's details (internals, SQL) stay in the logs
+    if (
+      parsed.statusCode === HttpStatus.INTERNAL_SERVER_ERROR &&
+      this.isProduction
+    ) {
       message = 'Internal server error';
       error = undefined;
     }
 
     const payload: ApiErrorResponse = {
-      statusCode,
+      statusCode: parsed.statusCode,
       timestamp: new Date().toISOString(),
       path: request.url,
       message,
     };
-
-    if (error) {
-      payload.error = error;
-    }
-
-    if (request.requestId) {
-      payload.requestId = request.requestId;
-    }
-
+    if (error) payload.error = error;
+    if (request.requestId) payload.requestId = request.requestId;
     return payload;
   }
 
   /**
    * Extracts message and status from a NestJS HttpException.
    */
-  private parseHttpException(exception: HttpException): {
-    statusCode: number;
-    message: string | string[] | object;
-    error?: string;
-  } {
+  private parseHttpException(exception: HttpException): ParsedException {
     const statusCode = exception.getStatus();
     const responseBody = exception.getResponse();
 
@@ -125,18 +163,6 @@ export class GlobalExceptionFilter implements ExceptionFilter {
       statusCode,
       message: responseBody || exception.message,
     };
-  }
-
-  /**
-   * Logs critical system errors (500) to the console.
-   * Includes the stack trace for debugging purposes.
-   */
-  private handleUnknownException(exception: unknown): void {
-    const errorMessage =
-      exception instanceof Error ? exception.message : String(exception);
-    const errorStack = exception instanceof Error ? exception.stack : undefined;
-
-    this.logger.error(`Critical Error: ${errorMessage}`, errorStack);
   }
 
   /**

@@ -3,6 +3,7 @@
 import { useUser } from '@clerk/nextjs';
 import { toast } from '@repo/ui/components/sonner';
 import { cn } from '@repo/ui/lib/utils';
+import { AxiosError } from 'axios';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Loader2 } from 'lucide-react';
 import { useRouter, useSearchParams } from 'next/navigation';
@@ -36,6 +37,8 @@ import {
   updateTemplateConfigFormat,
 } from '@/stores/features/template.slice';
 import { useAppDispatch, useAppSelector } from '@/stores/store';
+import { type ErrorResponse } from '@/types/error.response';
+import { toastErrorMessage } from '@/utils/toast-error-message.util';
 
 const sectionOrder = [
   Section.Personal,
@@ -108,6 +111,15 @@ const BuilderScreenContainer = () => {
               );
             }
           }
+        } catch (e) {
+          // e.g. a new account the backend hasn't set up yet (404)
+          const error =
+            e instanceof AxiosError
+              ? (e.response?.data as ErrorResponse | undefined)
+              : undefined;
+          toastErrorMessage(
+            error?.message ?? 'Could not load your resume. Please refresh.',
+          );
         } finally {
           setIsFetching(false);
         }

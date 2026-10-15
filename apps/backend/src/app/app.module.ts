@@ -10,7 +10,6 @@ import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 
 import { HealthController } from '@/app/health.controller';
 import { CacheModule } from '@/libs/cache';
-import { AppConfigModule } from '@/libs/configs/config.module';
 import { Env, validationSchema } from '@/libs/configs/env.config';
 import { DatabaseModule } from '@/libs/databases/database.module';
 import { GlobalExceptionFilter } from '@/libs/filters/http-exception.filter';
@@ -34,7 +33,6 @@ import { UserModule } from '@/modules/user/user.module';
     }),
     EventEmitterModule.forRoot(),
     ThrottlerModule.forRootAsync({
-      imports: [AppConfigModule],
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => [
         {

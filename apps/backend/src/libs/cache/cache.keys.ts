@@ -15,7 +15,6 @@ export const CacheKeys = {
       `${CachePrefix.USER}:provider:${providerId}`,
   },
   resume: {
-    byId: (resumeId: string): string => `${CachePrefix.RESUME}:id:${resumeId}`,
     byUserId: (userId: string): string =>
       `${CachePrefix.RESUME}:user:${userId}`,
   },

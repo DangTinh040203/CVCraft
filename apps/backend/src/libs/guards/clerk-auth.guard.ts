@@ -3,6 +3,7 @@ import {
   CanActivate,
   ExecutionContext,
   Injectable,
+  Logger,
   UnauthorizedException,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
@@ -15,13 +16,15 @@ export const IS_PUBLIC_KEY = 'isPublic';
 
 @Injectable()
 export class ClerkAuthGuard implements CanActivate {
+  private readonly logger = new Logger(ClerkAuthGuard.name);
+
   constructor(
     private readonly configService: ConfigService,
     private readonly reflector: Reflector,
   ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
-    // Skip WS context — WebSocket auth is handled by the InterviewGateway
+    // WebSocket handshakes authenticate in their gateway (none yet)
     if (context.getType() === 'ws') {
       return true;
     }
@@ -60,7 +63,11 @@ export class ClerkAuthGuard implements CanActivate {
       request.auth = payload;
 
       return true;
-    } catch {
+    } catch (error) {
+      // Expired vs. bad signature: useful when chasing 401s, too noisy as warn
+      this.logger.debug(
+        `Token rejected: ${error instanceof Error ? error.message : String(error)}`,
+      );
       throw new UnauthorizedException('Invalid token');
     }
   }
