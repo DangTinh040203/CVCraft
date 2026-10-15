@@ -243,7 +243,11 @@ function adjustBreak(overflow: Range | undefined, rendered: Element) {
   };
 
   let block: Element | undefined;
-  for (let node: Node | null = overflow.startContainer; node && node !== rendered; node = node.parentNode) {
+  for (
+    let node: Node | null = overflow.startContainer;
+    node && node !== rendered;
+    node = node.parentNode
+  ) {
     if (
       node instanceof Element &&
       !node.hasAttribute(TALL_ATTR) &&
@@ -358,8 +362,7 @@ export function PagedResume({
 
           // Laid out off-screen at full size (the builder preview is scaled
           // down), then moved in, so the old pages stay up meanwhile
-          const runs: Array<{ previewer: Previewer; stage: HTMLElement }> =
-            [];
+          const runs: Array<{ previewer: Previewer; stage: HTMLElement }> = [];
           let pages: number;
           try {
             for (const content of contents) {
@@ -370,11 +373,13 @@ export function PagedResume({
               document.body.append(stage);
               const previewer = new PagedPreviewer();
               runs.push({ previewer, stage });
-              await previewer.preview(
+              const flow = await previewer.preview(
                 content,
                 [{ [window.location.href]: css }],
                 stage,
               );
+
+              flow.pages.forEach((page) => page.removeListeners());
             }
 
             const flows = runs.map(({ stage }) =>
@@ -405,8 +410,7 @@ export function PagedResume({
   }, [templateKey, resume, format]);
 
   useEffect(
-    () => () =>
-      previewersRef.current.forEach((old) => old.polisher.destroy()),
+    () => () => previewersRef.current.forEach((old) => old.polisher.destroy()),
     [],
   );
 
@@ -465,12 +469,7 @@ export function PagedResume({
       `}</style>
       {/* Laid out (off-screen) rather than display:none, so column widths and
           paddings can be measured */}
-      <div
-        ref={sourceRef}
-        data-paged-source
-        aria-hidden
-        style={SOURCE_STYLE}
-      >
+      <div ref={sourceRef} data-paged-source aria-hidden style={SOURCE_STYLE}>
         <ResumeDocument
           templateKey={templateKey}
           resume={resume}
