@@ -4,14 +4,19 @@ import { Badge } from '@repo/ui/components/badge';
 import { Button } from '@repo/ui/components/button';
 import { Dialog, DialogContent, DialogTitle } from '@repo/ui/components/dialog';
 import { ArrowRight, Lock, ZoomIn } from 'lucide-react';
-import Link from 'next/link';
 import { useState } from 'react';
 
 import { TEMPLATES } from '@/components/templates/registry';
 import { sampleResume } from '@/components/templates/sample-resume';
 import { TemplateThumbnail } from '@/components/templates/template-thumbnail';
 
-export function TemplateCard({ templateKey }: { templateKey: string }) {
+interface TemplateCardProps {
+  templateKey: string;
+  /** Called by the Use button with the template's slug. */
+  onUse: (slug: string) => void;
+}
+
+export function TemplateCard({ templateKey, onUse }: TemplateCardProps) {
   const [previewOpen, setPreviewOpen] = useState(false);
   const template = TEMPLATES.find((t) => t.key === templateKey);
   if (!template) return null;
@@ -87,11 +92,12 @@ export function TemplateCard({ templateKey }: { templateKey: string }) {
             )}
           </div>
         </div>
-        <Button asChild className='min-w-20 shrink-0 gap-1'>
-          <Link href={`/builder?template=${template.slug}`}>
-            Use
-            <ArrowRight className='size-3.5' />
-          </Link>
+        <Button
+          className='min-w-20 shrink-0 gap-1'
+          onClick={() => onUse(template.slug)}
+        >
+          Use
+          <ArrowRight className='size-3.5' />
         </Button>
       </div>
 

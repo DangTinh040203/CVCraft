@@ -5,7 +5,11 @@ import {
   type Format,
   type SectionType,
 } from '@/stores/features/template.slice';
-import { type Resume, type UpdateResumeDto } from '@/types/resume.type';
+import {
+  type ParseResumeResponse,
+  type Resume,
+  type UpdateResumeDto,
+} from '@/types/resume.type';
 
 /** Editor HTML as-is, or an empty string when it is only empty paragraphs. */
 function richText(value: string | null | undefined): string {
@@ -201,5 +205,37 @@ export function resumeToUpdateDto(
       name,
       description,
     })),
+  };
+}
+
+/**
+ * Fills a resume with what `POST /resumes/parse` extracted. The resume keeps
+ * its id, template and format; every section is replaced, and each new row
+ * gets a client id until the next save.
+ */
+export function applyParsedResume(
+  resume: Resume,
+  parsed: ParseResumeResponse,
+): Resume {
+  const rows = <T>(items: T[] | null | undefined) =>
+    (items ?? []).map((item) => ({
+      ...item,
+      id: crypto.randomUUID(),
+      resumeId: resume.id,
+    }));
+
+  return {
+    ...resume,
+    title: parsed.title ?? '',
+    subTitle: parsed.subTitle ?? '',
+    overview: parsed.overview ?? '',
+    avatar: parsed.avatar ?? resume.avatar,
+    information: rows(parsed.information),
+    educations: rows(parsed.educations),
+    skills: rows(parsed.skills),
+    workExperiences: rows(parsed.workExperiences),
+    projects: rows(parsed.projects),
+    certifications: rows(parsed.certifications),
+    languages: rows(parsed.languages),
   };
 }

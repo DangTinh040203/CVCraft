@@ -1,17 +1,53 @@
-import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  MaxFileSizeValidator,
+  Param,
+  ParseFilePipe,
+  Post,
+  UploadedFile,
+  UseInterceptors,
+} from '@nestjs/common';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { Throttle } from '@nestjs/throttler';
 
 import { CurrentDbUser } from '@/libs/decorators';
-import { ResumeService } from '@/modules/resume/application/services';
+import { FileMagicBytesValidator } from '@/libs/pipes/file-magic-bytes.pipe';
+import {
+  ResumeParserService,
+  ResumeService,
+} from '@/modules/resume/application/services';
 import { UpdateResumeDto } from '@/modules/resume/presentation/DTOs';
 import { User } from '@/modules/user/domain';
 
 @Controller('resumes')
 export class ResumeController {
-  constructor(private readonly resumeService: ResumeService) {}
+  constructor(
+    private readonly resumeService: ResumeService,
+    private readonly resumeParserService: ResumeParserService,
+  ) {}
 
   @Get()
   findResume(@CurrentDbUser() user: User) {
     return this.resumeService.findByUserId(user.id);
+  }
+
+  // Declared before `/:id` so "parse" isn't taken for a resume id
+  @Throttle({ default: { ttl: 60000, limit: 5 } })
+  @UseInterceptors(FileInterceptor('file'))
+  @Post('/parse')
+  async parse(
+    @UploadedFile(
+      new ParseFilePipe({
+        validators: [new MaxFileSizeValidator({ maxSize: 1024 * 1024 * 5 })],
+      }),
+      new FileMagicBytesValidator(['application/pdf']),
+    )
+    file: Express.Multer.File,
+  ) {
+    return this.resumeParserService.parse(file);
   }
 
   @Get('/:id')

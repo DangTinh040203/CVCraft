@@ -255,7 +255,6 @@ function CalendarDayButton({
         `
           hover:bg-primary/10 hover:text-primary hover:scale-100
           hover:shadow-none
-          active:scale-100
           data-[today=true]:text-primary data-[today=true]:font-semibold
           data-[selected-single=true]:bg-primary
           data-[selected-single=true]:text-primary-foreground
@@ -279,6 +278,7 @@ function CalendarDayButton({
           dark:hover:text-accent-foreground
           flex aspect-square size-auto w-full min-w-(--cell-size) flex-col gap-1
           rounded-md leading-none font-normal
+          active:scale-100
           [&>span]:text-xs [&>span]:opacity-70
         `,
         defaultClassNames.day,

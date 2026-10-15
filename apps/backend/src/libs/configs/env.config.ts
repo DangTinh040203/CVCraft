@@ -24,6 +24,7 @@ export enum Env {
   GEMINI_API_KEY = 'GEMINI_API_KEY',
   GEMINI_LIVE_MODEL = 'GEMINI_LIVE_MODEL',
   GEMINI_MODEL = 'GEMINI_MODEL',
+  GEMINI_FALLBACK_MODEL = 'GEMINI_FALLBACK_MODEL',
 }
 
 export const validationSchema = Joi.object({
@@ -50,5 +51,9 @@ export const validationSchema = Joi.object({
 
   [Env.GEMINI_API_KEY]: Joi.string().required(),
   [Env.GEMINI_LIVE_MODEL]: Joi.string(),
-  [Env.GEMINI_MODEL]: Joi.string(),
+  [Env.GEMINI_MODEL]: Joi.string().default('gemini-3.5-flash-lite'),
+  // Used when GEMINI_MODEL stays overloaded; empty to disable
+  [Env.GEMINI_FALLBACK_MODEL]: Joi.string()
+    .allow('')
+    .default('gemini-3.1-flash-lite'),
 });

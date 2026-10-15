@@ -101,3 +101,18 @@ export interface UpdateResumeDto {
   certifications?: Array<Omit<Certification, 'id' | 'resumeId'>>;
   languages?: Array<Omit<Language, 'id' | 'resumeId'>>;
 }
+
+/** What `POST /resumes/parse` extracts from an uploaded PDF resume. */
+export interface ParseResumeResponse {
+  title: string;
+  subTitle: string;
+  overview: string;
+  avatar: string | null;
+  information: Array<Omit<ResumeInformation, 'id' | 'resumeId'>>;
+  educations: Array<Omit<Education, 'id' | 'resumeId'>>;
+  skills: Array<Omit<Skill, 'id' | 'resumeId'>>;
+  workExperiences: Array<Omit<WorkExperience, 'id' | 'resumeId'>>;
+  projects: Array<Omit<Project, 'id' | 'resumeId'>>;
+  certifications: Array<Omit<Certification, 'id' | 'resumeId'>>;
+  languages: Array<Omit<Language, 'id' | 'resumeId'>>;
+}

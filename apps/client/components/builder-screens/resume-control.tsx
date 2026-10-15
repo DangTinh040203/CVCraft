@@ -8,10 +8,11 @@ import {
 } from '@repo/ui/components/tooltip';
 import { cn } from '@repo/ui/lib/utils';
 import { motion } from 'framer-motion';
-import { Eye, EyeOff, FileText, Loader2, Save } from 'lucide-react';
+import { Eye, EyeOff, FileText, Loader2, Save, Upload } from 'lucide-react';
 import React from 'react';
 
 import DownloadPdf from '@/components/builder-screens/download-pdf';
+import { useImportResume } from '@/hooks/use-import-resume';
 import { useSyncResume } from '@/hooks/use-sync-resume';
 import {
   templateConfigSelector,
@@ -23,6 +24,15 @@ const ResumeControl = () => {
   const { resume, sync, isSyncing } = useSyncResume();
   const { previewMode } = useAppSelector(templateConfigSelector);
   const dispatch = useAppDispatch();
+  const { importResume, isImporting } = useImportResume();
+  const importInputRef = React.useRef<HTMLInputElement>(null);
+
+  const handleImport = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    // Reset so the same file can be picked again
+    e.target.value = '';
+    if (file) void importResume(file);
+  };
 
   const handleTogglePreviewMode = () => {
     dispatch(updatePreviewMode(!previewMode));
@@ -30,6 +40,14 @@ const ResumeControl = () => {
 
   return (
     <div className='mb-4'>
+      <input
+        ref={importInputRef}
+        type='file'
+        accept='.pdf,application/pdf'
+        className='hidden'
+        onChange={handleImport}
+      />
+
       <div className='my-4 flex items-center gap-4'>
         <div
           className={`
@@ -151,6 +169,42 @@ const ResumeControl = () => {
             <DownloadPdf resume={resume} />
           </div>
         )}
+
+        <div
+          className={`
+            w-full
+            sm:w-auto
+          `}
+        >
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  variant='secondary'
+                  className={`
+                    border-primary w-full gap-2 border shadow-xl
+                    sm:w-auto
+                  `}
+                  onClick={() => importInputRef.current?.click()}
+                  disabled={isImporting || !resume}
+                >
+                  {isImporting ? (
+                    <Loader2 className='h-4 w-4 animate-spin' />
+                  ) : (
+                    <Upload className='h-4 w-4' />
+                  )}
+                  {isImporting ? 'Importing...' : 'Import Resume'}
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>
+                  Upload a PDF resume and let AI fill in your details
+                  automatically.
+                </p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+        </div>
       </div>
     </div>
   );

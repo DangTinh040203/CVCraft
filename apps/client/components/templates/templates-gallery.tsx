@@ -1,11 +1,15 @@
 'use client';
 
+import { useUser } from '@clerk/nextjs';
 import { cn } from '@repo/ui/lib/utils';
 import { m } from 'framer-motion';
+import { useRouter } from 'next/navigation';
 import { useMemo, useState } from 'react';
 
 import { TEMPLATES } from '@/components/templates/registry';
 import { TemplateCard } from '@/components/templates/template-card';
+import { TemplateSelectionDialog } from '@/components/templates/template-selection-dialog';
+import { useImportResume } from '@/hooks/use-import-resume';
 import { fadeInUp, staggerContainer } from '@/styles/animation';
 
 type Filter = 'all' | 'free' | 'premium';
@@ -18,6 +22,27 @@ const filters: { key: Filter; label: string }[] = [
 
 export function TemplatesGallery() {
   const [filter, setFilter] = useState<Filter>('all');
+  const [selectedSlug, setSelectedSlug] = useState<string | null>(null);
+  const { isSignedIn } = useUser();
+  const router = useRouter();
+  const { importResume, isImporting } = useImportResume();
+
+  const handleUse = (slug: string) => {
+    // Signed out, the builder's auth redirect brings them back to it
+    if (!isSignedIn) {
+      router.push(`/builder?template=${slug}`);
+      return;
+    }
+    setSelectedSlug(slug);
+  };
+
+  const handleSelect = async (type: 'upload' | 'scratch', file?: File) => {
+    if (!selectedSlug) return;
+    if (type === 'upload') {
+      if (!file || !(await importResume(file))) return;
+    }
+    router.push(`/builder?template=${selectedSlug}`);
+  };
 
   const visibleTemplates = useMemo(() => {
     if (filter === 'all') return TEMPLATES;
@@ -143,7 +168,7 @@ export function TemplatesGallery() {
         >
           {visibleTemplates.map((template) => (
             <m.div key={template.key} variants={fadeInUp}>
-              <TemplateCard templateKey={template.key} />
+              <TemplateCard templateKey={template.key} onUse={handleUse} />
             </m.div>
           ))}
         </m.div>
@@ -154,6 +179,15 @@ export function TemplatesGallery() {
           </p>
         )}
       </div>
+
+      <TemplateSelectionDialog
+        isOpen={!!selectedSlug}
+        isLoading={isImporting}
+        onOpenChange={(open) => {
+          if (!open && !isImporting) setSelectedSlug(null);
+        }}
+        onSelect={handleSelect}
+      />
     </section>
   );
 }
