@@ -150,10 +150,12 @@ function SortableLanguageItem({
         </Button>
       </div>
 
-      <div className={`
+      <div
+        className={`
         grid gap-3
         sm:grid-cols-2
-      `}>
+      `}
+      >
         <div className='space-y-1'>
           <Input
             value={item.name}
@@ -409,7 +411,9 @@ const LanguageForm = ({
                       {'No languages added yet'}
                     </p>
                     <p className='mt-1 text-xs text-slate-400'>
-                      {'Add the languages you speak and your level of proficiency.'}
+                      {
+                        'Add the languages you speak and your level of proficiency.'
+                      }
                     </p>
                   </div>
                 ) : (

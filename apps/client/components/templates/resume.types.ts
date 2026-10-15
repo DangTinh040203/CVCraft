@@ -78,15 +78,29 @@ export function sortByOrder<T extends { order: number }>(items: T[]): T[] {
   return [...items].sort((a, b) => a.order - b.order);
 }
 
+/**
+ * A resume date as a Date: ISO as the editor saves it, or "MM/YYYY" as early
+ * CV imports returned it. Null when it can't be read.
+ */
+export function parseResumeDate(value: string | null | undefined): Date | null {
+  if (!value) return null;
+  const monthYear = value.trim().match(/^(\d{1,2})[-/.](\d{4})$/);
+  const date = monthYear
+    ? new Date(Number(monthYear[2]), Number(monthYear[1]) - 1, 1)
+    : new Date(value);
+  return isNaN(date.getTime()) ? null : date;
+}
+
 export function formatDateRange(
   startDate: string,
   endDate: string | null,
 ): string {
-  const format = (iso: string) =>
-    new Date(iso).toLocaleDateString('en-US', {
+  // An unreadable date shows as written rather than "Invalid Date"
+  const format = (value: string) =>
+    parseResumeDate(value)?.toLocaleDateString('en-US', {
       month: 'short',
       year: 'numeric',
-    });
+    }) ?? value;
 
   return `${format(startDate)} – ${endDate ? format(endDate) : 'Present'}`;
 }

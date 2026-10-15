@@ -48,16 +48,11 @@ import {
 import { useCallback, useEffect, useMemo, useState } from 'react';
 
 import BuilderNavigation from '@/components/builder-screens/builder-navigation';
+import { parseResumeDate } from '@/components/templates/resume.types';
 import { useSyncResume } from '@/hooks/use-sync-resume';
 import { updateResume } from '@/stores/features/resume.slice';
 import { useAppDispatch } from '@/stores/store';
 import type { Education } from '@/types/resume.type';
-
-const safeDate = (value: string | null | undefined): Date | null => {
-  if (!value) return null;
-  const d = new Date(value);
-  return isNaN(d.getTime()) ? null : d;
-};
 
 interface EducationFormProps {
   onNext?: () => void;
@@ -170,10 +165,12 @@ function SortableEducationItem({
       </div>
 
       <div className='grid gap-3'>
-        <div className={`
+        <div
+          className={`
           grid gap-3
           sm:grid-cols-2
-        `}>
+        `}
+        >
           <div className='space-y-1'>
             <Input
               value={item.school}
@@ -246,9 +243,7 @@ function SortableEducationItem({
                     errors?.degree && 'border-red-400 focus:ring-red-500/20',
                   )}
                 >
-                  <SelectValue
-                    placeholder={'Select a degree'}
-                  />
+                  <SelectValue placeholder={'Select a degree'} />
                 </SelectTrigger>
                 <SelectContent>
                   {DEGREE_OPTIONS.map((degree) => (
@@ -280,16 +275,18 @@ function SortableEducationItem({
             'dark:border-slate-700 dark:bg-slate-700',
           )}
         />
-        <div className={`
+        <div
+          className={`
           grid gap-3
           sm:grid-cols-2
-        `}>
+        `}
+        >
           <div>
             <Label className='mb-1.5 block text-xs text-slate-500'>
               {'Start date'}
             </Label>
             <DatePicker
-              date={safeDate(item.startDate)}
+              date={parseResumeDate(item.startDate)}
               setDate={(date) =>
                 onUpdate(
                   item.id,
@@ -304,7 +301,7 @@ function SortableEducationItem({
               {'End date'}
             </Label>
             <DatePicker
-              date={safeDate(item.endDate)}
+              date={parseResumeDate(item.endDate)}
               setDate={(date) =>
                 onUpdate(item.id, 'endDate', date ? date.toISOString() : null)
               }
@@ -519,7 +516,9 @@ const EducationForm = ({ onNext, onBack }: EducationFormProps) => {
                       {'No education added yet'}
                     </p>
                     <p className='mt-1 text-xs text-slate-400'>
-                      {'Add your schools and degrees to round out your profile.'}
+                      {
+                        'Add your schools and degrees to round out your profile.'
+                      }
                     </p>
                   </div>
                 ) : (

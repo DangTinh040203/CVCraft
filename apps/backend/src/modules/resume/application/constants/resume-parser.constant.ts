@@ -14,7 +14,7 @@ export const RESUME_PARSER_PROMPT = `
   - "overview" = the summary / objective / about-me paragraph of the CV.
   - "information" = personal contact details as label/value pairs (e.g. label "Email" / value "a@b.com", "Phone", "Address", "GitHub", "LinkedIn", "Date of Birth"). Do NOT put the name or position here.
   - "skills" = skill groups as label/value pairs (e.g. label "Programming Languages" / value "TypeScript, Go"). If the CV lists skills flat without groups, use a sensible label like "Skills".
-  - For dates ("startDate", "endDate"): keep the format found in the CV (e.g. "03/2021", "Mar 2021"). If a role/education is ongoing ("Present", "Now", "Hiện tại"), return null for "endDate".
+  - For dates ("startDate", "endDate", certification "date"): ALWAYS return "YYYY-MM" whatever the CV writes (e.g. "03/2021" -> "2021-03", "Mar 2021" -> "2021-03", "Tháng 3/2021" -> "2021-03"). If only the year is given, return "YYYY". If a role/education is ongoing ("Present", "Current", "Now", "Hiện tại"), return null for "endDate".
   - Inside "projects": "title" = the project name, "subTitle" = a short tagline or project type; "position" = the candidate's role in that project.
 
   --------------------------------
@@ -86,8 +86,15 @@ export const RESUME_SCHEMA: Schema = {
             ],
           },
           major: { type: Type.STRING },
-          startDate: { type: Type.STRING },
-          endDate: { type: Type.STRING, nullable: true },
+          startDate: {
+            type: Type.STRING,
+            description: '"YYYY-MM", or "YYYY" when only the year is known.',
+          },
+          endDate: {
+            type: Type.STRING,
+            nullable: true,
+            description: '"YYYY-MM" or "YYYY"; null while ongoing.',
+          },
         },
         required: ['school', 'degree', 'major', 'startDate'],
       },
@@ -113,8 +120,15 @@ export const RESUME_SCHEMA: Schema = {
           company: { type: Type.STRING },
           position: { type: Type.STRING },
           description: { type: Type.STRING },
-          startDate: { type: Type.STRING },
-          endDate: { type: Type.STRING, nullable: true },
+          startDate: {
+            type: Type.STRING,
+            description: '"YYYY-MM", or "YYYY" when only the year is known.',
+          },
+          endDate: {
+            type: Type.STRING,
+            nullable: true,
+            description: '"YYYY-MM" or "YYYY"; null while ongoing.',
+          },
         },
         required: ['company', 'position', 'description', 'startDate'],
       },
@@ -158,7 +172,10 @@ export const RESUME_SCHEMA: Schema = {
         properties: {
           name: { type: Type.STRING },
           issuer: { type: Type.STRING },
-          date: { type: Type.STRING },
+          date: {
+            type: Type.STRING,
+            description: '"YYYY-MM", or "YYYY" when only the year is known.',
+          },
         },
         required: ['name', 'issuer', 'date'],
       },

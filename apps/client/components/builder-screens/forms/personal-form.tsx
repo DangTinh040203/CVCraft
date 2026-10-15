@@ -308,10 +308,12 @@ const PersonalForm = ({ onNext, onBack }: PersonalFormProps) => {
                       {'Basic Details'}
                     </span>
                   </div>
-                  <div className={`
+                  <div
+                    className={`
                     grid gap-4
                     sm:grid-cols-2
-                  `}>
+                  `}
+                  >
                     <FormField
                       control={form.control}
                       name='title'
@@ -458,7 +460,9 @@ const PersonalForm = ({ onNext, onBack }: PersonalFormProps) => {
                           {'No contact details yet'}
                         </p>
                         <p className='mt-1 text-xs text-slate-400'>
-                          {'Add an email, phone number, or links so recruiters can reach you.'}
+                          {
+                            'Add an email, phone number, or links so recruiters can reach you.'
+                          }
                         </p>
                       </div>
                     ) : (

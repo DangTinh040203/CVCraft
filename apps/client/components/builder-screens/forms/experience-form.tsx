@@ -41,16 +41,11 @@ import { useEffect, useState } from 'react';
 
 import BuilderNavigation from '@/components/builder-screens/builder-navigation';
 import Editor from '@/components/builder-screens/editor';
+import { parseResumeDate } from '@/components/templates/resume.types';
 import { useSyncResume } from '@/hooks/use-sync-resume';
 import { updateResume } from '@/stores/features/resume.slice';
 import { useAppDispatch } from '@/stores/store';
 import type { WorkExperience } from '@/types/resume.type';
-
-const safeDate = (value: string | null | undefined): Date | null => {
-  if (!value) return null;
-  const d = new Date(value);
-  return isNaN(d.getTime()) ? null : d;
-};
 
 interface ExperienceFormProps {
   onNext?: () => void;
@@ -144,10 +139,12 @@ function SortableExperienceItem({
       </div>
 
       <div className='grid gap-3'>
-        <div className={`
+        <div
+          className={`
           grid gap-3
           sm:grid-cols-2
-        `}>
+        `}
+        >
           <div className='space-y-1'>
             <Input
               value={item.company}
@@ -187,16 +184,18 @@ function SortableExperienceItem({
             )}
           </div>
         </div>
-        <div className={`
+        <div
+          className={`
           grid gap-3
           sm:grid-cols-2
-        `}>
+        `}
+        >
           <div>
             <Label className='mb-1.5 block text-xs text-slate-500'>
               {'Start date'}
             </Label>
             <DatePicker
-              date={safeDate(item.startDate)}
+              date={parseResumeDate(item.startDate)}
               setDate={(date) =>
                 onUpdate(
                   item.id,
@@ -211,7 +210,7 @@ function SortableExperienceItem({
               {'End date'}
             </Label>
             <DatePicker
-              date={safeDate(item.endDate)}
+              date={parseResumeDate(item.endDate)}
               setDate={(date) =>
                 onUpdate(item.id, 'endDate', date ? date.toISOString() : null)
               }
@@ -434,7 +433,9 @@ const ExperienceForm = ({ onNext, onBack }: ExperienceFormProps) => {
                       {'No work experience yet'}
                     </p>
                     <p className='mt-1 text-xs text-slate-400'>
-                      {'Add your roles to highlight your career history and achievements.'}
+                      {
+                        'Add your roles to highlight your career history and achievements.'
+                      }
                     </p>
                   </div>
                 ) : (

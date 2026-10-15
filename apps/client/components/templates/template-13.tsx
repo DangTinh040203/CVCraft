@@ -9,6 +9,7 @@ import {
 } from 'lucide-react';
 
 import {
+  parseResumeDate,
   type ResumeData,
   sortByOrder,
 } from '@/components/templates/resume.types';
@@ -125,8 +126,10 @@ function SectionTitle({
   );
 }
 
-function formatMonth(iso: string) {
-  const date = new Date(iso);
+function formatMonth(value: string) {
+  // An unreadable date shows as written rather than "NaN/NaN"
+  const date = parseResumeDate(value);
+  if (!date) return value;
   return `${String(date.getMonth() + 1).padStart(2, '0')}/${date.getFullYear()}`;
 }
 

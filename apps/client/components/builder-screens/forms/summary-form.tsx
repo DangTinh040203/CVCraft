@@ -170,7 +170,9 @@ const SummaryForm = ({ onNext, onBack }: SummaryFormProps) => {
               <Editor
                 value={value}
                 onChange={handleChange}
-                placeholder={'Summarize your background, key strengths, and what you bring to a role...'}
+                placeholder={
+                  'Summarize your background, key strengths, and what you bring to a role...'
+                }
               />
             </div>
 
@@ -196,7 +198,9 @@ const SummaryForm = ({ onNext, onBack }: SummaryFormProps) => {
                 `}
               >
                 <span className='font-medium'>{'Pro tip:'}</span>{' '}
-                {'Keep it to 3-5 sentences and lead with your strongest achievements.'}
+                {
+                  'Keep it to 3-5 sentences and lead with your strongest achievements.'
+                }
               </p>
             </div>
           </motion.div>

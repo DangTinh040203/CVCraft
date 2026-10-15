@@ -34,6 +34,7 @@ import { AlertCircle, Award, GripVertical, Plus, Trash2 } from 'lucide-react';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 
 import BuilderNavigation from '@/components/builder-screens/builder-navigation';
+import { parseResumeDate } from '@/components/templates/resume.types';
 import { useSyncResume } from '@/hooks/use-sync-resume';
 import { updateResume } from '@/stores/features/resume.slice';
 import { useAppDispatch } from '@/stores/store';
@@ -143,10 +144,12 @@ function SortableCertificationItem({
           )}
         </div>
 
-        <div className={`
+        <div
+          className={`
           grid gap-3
           sm:grid-cols-2
-        `}>
+        `}
+        >
           <div className='space-y-1'>
             <Input
               value={item.issuer}
@@ -168,7 +171,7 @@ function SortableCertificationItem({
           </div>
           <div>
             <DatePicker
-              date={item.date ? new Date(item.date) : null}
+              date={parseResumeDate(item.date)}
               setDate={(date) =>
                 onUpdate(
                   item.id,

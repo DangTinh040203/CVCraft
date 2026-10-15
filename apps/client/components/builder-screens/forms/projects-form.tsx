@@ -137,10 +137,12 @@ function SortableProjectItem({
       </div>
 
       <div className='grid gap-3'>
-        <div className={`
+        <div
+          className={`
           grid gap-3
           sm:grid-cols-2
-        `}>
+        `}
+        >
           <div className='space-y-1'>
             <Input
               value={item.title}
@@ -172,10 +174,12 @@ function SortableProjectItem({
           />
         </div>
 
-        <div className={`
+        <div
+          className={`
           grid gap-3
           sm:grid-cols-2
-        `}>
+        `}
+        >
           <Input
             value={item.position}
             onChange={(e) => onUpdate(item.id, 'position', e.target.value)}
@@ -390,7 +394,7 @@ const ProjectsForm = ({ onNext, onBack }: ProjectsFormProps) => {
                     dark:text-slate-400
                   `}
                 >
-                  {'Highlight the work you\'re most proud of'}
+                  {"Highlight the work you're most proud of"}
                 </span>
               </div>
             </CardTitle>
