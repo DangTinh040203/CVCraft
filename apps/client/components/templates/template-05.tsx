@@ -1,11 +1,14 @@
 import Image from 'next/image';
 
+import { ProjectExtras } from '@/components/templates/project-extras';
 import {
   formatDateRange,
+  hasSkillGroups,
   type ResumeData,
   sortByOrder,
 } from '@/components/templates/resume.types';
 import { RichText } from '@/components/templates/rich-text';
+import { SkillGroups } from '@/components/templates/skill-groups';
 
 interface TemplateProps {
   resume: ResumeData;
@@ -82,15 +85,23 @@ export function Template05({ resume }: TemplateProps) {
         {resume.skills.length > 0 && (
           <section className='mb-5 break-inside-avoid'>
             <h2 className={sectionBar}>Technical Skills</h2>
-            <div
-              className={`
-                grid grid-cols-3 gap-x-4 gap-y-1 text-[9pt] text-neutral-700
-              `}
-            >
-              {skills.map((skill) => (
-                <span key={skill.id}>{skill.label}</span>
-              ))}
-            </div>
+            {hasSkillGroups(skills) ? (
+              <SkillGroups
+                skills={skills}
+                className='text-[9pt] text-neutral-700'
+                labelClassName='font-bold text-neutral-900'
+              />
+            ) : (
+              <div
+                className={`
+                  grid grid-cols-3 gap-x-4 gap-y-1 text-[9pt] text-neutral-700
+                `}
+              >
+                {skills.map((skill) => (
+                  <span key={skill.id}>{skill.label}</span>
+                ))}
+              </div>
+            )}
           </section>
         )}
 
@@ -183,6 +194,10 @@ export function Template05({ resume }: TemplateProps) {
                   </h3>
                   <RichText
                     value={project.details}
+                    className='text-[9pt] text-neutral-700'
+                  />
+                  <ProjectExtras
+                    project={project}
                     className='text-[9pt] text-neutral-700'
                   />
                 </div>

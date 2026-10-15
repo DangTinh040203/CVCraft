@@ -4,7 +4,10 @@ import { useCallback, useState } from 'react';
 
 import { useService } from '@/hooks/use-http';
 import { ResumeService } from '@/services/resume.service';
-import { resumeSelector, setResume } from '@/stores/features/resume.slice';
+import {
+  importResume as importParsedResume,
+  resumeSelector,
+} from '@/stores/features/resume.slice';
 import {
   normalizeFormat,
   updateTemplateConfigFormat,
@@ -37,7 +40,8 @@ export function useImportResume() {
         if (!resume && base.format) {
           dispatch(updateTemplateConfigFormat(normalizeFormat(base.format)));
         }
-        dispatch(setResume(applyParsedResume(base, parsed)));
+        // Unsaved until the user saves; leaving the page warns meanwhile
+        dispatch(importParsedResume(applyParsedResume(base, parsed)));
         toast.success('Resume imported. Review it, then save.');
         return true;
       } catch (e) {

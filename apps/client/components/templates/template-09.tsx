@@ -1,5 +1,6 @@
 import {
   Briefcase,
+  FolderKanban,
   GraduationCap,
   Languages,
   Sparkles,
@@ -7,12 +8,15 @@ import {
 } from 'lucide-react';
 import Image from 'next/image';
 
+import { ProjectExtras } from '@/components/templates/project-extras';
 import {
   formatDateRange,
+  hasSkillGroups,
   type ResumeData,
   sortByOrder,
 } from '@/components/templates/resume.types';
 import { RichText } from '@/components/templates/rich-text';
+import { SkillGroups } from '@/components/templates/skill-groups';
 
 interface TemplateProps {
   resume: ResumeData;
@@ -70,6 +74,7 @@ export function Template09({ resume }: TemplateProps) {
   const information = sortByOrder(resume.information);
   const educations = sortByOrder(resume.educations);
   const workExperiences = sortByOrder(resume.workExperiences);
+  const projects = sortByOrder(resume.projects);
   const skills = sortByOrder(resume.skills);
   const certifications = sortByOrder(resume.certifications);
   const languages = sortByOrder(resume.languages);
@@ -171,6 +176,37 @@ export function Template09({ resume }: TemplateProps) {
             </div>
           </section>
         )}
+
+        {resume.projects.length > 0 && (
+          <section className='mb-5'>
+            <h2
+              className={`
+                mb-2 flex items-center gap-2 text-[10pt] font-bold
+                text-neutral-900
+              `}
+            >
+              <FolderKanban className='size-3.5 text-rose-700' />
+              Projects
+            </h2>
+            <div className='space-y-3'>
+              {projects.map((project) => (
+                <div key={project.id} className='break-inside-avoid'>
+                  <h3 className='text-[9.5pt] font-semibold text-neutral-900'>
+                    {project.title}
+                  </h3>
+                  <RichText
+                    value={project.details}
+                    className='text-[9pt] text-neutral-700'
+                  />
+                  <ProjectExtras
+                    project={project}
+                    className='text-[9pt] text-neutral-700'
+                  />
+                </div>
+              ))}
+            </div>
+          </section>
+        )}
       </main>
 
       <aside className='w-[62mm] shrink-0 bg-rose-950 p-[8mm] text-white'>
@@ -220,18 +256,27 @@ export function Template09({ resume }: TemplateProps) {
               <Sparkles className='size-3' />
               Skills
             </h2>
-            <div className='flex flex-wrap gap-1.5'>
-              {skills.map((skill) => (
-                <span
-                  key={skill.id}
-                  className={`
-                    rounded-full bg-white/10 px-2.5 py-1 text-[7.5pt] text-white
-                  `}
-                >
-                  {skill.label}
-                </span>
-              ))}
-            </div>
+            {hasSkillGroups(skills) ? (
+              <SkillGroups
+                skills={skills}
+                className='text-[7.5pt] text-rose-100'
+                labelClassName='font-semibold text-white'
+              />
+            ) : (
+              <div className='flex flex-wrap gap-1.5'>
+                {skills.map((skill) => (
+                  <span
+                    key={skill.id}
+                    className={`
+                      rounded-full bg-white/10 px-2.5 py-1 text-[7.5pt]
+                      text-white
+                    `}
+                  >
+                    {skill.label}
+                  </span>
+                ))}
+              </div>
+            )}
           </div>
         )}
 

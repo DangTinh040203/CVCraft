@@ -26,6 +26,7 @@ import { Section } from '@/constants/builder-section.constant';
 import { useGlobalSaveShortcut } from '@/hooks/use-global-save-shortcut';
 import { useService } from '@/hooks/use-http';
 import { useSyncResume } from '@/hooks/use-sync-resume';
+import { useUnsavedChangesWarning } from '@/hooks/use-unsaved-changes-warning';
 import { ResumeService } from '@/services/resume.service';
 import { setResume } from '@/stores/features/resume.slice';
 import {
@@ -65,6 +66,7 @@ const BuilderScreenContainer = () => {
   const { resume } = useSyncResume();
   // Ctrl+S / Cmd+S saves from anywhere in the builder
   useGlobalSaveShortcut();
+  useUnsavedChangesWarning();
 
   const { previewMode } = useAppSelector(templateConfigSelector);
   const templateSelected = useAppSelector(templateSelectedSelector);

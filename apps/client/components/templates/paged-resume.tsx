@@ -117,6 +117,37 @@ function findColumns(root: Element) {
   return last && isColumnGrid(last) ? last : undefined;
 }
 
+const TRANSPARENT = /^(transparent|rgba\(.*,\s*0\))$/;
+
+/**
+ * A sidebar template's colored columns as a page background (CSS
+ * `background-image`), or '' for any other template.
+ *
+ * The columns only fill each page's content box: the vertical padding became
+ * the page margin (see pageMargins), and print leaves some slack at the foot,
+ * so a dark sidebar would stop short of the sheet's top and bottom edges.
+ * Painted on the page itself, at the column's measured position and color
+ * (accent applied), it runs edge to edge.
+ */
+function sidebarBackdrop(root: Element) {
+  const { display, flexDirection } = getComputedStyle(root);
+  if (display !== 'flex' || flexDirection !== 'row') return '';
+
+  const left = root.getBoundingClientRect().left;
+  return Array.from(root.children)
+    .flatMap((column) => {
+      const { backgroundColor: color, position } = getComputedStyle(column);
+      if (position === 'absolute' || TRANSPARENT.test(color)) return [];
+      const box = column.getBoundingClientRect();
+      const from = box.left - left;
+      const to = from + box.width;
+      return [
+        `linear-gradient(to right, transparent ${from}px, ${color} ${from}px, ${color} ${to}px, transparent ${to}px)`,
+      ];
+    })
+    .join(', ');
+}
+
 /**
  * Builds the HTML handed to Paged.js from the laid-out template.
  *
@@ -354,6 +385,7 @@ export function PagedResume({
           await document.fonts.ready;
           const margins = pageMargins(root);
           const css = pageCss(margins);
+          const backdrop = sidebarBackdrop(root);
           const { contents, decorations } = prepareContent(
             root,
             PAGE_HEIGHT_PX - margins.top - margins.bottom - PRINT_SLACK_PX,
@@ -392,6 +424,11 @@ export function PagedResume({
                 ?.insertAdjacentHTML('afterbegin', html);
             }
             const merged = runs.find(({ stage }) => stage.contains(roots[0]!));
+            if (backdrop) {
+              merged!.stage
+                .querySelectorAll<HTMLElement>('.pagedjs_page')
+                .forEach((page) => (page.style.backgroundImage = backdrop));
+            }
             target.replaceChildren(...Array.from(merged!.stage.childNodes));
             pages = roots.length;
           } catch (error) {

@@ -74,6 +74,40 @@ export interface ResumeData {
   languages: LanguageItem[];
 }
 
+/** Proficiency words a skill's `value` may hold, as in the sample data. */
+const SKILL_LEVELS = new Set([
+  'beginner',
+  'elementary',
+  'novice',
+  'basic',
+  'intermediate',
+  'competent',
+  'proficient',
+  'advanced',
+  'expert',
+  'master',
+]);
+
+/** True when a skill's `value` is a proficiency level ("Expert"). */
+export function isSkillLevel(value: string | null | undefined): boolean {
+  return SKILL_LEVELS.has((value ?? '').trim().toLowerCase());
+}
+
+/**
+ * What a skill lists, e.g. "React, Next.js" for the group "Frameworks" (as
+ * CV import returns skills). Empty when `value` is a proficiency level or
+ * blank, so templates that show levels their own way keep doing so.
+ */
+export function skillDetail(skill: SkillItem): string {
+  const value = (skill.value ?? '').trim();
+  return value && !isSkillLevel(value) ? value : '';
+}
+
+/** True when any skill lists items, so the section reads as groups. */
+export function hasSkillGroups(skills: SkillItem[]): boolean {
+  return skills.some((skill) => skillDetail(skill) !== '');
+}
+
 export function sortByOrder<T extends { order: number }>(items: T[]): T[] {
   return [...items].sort((a, b) => a.order - b.order);
 }

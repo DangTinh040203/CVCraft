@@ -7,12 +7,15 @@ import {
   Layers,
 } from 'lucide-react';
 
+import { ProjectExtras } from '@/components/templates/project-extras';
 import {
   formatDateRange,
+  hasSkillGroups,
   type ResumeData,
   sortByOrder,
 } from '@/components/templates/resume.types';
 import { RichText } from '@/components/templates/rich-text';
+import { SkillGroups } from '@/components/templates/skill-groups';
 
 interface TemplateProps {
   resume: ResumeData;
@@ -157,19 +160,27 @@ export function Template12({ resume }: TemplateProps) {
               <Badge icon={Layers} color='#2563eb'>
                 Skills
               </Badge>
-              <div className='flex flex-wrap gap-1.5'>
-                {skills.map((skill) => (
-                  <span
-                    key={skill.id}
-                    className={`
-                      rounded-full bg-neutral-100 px-2.5 py-1 text-[8pt]
-                      text-neutral-700
-                    `}
-                  >
-                    {skill.label}
-                  </span>
-                ))}
-              </div>
+              {hasSkillGroups(skills) ? (
+                <SkillGroups
+                  skills={skills}
+                  className='text-[8pt] text-neutral-700'
+                  labelClassName='font-semibold text-neutral-900'
+                />
+              ) : (
+                <div className='flex flex-wrap gap-1.5'>
+                  {skills.map((skill) => (
+                    <span
+                      key={skill.id}
+                      className={`
+                        rounded-full bg-neutral-100 px-2.5 py-1 text-[8pt]
+                        text-neutral-700
+                      `}
+                    >
+                      {skill.label}
+                    </span>
+                  ))}
+                </div>
+              )}
             </section>
           )}
 
@@ -225,6 +236,10 @@ export function Template12({ resume }: TemplateProps) {
                     </p>
                     <RichText
                       value={project.details}
+                      className='text-[8pt] text-neutral-700'
+                    />
+                    <ProjectExtras
+                      project={project}
                       className='text-[8pt] text-neutral-700'
                     />
                   </div>

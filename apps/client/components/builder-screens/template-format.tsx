@@ -37,6 +37,7 @@ import {
 } from 'lucide-react';
 
 import { FONT_OPTIONS } from '@/configs/font.config';
+import { markResumeDirty } from '@/stores/features/resume.slice';
 import {
   defaultFormat,
   type FontWeight,
@@ -52,7 +53,8 @@ const COLOR_OPTIONS = [
   {
     value: TEMPLATE_DEFAULT,
     labelKey: 'Template default',
-    color: 'conic-gradient(#3b82f6, #10b981, #f59e0b, #ef4444, #8b5cf6, #3b82f6)',
+    color:
+      'conic-gradient(#3b82f6, #10b981, #f59e0b, #ef4444, #8b5cf6, #3b82f6)',
   },
   { value: '#3b82f6', labelKey: 'Blue', color: '#3b82f6' },
   { value: '#06b6d4', labelKey: 'Cyan', color: '#06b6d4' },
@@ -165,12 +167,15 @@ const TemplateFormat = () => {
   const dispatch = useAppDispatch();
   const format = useAppSelector(templateFormatSelector);
 
+  // The format is saved with the resume, so a change is unsaved work too
   const updateFormat = (updates: Partial<Format>) => {
     dispatch(updateTemplateConfigFormat(updates));
+    dispatch(markResumeDirty());
   };
 
   const handleReset = () => {
     dispatch(updateTemplateConfigFormat(defaultFormat));
+    dispatch(markResumeDirty());
   };
 
   return (

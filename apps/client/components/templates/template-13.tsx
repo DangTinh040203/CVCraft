@@ -8,6 +8,7 @@ import {
   ScanFace,
 } from 'lucide-react';
 
+import { ProjectExtras } from '@/components/templates/project-extras';
 import {
   parseResumeDate,
   type ResumeData,
@@ -325,10 +326,17 @@ export function Template13({ resume }: TemplateProps) {
                       value={project.details}
                       className='text-neutral-700'
                     />
-                    <p className='text-neutral-700'>
-                      <span className='font-bold'>Technologies - </span>
-                      {project.technologies}
-                    </p>
+                    {project.technologies && (
+                      <p className='text-neutral-700'>
+                        <span className='font-bold'>Technologies - </span>
+                        {project.technologies}
+                      </p>
+                    )}
+                    <ProjectExtras
+                      project={project}
+                      className='text-neutral-700'
+                      hide={['position', 'technologies']}
+                    />
                   </div>
                 </div>
               ))}

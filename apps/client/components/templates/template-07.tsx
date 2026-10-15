@@ -1,9 +1,12 @@
 import { Briefcase, FolderKanban, GraduationCap, User } from 'lucide-react';
 import Image from 'next/image';
 
+import { ProjectExtras } from '@/components/templates/project-extras';
 import {
   formatDateRange,
+  isSkillLevel,
   type ResumeData,
+  skillDetail,
   sortByOrder,
 } from '@/components/templates/resume.types';
 import { RichText } from '@/components/templates/rich-text';
@@ -108,19 +111,26 @@ export function Template07({ resume }: TemplateProps) {
                   <p className='mb-1 text-[8pt] text-neutral-700'>
                     {skill.label}
                   </p>
-                  <div className='h-1 rounded-full bg-neutral-200'>
-                    <div
-                      className='h-1 rounded-full bg-teal-600'
-                      style={{
-                        width:
-                          skill.value === 'Expert'
-                            ? '95%'
-                            : skill.value === 'Advanced'
-                              ? '78%'
-                              : '58%',
-                      }}
-                    />
-                  </div>
+                  {/* A level draws the bar; a list of items is written out */}
+                  {isSkillLevel(skill.value) ? (
+                    <div className='h-1 rounded-full bg-neutral-200'>
+                      <div
+                        className='h-1 rounded-full bg-teal-600'
+                        style={{
+                          width:
+                            skill.value === 'Expert'
+                              ? '95%'
+                              : skill.value === 'Advanced'
+                                ? '78%'
+                                : '58%',
+                        }}
+                      />
+                    </div>
+                  ) : (
+                    <p className='text-[7.5pt] text-neutral-500'>
+                      {skillDetail(skill)}
+                    </p>
+                  )}
                 </div>
               ))}
             </div>
@@ -208,6 +218,10 @@ export function Template07({ resume }: TemplateProps) {
                   </h3>
                   <RichText
                     value={project.details}
+                    className='text-[9pt] text-neutral-700'
+                  />
+                  <ProjectExtras
+                    project={project}
                     className='text-[9pt] text-neutral-700'
                   />
                 </div>

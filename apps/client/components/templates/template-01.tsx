@@ -1,9 +1,12 @@
+import { ProjectExtras } from '@/components/templates/project-extras';
 import {
   formatDateRange,
+  hasSkillGroups,
   type ResumeData,
   sortByOrder,
 } from '@/components/templates/resume.types';
 import { RichText } from '@/components/templates/rich-text';
+import { SkillGroups } from '@/components/templates/skill-groups';
 
 interface TemplateProps {
   resume: ResumeData;
@@ -68,9 +71,17 @@ export function Template01({ resume }: TemplateProps) {
           >
             Skills
           </h2>
-          <p className='text-[9.5pt] text-neutral-700'>
-            {skills.map((skill) => skill.label).join(' · ')}
-          </p>
+          {hasSkillGroups(skills) ? (
+            <SkillGroups
+              skills={skills}
+              className='text-[9.5pt] text-neutral-700'
+              labelClassName='font-semibold text-neutral-900'
+            />
+          ) : (
+            <p className='text-[9.5pt] text-neutral-700'>
+              {skills.map((skill) => skill.label).join(' · ')}
+            </p>
+          )}
         </section>
       )}
 
@@ -206,6 +217,11 @@ export function Template01({ resume }: TemplateProps) {
                 <RichText
                   value={project.details}
                   className='text-[9.5pt] text-neutral-700'
+                />
+                <ProjectExtras
+                  project={project}
+                  className='text-[9.5pt] text-neutral-700'
+                  hide={['subTitle']}
                 />
               </div>
             ))}

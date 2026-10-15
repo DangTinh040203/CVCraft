@@ -1,11 +1,14 @@
 import Image from 'next/image';
 
+import { ProjectExtras } from '@/components/templates/project-extras';
 import {
   formatDateRange,
+  hasSkillGroups,
   type ResumeData,
   sortByOrder,
 } from '@/components/templates/resume.types';
 import { RichText } from '@/components/templates/rich-text';
+import { SkillGroups } from '@/components/templates/skill-groups';
 
 interface TemplateProps {
   resume: ResumeData;
@@ -120,6 +123,10 @@ export function Template08({ resume }: TemplateProps) {
                     value={project.details}
                     className='text-[9pt] text-neutral-700'
                   />
+                  <ProjectExtras
+                    project={project}
+                    className='text-[9pt] text-neutral-700'
+                  />
                 </div>
               ))}
             </div>
@@ -158,11 +165,19 @@ export function Template08({ resume }: TemplateProps) {
             >
               Skills
             </h2>
-            <ul className='space-y-1 text-[8pt] text-neutral-200'>
-              {skills.map((skill) => (
-                <li key={skill.id}>{skill.label}</li>
-              ))}
-            </ul>
+            {hasSkillGroups(skills) ? (
+              <SkillGroups
+                skills={skills}
+                className='text-[8pt] text-neutral-200'
+                labelClassName='font-semibold text-white'
+              />
+            ) : (
+              <ul className='space-y-1 text-[8pt] text-neutral-200'>
+                {skills.map((skill) => (
+                  <li key={skill.id}>{skill.label}</li>
+                ))}
+              </ul>
+            )}
           </div>
         )}
 

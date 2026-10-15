@@ -1,11 +1,14 @@
 import Image from 'next/image';
 
+import { ProjectExtras } from '@/components/templates/project-extras';
 import {
   formatDateRange,
+  hasSkillGroups,
   type ResumeData,
   sortByOrder,
 } from '@/components/templates/resume.types';
 import { RichText } from '@/components/templates/rich-text';
+import { SkillGroups } from '@/components/templates/skill-groups';
 
 interface TemplateProps {
   resume: ResumeData;
@@ -113,6 +116,10 @@ export function Template04({ resume }: TemplateProps) {
                     value={project.details}
                     className='text-[9pt] text-neutral-700'
                   />
+                  <ProjectExtras
+                    project={project}
+                    className='text-[9pt] text-neutral-700'
+                  />
                 </div>
               ))}
             </div>
@@ -168,19 +175,27 @@ export function Template04({ resume }: TemplateProps) {
             >
               Skills
             </h2>
-            <div className='flex flex-wrap gap-1.5'>
-              {skills.map((skill) => (
-                <span
-                  key={skill.id}
-                  className={`
-                    rounded border border-neutral-700 px-1.5 py-0.5 text-[8pt]
-                    text-neutral-200
-                  `}
-                >
-                  {skill.label}
-                </span>
-              ))}
-            </div>
+            {hasSkillGroups(skills) ? (
+              <SkillGroups
+                skills={skills}
+                className='text-[8pt] text-neutral-300'
+                labelClassName='font-semibold text-neutral-100'
+              />
+            ) : (
+              <div className='flex flex-wrap gap-1.5'>
+                {skills.map((skill) => (
+                  <span
+                    key={skill.id}
+                    className={`
+                      rounded border border-neutral-700 px-1.5 py-0.5 text-[8pt]
+                      text-neutral-200
+                    `}
+                  >
+                    {skill.label}
+                  </span>
+                ))}
+              </div>
+            )}
           </div>
         )}
 

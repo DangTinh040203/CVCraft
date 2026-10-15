@@ -1,6 +1,9 @@
+import { ProjectExtras } from '@/components/templates/project-extras';
 import {
   formatDateRange,
+  isSkillLevel,
   type ResumeData,
+  skillDetail,
   sortByOrder,
 } from '@/components/templates/resume.types';
 import { RichText } from '@/components/templates/rich-text';
@@ -79,17 +82,24 @@ export function Template06({ resume }: TemplateProps) {
                   <p className='mb-1 text-[8.5pt] text-neutral-700'>
                     {skill.label}
                   </p>
-                  <div className='flex gap-1'>
-                    {proficiencyBlocks(skill.value).map((filled, i) => (
-                      <span
-                        key={i}
-                        className={`
-                          h-1.5 flex-1 rounded-sm
-                          ${filled ? `bg-neutral-900` : `bg-neutral-200`}
-                        `}
-                      />
-                    ))}
-                  </div>
+                  {/* A level draws the blocks; a list of items is written out */}
+                  {isSkillLevel(skill.value) ? (
+                    <div className='flex gap-1'>
+                      {proficiencyBlocks(skill.value).map((filled, i) => (
+                        <span
+                          key={i}
+                          className={`
+                            h-1.5 flex-1 rounded-sm
+                            ${filled ? `bg-neutral-900` : `bg-neutral-200`}
+                          `}
+                        />
+                      ))}
+                    </div>
+                  ) : (
+                    <p className='text-[8pt] text-neutral-500'>
+                      {skillDetail(skill)}
+                    </p>
+                  )}
                 </div>
               ))}
             </div>
@@ -257,6 +267,10 @@ export function Template06({ resume }: TemplateProps) {
                   </h3>
                   <RichText
                     value={project.details}
+                    className='text-[9pt] text-neutral-700'
+                  />
+                  <ProjectExtras
+                    project={project}
                     className='text-[9pt] text-neutral-700'
                   />
                 </div>

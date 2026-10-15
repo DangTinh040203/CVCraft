@@ -1,8 +1,11 @@
 import Image from 'next/image';
 
+import { ProjectExtras } from '@/components/templates/project-extras';
 import {
   formatDateRange,
+  isSkillLevel,
   type ResumeData,
+  skillDetail,
   sortByOrder,
 } from '@/components/templates/resume.types';
 import { RichText } from '@/components/templates/rich-text';
@@ -96,19 +99,26 @@ export function Template02({ resume }: TemplateProps) {
                   >
                     <span>{skill.label}</span>
                   </div>
-                  <div className='mt-1 h-1 rounded-full bg-slate-700'>
-                    <div
-                      className='h-1 rounded-full bg-sky-400'
-                      style={{
-                        width:
-                          skill.value === 'Expert'
-                            ? '95%'
-                            : skill.value === 'Advanced'
-                              ? '80%'
-                              : '60%',
-                      }}
-                    />
-                  </div>
+                  {/* A level draws the bar; a list of items is written out */}
+                  {isSkillLevel(skill.value) ? (
+                    <div className='mt-1 h-1 rounded-full bg-slate-700'>
+                      <div
+                        className='h-1 rounded-full bg-sky-400'
+                        style={{
+                          width:
+                            skill.value === 'Expert'
+                              ? '95%'
+                              : skill.value === 'Advanced'
+                                ? '80%'
+                                : '60%',
+                        }}
+                      />
+                    </div>
+                  ) : (
+                    <p className='mt-0.5 text-[8pt] text-slate-400'>
+                      {skillDetail(skill)}
+                    </p>
+                  )}
                 </div>
               ))}
             </div>
@@ -259,6 +269,10 @@ export function Template02({ resume }: TemplateProps) {
                   </h3>
                   <RichText
                     value={project.details}
+                    className='text-[9pt] text-neutral-700'
+                  />
+                  <ProjectExtras
+                    project={project}
                     className='text-[9pt] text-neutral-700'
                   />
                 </div>

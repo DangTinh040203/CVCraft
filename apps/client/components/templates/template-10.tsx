@@ -9,6 +9,7 @@ import {
   Layers,
 } from 'lucide-react';
 
+import { ProjectExtras } from '@/components/templates/project-extras';
 import {
   formatDateRange,
   type ResumeData,
@@ -243,6 +244,7 @@ export function Template10({ resume }: TemplateProps) {
                   value={project.details}
                   className='text-neutral-700'
                 />
+                <ProjectExtras project={project} className='text-neutral-700' />
               </div>
             ))}
           </div>
