@@ -24,6 +24,10 @@ export enum Env {
   GEMINI_API_KEY = 'GEMINI_API_KEY',
   GEMINI_LIVE_MODEL = 'GEMINI_LIVE_MODEL',
   GEMINI_MODEL = 'GEMINI_MODEL',
+
+  RESEND_API_KEY = 'RESEND_API_KEY',
+  MAIL_FROM_ADDRESS = 'MAIL_FROM_ADDRESS',
+  MAIL_DAILY_LIMIT_PER_USER = 'MAIL_DAILY_LIMIT_PER_USER',
   GEMINI_FALLBACK_MODEL = 'GEMINI_FALLBACK_MODEL',
 }
 
@@ -56,4 +60,9 @@ export const validationSchema = Joi.object({
   [Env.GEMINI_FALLBACK_MODEL]: Joi.string()
     .allow('')
     .default('gemini-3.1-flash-lite'),
+
+  // Optional: without them, sending answers 503 and drafts still work
+  [Env.RESEND_API_KEY]: Joi.string().optional(),
+  [Env.MAIL_FROM_ADDRESS]: Joi.string().email().optional(),
+  [Env.MAIL_DAILY_LIMIT_PER_USER]: Joi.number().integer().min(1).default(5),
 });

@@ -178,7 +178,7 @@ const ResumeControl = () => {
               sm:w-auto
             `}
           >
-            <DownloadPdf resume={resume} />
+            <DownloadPdf />
           </div>
         )}
 

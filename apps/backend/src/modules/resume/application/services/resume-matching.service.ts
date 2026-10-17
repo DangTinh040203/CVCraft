@@ -26,6 +26,11 @@ export interface MatchResult {
   isValidJobDescription: boolean;
   jobTitle: string | null;
   company: string | null;
+  /** Who to apply to, when the JD names them (checked against the JD). */
+  contactName: string | null;
+  contactEmail: string | null;
+  /** Opening line for the application email, in the JD's language. */
+  greeting: string | null;
   /** Weighted from the criteria, 0-100. */
   overallScore: number;
   summary: string;
@@ -169,7 +174,7 @@ export class ResumeMatchingService {
         { cause: error },
       );
     }
-    return this.normalize(raw);
+    return this.normalize(raw, jobDescription);
   }
 
   /**
@@ -177,8 +182,21 @@ export class ResumeMatchingService {
    * scores and computes the overall score from them, so the numbers always
    * add up whatever the model returned.
    */
-  private normalize(raw: Entry): MatchResult {
+  private normalize(raw: Entry, jobDescription: string): MatchResult {
     const valid = raw.isValidJobDescription !== false;
+    // A recipient the JD doesn't actually mention would be made up: dropped,
+    // and so is a greeting addressing them
+    const jd = jobDescription.toLowerCase();
+    const name = str(raw.contactName).trim();
+    const contactName = name && jd.includes(name.toLowerCase()) ? name : null;
+    const email = str(raw.contactEmail).trim();
+    const contactEmail =
+      /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) &&
+      jd.includes(email.toLowerCase())
+        ? email
+        : null;
+    const greeting =
+      name && !contactName ? '' : str(raw.greeting).replace(/\s+/g, ' ').trim();
     const returned = new Map(list(raw.criteria).map((c) => [str(c.key), c]));
     const criteria = MATCH_CRITERIA.map(({ key, name, weight }) => {
       const found = returned.get(key);
@@ -198,6 +216,9 @@ export class ResumeMatchingService {
       isValidJobDescription: valid,
       jobTitle: str(raw.jobTitle).trim() || null,
       company: str(raw.company).trim() || null,
+      contactName: valid ? contactName : null,
+      contactEmail: valid ? contactEmail : null,
+      greeting: valid ? greeting.slice(0, 120) || null : null,
       overallScore,
       summary: str(raw.summary),
       criteria,

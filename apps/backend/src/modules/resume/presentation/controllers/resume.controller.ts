@@ -16,6 +16,7 @@ import { CurrentDbUser } from '@/libs/decorators';
 import { FileMagicBytesValidator } from '@/libs/pipes/file-magic-bytes.pipe';
 import { extractPdfText } from '@/libs/utils/pdf-text.util';
 import {
+  ResumeEmailService,
   ResumeMatchingService,
   ResumeParserService,
   ResumeService,
@@ -23,6 +24,7 @@ import {
 import {
   MatchResumeDto,
   UpdateResumeDto,
+  WriteEmailDto,
 } from '@/modules/resume/presentation/dtos';
 import { User } from '@/modules/user/domain';
 
@@ -32,6 +34,7 @@ export class ResumeController {
     private readonly resumeService: ResumeService,
     private readonly resumeParserService: ResumeParserService,
     private readonly resumeMatchingService: ResumeMatchingService,
+    private readonly resumeEmailService: ResumeEmailService,
   ) {}
 
   @Get()
@@ -78,6 +81,13 @@ export class ResumeController {
       payload.resume,
       payload.jobDescription,
     );
+  }
+
+  /** Drafts the application email for a job; sending is in ApplicationsModule. */
+  @Throttle({ default: { ttl: 60000, limit: 10 } })
+  @Post('/email')
+  async writeEmail(@Body() payload: WriteEmailDto) {
+    return this.resumeEmailService.write(payload);
   }
 
   @Get('/:id')

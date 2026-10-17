@@ -6,5 +6,7 @@ import { PdfController } from '@/modules/pdf/presentation/controllers';
 @Module({
   providers: [PdfExportService],
   controllers: [PdfController],
+  // Applications attach the resume PDF to the emails they send
+  exports: [PdfExportService],
 })
 export class PdfModule {}

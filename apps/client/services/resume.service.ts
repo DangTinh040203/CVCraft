@@ -1,4 +1,8 @@
 import { HttpService, type HttpServiceOptions } from '@/services/http.service';
+import {
+  type ApplicationEmailDraft,
+  type WriteEmailPayload,
+} from '@/types/application.type';
 import { type MatchResult } from '@/types/match.type';
 import {
   type ParseResumeResponse,
@@ -52,6 +56,15 @@ export class ResumeService extends HttpService {
       { resume: Resume; jobDescription: string },
       MatchResult
     >('/resumes/match', { resume, jobDescription });
+    return data;
+  }
+
+  /** Drafts the application email for a job description. */
+  async writeApplicationEmail(payload: WriteEmailPayload) {
+    const { data } = await this.post<WriteEmailPayload, ApplicationEmailDraft>(
+      '/resumes/email',
+      payload,
+    );
     return data;
   }
 }

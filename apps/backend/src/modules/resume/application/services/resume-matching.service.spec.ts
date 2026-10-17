@@ -97,6 +97,47 @@ describe('ResumeMatchingService', () => {
     ]);
   });
 
+  it('keeps the recipient the JD names, and drops one it made up', async () => {
+    const jd = 'Engineer role. Send your CV to Sarah Lee at jobs@acme.com.';
+    const named = setup({
+      isValidJobDescription: true,
+      contactName: 'Sarah Lee',
+      contactEmail: 'jobs@acme.com',
+      greeting: 'Dear Ms.  Sarah Lee,',
+    });
+    const invented = setup({
+      isValidJobDescription: true,
+      contactName: 'John Smith',
+      contactEmail: 'hr@acme.com',
+      greeting: 'Dear Mr. John Smith,',
+    });
+
+    await expect(named.service.match(resume, jd)).resolves.toMatchObject({
+      contactName: 'Sarah Lee',
+      contactEmail: 'jobs@acme.com',
+      greeting: 'Dear Ms. Sarah Lee,',
+    });
+    await expect(invented.service.match(resume, jd)).resolves.toMatchObject({
+      contactName: null,
+      contactEmail: null,
+      // It addressed someone the JD never mentions
+      greeting: null,
+    });
+  });
+
+  it('keeps a hiring-team greeting when no one is named', async () => {
+    const { service } = setup({
+      isValidJobDescription: true,
+      contactName: null,
+      greeting: 'Kính gửi Bộ phận Tuyển dụng,',
+    });
+
+    await expect(service.match(resume, 'jd')).resolves.toMatchObject({
+      contactName: null,
+      greeting: 'Kính gửi Bộ phận Tuyển dụng,',
+    });
+  });
+
   it('zeroes everything for something that is not a job description', async () => {
     const { service } = setup({
       isValidJobDescription: false,

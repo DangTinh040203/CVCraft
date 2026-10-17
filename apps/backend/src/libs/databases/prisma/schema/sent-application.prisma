@@ -1,0 +1,17 @@
+/// An application email sent through CraftCV: counts toward the daily send
+/// limit and is the user's history of jobs applied to.
+model SentApplication {
+  id                String   @id @default(uuid())
+  userId            String
+  user              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  toEmail           String
+  subject           String
+  jobTitle          String?
+  company           String?
+  /// The mail vendor's message id, for support lookups
+  providerMessageId String?
+  createdAt         DateTime @default(now())
+
+  @@index([userId, createdAt])
+  @@map("sent_applications")
+}

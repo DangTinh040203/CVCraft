@@ -21,6 +21,11 @@ export interface MatchResult {
   isValidJobDescription: boolean;
   jobTitle: string | null;
   company: string | null;
+  /** Who to apply to, only when the JD names them. */
+  contactName: string | null;
+  contactEmail: string | null;
+  /** Opening line for the application email, in the JD's language. */
+  greeting: string | null;
   /** 0-100, weighted from the criteria. */
   overallScore: number;
   summary: string;
