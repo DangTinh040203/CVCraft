@@ -181,6 +181,7 @@ function NavigationMenuLink({
         `
           hover:bg-accent hover:text-accent-foreground
           focus:bg-accent focus:text-accent-foreground
+          focus:[&_svg:not([class*='text-'])]:text-accent-foreground
           focus-visible:ring-ring/50 focus-visible:ring-[3px]
           focus-visible:outline-1
           data-[active=true]:bg-accent/50

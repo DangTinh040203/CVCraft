@@ -143,6 +143,7 @@ function SelectItem({
       className={cn(
         `
           focus:bg-accent focus:text-accent-foreground
+          focus:[&_svg:not([class*='text-'])]:text-accent-foreground
           [&_svg:not([class*='text-'])]:text-muted-foreground
           [&_svg:not([class*='size-'])]:size-4
           relative flex w-full cursor-default items-center gap-2 rounded-sm

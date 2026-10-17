@@ -1,16 +1,34 @@
+/// Where the user's application stands, set by them as the process goes on
+enum ApplicationStatus {
+  SENT
+  REPLIED
+  INTERVIEW
+  OFFER
+  REJECTED
+}
+
 /// An application email sent through CraftCV: counts toward the daily send
 /// limit and is the user's history of jobs applied to.
 model SentApplication {
-  id                String   @id @default(uuid())
+  id                String            @id @default(uuid())
   userId            String
-  user              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user              User              @relation(fields: [userId], references: [id], onDelete: Cascade)
   toEmail           String
+  /// Where replies go (the resume's email, else the account's)
+  replyTo           String?
   subject           String
+  /// The message as sent; null for sends from before it was kept
+  body              String?           @db.Text
   jobTitle          String?
   company           String?
+  status            ApplicationStatus @default(SENT)
+  notes             String?           @db.Text
   /// The mail vendor's message id, for support lookups
   providerMessageId String?
-  createdAt         DateTime @default(now())
+  createdAt         DateTime          @default(now())
+  updatedAt         DateTime          @default(now()) @updatedAt
+  /// Removed from the user's list; kept so it still counts toward the limit
+  deletedAt         DateTime?
 
   @@index([userId, createdAt])
   @@map("sent_applications")

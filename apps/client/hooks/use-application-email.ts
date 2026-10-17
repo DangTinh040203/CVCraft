@@ -55,7 +55,9 @@ export function useApplicationEmail(
 
   const refreshQuota = useCallback(async () => {
     try {
-      setQuota((await applicationsService.getApplications()).quota);
+      setQuota(
+        (await applicationsService.getApplications({ pageSize: 1 })).quota,
+      );
     } catch {
       // Not fatal: the server checks the quota again when sending
     }

@@ -17,6 +17,7 @@ import {
   Target,
   Upload,
 } from 'lucide-react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import React from 'react';
 
 import DownloadPdf from '@/components/builder-screens/download-pdf';
@@ -37,7 +38,21 @@ const ResumeControl = () => {
   const importInputRef = React.useRef<HTMLInputElement>(null);
   // The panel stays mounted, so its job description and last score survive
   // closing it to edit the resume
-  const [matchOpen, setMatchOpen] = React.useState(false);
+  // `?match=1` (from My applications' "Apply for a job") opens it right away
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const [matchOpen, setMatchOpen] = React.useState(
+    () => searchParams.get('match') === '1',
+  );
+
+  // Drop the flag, so a reload or Back doesn't reopen the panel
+  React.useEffect(() => {
+    if (searchParams.get('match') !== '1') return;
+    const params = new URLSearchParams(searchParams.toString());
+    params.delete('match');
+    const query = params.toString();
+    router.replace(`/builder${query ? `?${query}` : ''}`, { scroll: false });
+  }, [router, searchParams]);
 
   const handleImport = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];

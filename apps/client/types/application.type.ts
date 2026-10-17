@@ -32,13 +32,47 @@ export interface SendQuota {
   remaining: number;
 }
 
+/** Where an application stands, as the user tracks it. */
+export type ApplicationStatus =
+  'SENT' | 'REPLIED' | 'INTERVIEW' | 'OFFER' | 'REJECTED';
+
 export interface SentApplication {
   id: string;
   toEmail: string;
+  /** Where replies go. */
+  replyTo: string | null;
   subject: string;
+  /** The message as sent (null for early sends that didn't keep it). */
+  body: string | null;
   jobTitle: string | null;
   company: string | null;
+  status: ApplicationStatus;
+  notes: string | null;
   createdAt: string;
+  updatedAt: string;
+}
+
+export interface ApplicationsQuery {
+  status?: ApplicationStatus;
+  search?: string;
+  page?: number;
+  pageSize?: number;
+}
+
+/** `GET /applications`. */
+export interface ApplicationsPage {
+  items: SentApplication[];
+  total: number;
+  page: number;
+  pageSize: number;
+  /** Listed applications in each status, across all pages. */
+  counts: Record<ApplicationStatus, number>;
+  quota: SendQuota;
+}
+
+export interface UpdateApplicationPayload {
+  status?: ApplicationStatus;
+  notes?: string;
 }
 
 export interface SendApplicationPayload {

@@ -3,14 +3,17 @@ import {
   HttpStatus,
   Inject,
   Injectable,
+  NotFoundException,
   ServiceUnavailableException,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 
 import { Env } from '@/libs/configs/env.config';
+import { type ApplicationStatus } from '@/libs/databases/prisma/generated/enums';
 import {
   type ISentApplicationRepository,
   SENT_APPLICATION_REPOSITORY_TOKEN,
+  type UpdateSentApplication,
 } from '@/modules/applications/application/interfaces';
 import { type SentApplication } from '@/modules/applications/domain';
 import { MailService } from '@/modules/mail/application/services';
@@ -22,7 +25,13 @@ import { type User } from '@/modules/user/domain';
 
 /** Sends count toward the limit for this long after they go out. */
 const QUOTA_WINDOW_MS = 24 * 60 * 60 * 1000;
-const HISTORY_SIZE = 20;
+
+export interface ListApplicationsInput {
+  status?: ApplicationStatus;
+  search?: string;
+  page: number;
+  pageSize: number;
+}
 
 export interface SendApplicationInput {
   to: string;
@@ -111,8 +120,37 @@ export class ApplicationsService {
     };
   }
 
-  history(userId: string): Promise<SentApplication[]> {
-    return this.repository.findRecent(userId, HISTORY_SIZE);
+  /** A page of the user's applications, with the count in each status. */
+  async list(userId: string, input: ListApplicationsInput) {
+    const [{ items, total }, counts] = await Promise.all([
+      this.repository.findPage(userId, {
+        status: input.status,
+        search: input.search,
+        skip: (input.page - 1) * input.pageSize,
+        take: input.pageSize,
+      }),
+      this.repository.countByStatus(userId),
+    ]);
+    return { items, total, page: input.page, pageSize: input.pageSize, counts };
+  }
+
+  /** Moves the application along (status) or keeps notes on it. */
+  async update(userId: string, id: string, data: UpdateSentApplication) {
+    const application = await this.repository.update(userId, id, {
+      status: data.status,
+      // An emptied note is cleared
+      notes:
+        typeof data.notes === 'string' ? data.notes.trim() || null : undefined,
+    });
+    if (!application) throw new NotFoundException('Application not found');
+    return application;
+  }
+
+  /** Takes it off the list; it still counts toward today's limit. */
+  async remove(userId: string, id: string) {
+    if (!(await this.repository.remove(userId, id))) {
+      throw new NotFoundException('Application not found');
+    }
   }
 
   async send(
@@ -165,7 +203,9 @@ export class ApplicationsService {
     const application = await this.repository.create({
       userId: user.id,
       toEmail: to,
+      replyTo: candidateEmail,
       subject: input.subject.trim(),
+      body: input.body.trim(),
       jobTitle: input.jobTitle?.trim() || null,
       company: input.company?.trim() || null,
       providerMessageId,

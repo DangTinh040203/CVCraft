@@ -1,6 +1,9 @@
 import { clerkMiddleware } from '@clerk/nextjs/server';
 import { NextResponse } from 'next/server';
 
+/** Pages that need an account; signed-out visitors sign in, then return. */
+const SIGNED_IN_ONLY = ['/builder', '/applications'];
+
 export const proxy = clerkMiddleware(async (auth, req) => {
   const { isAuthenticated } = await auth();
   const pathname = req.nextUrl.pathname;
@@ -14,7 +17,10 @@ export const proxy = clerkMiddleware(async (auth, req) => {
     return NextResponse.redirect(new URL('/', req.url));
   }
 
-  if (!isAuthenticated && pathname.startsWith('/builder')) {
+  if (
+    !isAuthenticated &&
+    SIGNED_IN_ONLY.some((path) => pathname.startsWith(path))
+  ) {
     const signInUrl = new URL('/auth/sign-in', req.url);
     signInUrl.searchParams.set(
       'callbackUrl',

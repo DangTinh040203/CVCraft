@@ -25,6 +25,7 @@ import {
   LogOut,
   Menu,
   PenSquare,
+  Send,
   User,
   X,
 } from 'lucide-react';
@@ -235,6 +236,12 @@ const Header = () => {
                           </div>
                         </DropdownMenuLabel>
                         <DropdownMenuSeparator />
+                        <DropdownMenuItem asChild>
+                          <Link href='/applications' className='cursor-pointer'>
+                            <Send className='mr-2 h-4 w-4' />
+                            My applications
+                          </Link>
+                        </DropdownMenuItem>
                         <DropdownMenuItem disabled>
                           <User className='mr-2 h-4 w-4' />
                           Profile
@@ -393,6 +400,17 @@ const Header = () => {
                   exit='exit'
                 >
                   <SignedIn>
+                    <Link href='/applications' onClick={() => setIsOpen(false)}>
+                      <Button
+                        variant={
+                          isActive('/applications') ? 'secondary' : 'ghost'
+                        }
+                        className='w-full justify-start gap-3'
+                      >
+                        <Send className='h-4 w-4' />
+                        My applications
+                      </Button>
+                    </Link>
                     <Button
                       variant='ghost'
                       className='w-full justify-start gap-3'

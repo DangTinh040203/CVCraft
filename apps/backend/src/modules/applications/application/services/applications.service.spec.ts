@@ -1,4 +1,8 @@
-import { HttpStatus, ServiceUnavailableException } from '@nestjs/common';
+import {
+  HttpStatus,
+  NotFoundException,
+  ServiceUnavailableException,
+} from '@nestjs/common';
 import { type ConfigService } from '@nestjs/config';
 
 import { type ISentApplicationRepository } from '@/modules/applications/application/interfaces';
@@ -41,7 +45,10 @@ function setup({ used = 0, configured = true } = {}) {
       .mockImplementation((data) =>
         Promise.resolve(new SentApplication({ ...data, id: 'a1' })),
       ),
-    findRecent: jest.fn(),
+    findPage: jest.fn().mockResolvedValue({ items: [], total: 0 }),
+    countByStatus: jest.fn().mockResolvedValue({ SENT: 0 }),
+    update: jest.fn().mockResolvedValue(null),
+    remove: jest.fn().mockResolvedValue(false),
   };
   const mail = {
     isConfigured: jest.fn().mockReturnValue(configured),
@@ -86,6 +93,8 @@ describe('ApplicationsService', () => {
       expect.objectContaining({
         userId: 'u1',
         toEmail: 'hr@acme.com',
+        replyTo: 'tinh@example.com',
+        body: 'Dear team, I would like to apply.',
         providerMessageId: 'msg_1',
       }),
     );
@@ -142,6 +151,52 @@ describe('ApplicationsService', () => {
       ServiceUnavailableException,
     );
     expect(pdf.render).not.toHaveBeenCalled();
+  });
+
+  it('lists a page of applications with the count per status', async () => {
+    const { repository, service } = setup();
+
+    const page = await service.list('u1', {
+      status: 'INTERVIEW',
+      search: 'acme',
+      page: 3,
+      pageSize: 10,
+    });
+
+    expect(repository.findPage).toHaveBeenCalledWith('u1', {
+      status: 'INTERVIEW',
+      search: 'acme',
+      skip: 20,
+      take: 10,
+    });
+    expect(page).toMatchObject({ page: 3, pageSize: 10, counts: { SENT: 0 } });
+  });
+
+  it("updates only the user's own application, clearing an emptied note", async () => {
+    const { repository, service } = setup();
+    repository.update.mockResolvedValueOnce(
+      new SentApplication({ id: 'a1', status: 'REPLIED' }),
+    );
+
+    await service.update('u1', 'a1', { status: 'REPLIED', notes: '  ' });
+
+    expect(repository.update).toHaveBeenCalledWith('u1', 'a1', {
+      status: 'REPLIED',
+      notes: null,
+    });
+    await expect(
+      service.update('u1', 'someone-elses', { status: 'OFFER' }),
+    ).rejects.toBeInstanceOf(NotFoundException);
+  });
+
+  it('404s when removing what is not on the list', async () => {
+    const { repository, service } = setup();
+    repository.remove.mockResolvedValueOnce(true);
+
+    await expect(service.remove('u1', 'a1')).resolves.toBeUndefined();
+    await expect(service.remove('u1', 'a1')).rejects.toBeInstanceOf(
+      NotFoundException,
+    );
   });
 
   it('records nothing when the send fails', async () => {

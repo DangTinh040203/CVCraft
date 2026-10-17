@@ -67,6 +67,7 @@ function ContextMenuSubTrigger({
       className={cn(
         `
           focus:bg-accent focus:text-accent-foreground
+          focus:[&_svg:not([class*='text-'])]:text-accent-foreground
           data-[state=open]:bg-accent data-[state=open]:text-accent-foreground
           [&_svg:not([class*='text-'])]:text-muted-foreground
           [&_svg:not([class*='size-'])]:size-4
@@ -161,6 +162,7 @@ function ContextMenuItem({
       className={cn(
         `
           focus:bg-accent focus:text-accent-foreground
+          focus:[&_svg:not([class*='text-'])]:text-accent-foreground
           data-[variant=destructive]:text-destructive
           data-[variant=destructive]:focus:bg-destructive/10
           data-[variant=destructive]:focus:text-destructive
