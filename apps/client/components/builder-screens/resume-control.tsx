@@ -8,10 +8,19 @@ import {
 } from '@repo/ui/components/tooltip';
 import { cn } from '@repo/ui/lib/utils';
 import { motion } from 'framer-motion';
-import { Eye, EyeOff, FileText, Loader2, Save, Upload } from 'lucide-react';
+import {
+  Eye,
+  EyeOff,
+  FileText,
+  Loader2,
+  Save,
+  Target,
+  Upload,
+} from 'lucide-react';
 import React from 'react';
 
 import DownloadPdf from '@/components/builder-screens/download-pdf';
+import { JobMatchSheet } from '@/components/builder-screens/job-match/job-match-sheet';
 import { useImportResume } from '@/hooks/use-import-resume';
 import { useSyncResume } from '@/hooks/use-sync-resume';
 import {
@@ -26,6 +35,9 @@ const ResumeControl = () => {
   const dispatch = useAppDispatch();
   const { importResume, isImporting } = useImportResume();
   const importInputRef = React.useRef<HTMLInputElement>(null);
+  // The panel stays mounted, so its job description and last score survive
+  // closing it to edit the resume
+  const [matchOpen, setMatchOpen] = React.useState(false);
 
   const handleImport = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -205,7 +217,29 @@ const ResumeControl = () => {
             </Tooltip>
           </TooltipProvider>
         </div>
+
+        <div
+          className={`
+            w-full
+            sm:w-auto
+          `}
+        >
+          <Button
+            variant='secondary'
+            className={`
+              border-primary w-full gap-2 border shadow-xl
+              sm:w-auto
+            `}
+            onClick={() => setMatchOpen(true)}
+            disabled={!resume}
+          >
+            <Target className='h-4 w-4' />
+            Match to Job
+          </Button>
+        </div>
       </div>
+
+      <JobMatchSheet open={matchOpen} onOpenChange={setMatchOpen} />
     </div>
   );
 };

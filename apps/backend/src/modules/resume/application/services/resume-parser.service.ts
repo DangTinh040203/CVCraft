@@ -1,11 +1,7 @@
 import { ThinkingLevel } from '@google/genai';
-import {
-  BadRequestException,
-  Injectable,
-  InternalServerErrorException,
-} from '@nestjs/common';
-import { PDFParse } from 'pdf-parse';
+import { Injectable, InternalServerErrorException } from '@nestjs/common';
 
+import { extractPdfText } from '@/libs/utils/pdf-text.util';
 import { LlmService } from '@/modules/llm/application/services';
 import {
   RESUME_PARSER_PROMPT,
@@ -20,22 +16,7 @@ export class ResumeParserService {
   constructor(private readonly llmService: LlmService) {}
 
   async parse(file: Express.Multer.File): Promise<Record<string, unknown>> {
-    const parser = new PDFParse({ data: file.buffer });
-    let text: string;
-    let pages: Array<{ text: string }>;
-    try {
-      ({ text, pages } = await parser.getText());
-    } finally {
-      await parser.destroy();
-    }
-
-    // A scanned PDF has no text layer; Gemini would only invent a resume.
-    // Checked per page: the joined text always has "-- 1 of 1 --" markers
-    if (pages.every((page) => !page.text.trim())) {
-      throw new BadRequestException(
-        'No text found in this PDF. Scanned resumes are not supported yet.',
-      );
-    }
+    const text = await extractPdfText(file.buffer);
 
     // A function replacement, so `$&`-style patterns in the CV stay literal
     const prompt = RESUME_PARSER_PROMPT.replace('{cv_text}', () => text);

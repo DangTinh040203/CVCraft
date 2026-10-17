@@ -4,6 +4,7 @@ import { LlmModule } from '@/modules/llm/llm.module';
 import { RESUME_REPOSITORY_TOKEN } from '@/modules/resume/application/interfaces';
 import { UserCreatedListener } from '@/modules/resume/application/listeners/user-created.listener';
 import {
+  ResumeMatchingService,
   ResumeParserService,
   ResumeService,
 } from '@/modules/resume/application/services';
@@ -16,6 +17,7 @@ import { UserModule } from '@/modules/user/user.module';
   providers: [
     ResumeService,
     ResumeParserService,
+    ResumeMatchingService,
     UserCreatedListener,
 
     {

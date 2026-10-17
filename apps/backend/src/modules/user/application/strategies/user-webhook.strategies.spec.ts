@@ -1,7 +1,7 @@
 import { ConflictException } from '@nestjs/common';
 import { type EventEmitter2 } from '@nestjs/event-emitter';
 
-import { CacheKeys,type CacheService } from '@/libs/cache';
+import { CacheKeys, type CacheService } from '@/libs/cache';
 import { USER_CREATED_EVENT } from '@/modules/user/application/constants/user-events.constant';
 import { type IUserRepository } from '@/modules/user/application/interfaces';
 import { type UserService } from '@/modules/user/application/services/user.service';

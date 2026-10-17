@@ -1,4 +1,5 @@
 import { HttpService, type HttpServiceOptions } from '@/services/http.service';
+import { type MatchResult } from '@/types/match.type';
 import {
   type ParseResumeResponse,
   type Resume,
@@ -31,6 +32,26 @@ export class ResumeService extends HttpService {
       '/resumes/parse',
       formData,
     );
+    return data;
+  }
+
+  /** Reads a job description PDF; the text is shown for review. */
+  async readJobDescription(file: File): Promise<string> {
+    const formData = new FormData();
+    formData.append('file', file);
+    const { data } = await this.post<FormData, { text: string }>(
+      '/resumes/job-description',
+      formData,
+    );
+    return data.text;
+  }
+
+  /** Scores the resume as the editor has it against a job description. */
+  async matchResume(resume: Resume, jobDescription: string) {
+    const { data } = await this.post<
+      { resume: Resume; jobDescription: string },
+      MatchResult
+    >('/resumes/match', { resume, jobDescription });
     return data;
   }
 }

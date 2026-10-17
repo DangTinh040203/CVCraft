@@ -58,6 +58,9 @@ export class GeminiAdapter implements LLMProvider {
     if (options?.thinkingConfig) {
       config.thinkingConfig = options.thinkingConfig;
     }
+    if (options?.temperature !== undefined) {
+      config.temperature = options.temperature;
+    }
 
     const models = [
       this.configService.getOrThrow<string>(Env.GEMINI_MODEL),
