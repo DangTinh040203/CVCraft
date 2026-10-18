@@ -1,5 +1,6 @@
 'use client';
 
+import { Button } from '@repo/ui/components/button';
 import { ArrowUp } from 'lucide-react';
 import { useEffect, useState } from 'react';
 
@@ -33,18 +34,17 @@ export const ScrollToTop = () => {
         animate-in fade-in zoom-in fixed right-8 bottom-8 z-50 duration-300
       `}
     >
-      <button
-        onClick={scrollToTop}
-        className={`
-          bg-primary text-primary-foreground flex size-12 cursor-pointer
-          items-center justify-center rounded-full shadow-lg transition-all
-          hover:bg-primary/90 hover:shadow-xl
-          focus:ring-2 focus:ring-offset-2 focus:outline-none
-        `}
+      <Button
+        size='icon'
         aria-label='Scroll to top'
+        className={`
+          size-12 rounded-full shadow-lg
+          hover:shadow-xl
+        `}
+        onClick={scrollToTop}
       >
         <ArrowUp className='size-6' />
-      </button>
+      </Button>
     </div>
   );
 };

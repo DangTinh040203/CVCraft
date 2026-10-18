@@ -20,21 +20,28 @@ import {
   SheetTitle,
 } from '@repo/ui/components/sheet';
 import { Textarea } from '@repo/ui/components/textarea';
+import { cn } from '@repo/ui/lib/utils';
 import { format } from 'date-fns';
 import {
   Check,
   Copy,
   ExternalLink,
   Loader2,
-  Mail,
+  Paperclip,
   Reply,
+  RotateCcw,
   Trash2,
+  XCircle,
 } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { type ReactNode, useEffect, useState } from 'react';
 
-import { CompanyAvatar } from '@/components/applications-screen/company-avatar';
-import { StatusSelect } from '@/components/applications-screen/status-select';
 import {
+  PIPELINE_STEPS,
+  STATUS_META,
+} from '@/components/applications-screen/application-status';
+import { CompanyAvatar } from '@/components/applications-screen/company-avatar';
+import {
+  type ApplicationStatus,
   type SentApplication,
   type UpdateApplicationPayload,
 } from '@/types/application.type';
@@ -127,87 +134,97 @@ function DetailBody({
 
   return (
     <div className='flex h-full min-h-0 flex-col'>
-      <SheetHeader className='border-b p-6 pr-12'>
-        <div className='flex items-start gap-3'>
+      <SheetHeader className='gap-0 border-b p-6 pr-12'>
+        <div className='flex items-center gap-4'>
           <CompanyAvatar
             name={application.company || title}
-            className='size-11'
+            className='size-12 text-base'
           />
           <div className='min-w-0 flex-1'>
-            <SheetTitle className='text-lg leading-snug'>{title}</SheetTitle>
+            <SheetTitle className='font-display text-xl leading-snug font-bold'>
+              {title}
+            </SheetTitle>
             <SheetDescription className='truncate'>
-              {application.company ?? 'Company not stated'}
+              {application.company ?? 'Company not stated'} · Sent{' '}
+              {format(new Date(application.createdAt), 'MMM d, yyyy')}
             </SheetDescription>
           </div>
         </div>
-        <div className='mt-4 flex items-center justify-between gap-3'>
-          <span className='text-muted-foreground text-sm'>Status</span>
-          <StatusSelect
-            value={application.status}
-            onChange={(status) => void onUpdate(application, { status })}
-          />
-        </div>
       </SheetHeader>
 
-      <div className='min-h-0 flex-1 space-y-6 overflow-y-auto p-6'>
-        <dl className='grid gap-3 text-sm'>
-          <MetaRow label='Sent to' value={application.toEmail} />
-          {application.replyTo && (
-            <MetaRow label='Replies go to' value={application.replyTo} />
-          )}
-          <MetaRow
-            label='Sent'
-            value={format(
-              new Date(application.createdAt),
-              'MMM d, yyyy · HH:mm',
-            )}
+      <div className='min-h-0 flex-1 space-y-8 overflow-y-auto p-6'>
+        <DetailSection title='Progress'>
+          <ProgressSteps
+            status={application.status}
+            onChange={(status) => void onUpdate(application, { status })}
           />
-        </dl>
+        </DetailSection>
 
-        <section className='space-y-2'>
-          <h3 className='flex items-center gap-2 text-sm font-semibold'>
-            <Mail className='text-muted-foreground size-4' />
-            Email sent
-          </h3>
-          <div className='bg-muted/40 rounded-xl border p-4'>
-            <p className='text-sm font-semibold'>{application.subject}</p>
+        <DetailSection title='Details'>
+          <dl className='divide-y rounded-2xl border text-sm'>
+            <MetaRow label='Sent to' value={application.toEmail} />
+            {application.replyTo && (
+              <MetaRow label='Replies go to' value={application.replyTo} />
+            )}
+            <MetaRow
+              label='Sent on'
+              value={format(
+                new Date(application.createdAt),
+                'EEEE, MMM d, yyyy · HH:mm',
+              )}
+            />
+          </dl>
+        </DetailSection>
+
+        <DetailSection title='Email sent'>
+          <div className='overflow-hidden rounded-2xl border'>
+            <p className='bg-muted/40 border-b px-4 py-3 text-sm font-semibold'>
+              {application.subject}
+            </p>
             {application.body ? (
               <p
                 className={`
-                  text-muted-foreground mt-3 text-sm/relaxed whitespace-pre-wrap
+                  text-foreground/80 px-4 py-4 text-sm/relaxed
+                  whitespace-pre-wrap
                 `}
               >
                 {application.body}
               </p>
             ) : (
-              <p className='text-muted-foreground mt-3 text-sm italic'>
+              <p className='text-muted-foreground px-4 py-4 text-sm italic'>
                 This email was sent before CraftCV kept a copy of the message.
               </p>
             )}
-            <p className='text-muted-foreground mt-4 border-t pt-3 text-xs'>
-              Your resume was attached as a PDF.
+            <p
+              className={`
+                text-muted-foreground flex items-center gap-2 border-t px-4
+                py-2.5 text-xs
+              `}
+            >
+              <Paperclip className='size-3.5' />
+              Your resume was attached as a PDF
             </p>
           </div>
-        </section>
+        </DetailSection>
 
-        <section className='space-y-2'>
-          <label htmlFor='application-notes' className='text-sm font-semibold'>
-            Notes
-          </label>
+        <DetailSection title='Notes'>
           <Textarea
             id='application-notes'
+            aria-label='Notes'
             value={notes}
             maxLength={NOTES_MAX}
             rows={4}
+            className='rounded-2xl'
             placeholder='Interview dates, who you spoke with, salary range…'
             onChange={(event) => setNotes(event.target.value)}
           />
-          <div className='flex items-center justify-between gap-3'>
+          <div className='mt-2 flex items-center justify-between gap-3'>
             <span className='text-muted-foreground text-xs'>
               Only you can see these.
             </span>
             <Button
               size='sm'
+              className='rounded-full'
               disabled={!notesDirty || savingNotes}
               onClick={() => void saveNotes()}
             >
@@ -215,11 +232,11 @@ function DetailBody({
               Save notes
             </Button>
           </div>
-        </section>
+        </DetailSection>
       </div>
 
       <div className='flex items-center gap-2 border-t p-4'>
-        <Button asChild className='flex-1 gap-2'>
+        <Button asChild className='flex-1 gap-2 rounded-full'>
           <a href={followUpUrl} target='_blank' rel='noreferrer'>
             <Reply className='size-4' />
             Follow up in Gmail
@@ -228,14 +245,10 @@ function DetailBody({
         </Button>
         <Button
           variant='outline'
-          className='gap-2'
+          className='gap-2 rounded-full'
           onClick={() => void copyEmail()}
         >
-          {copied ? (
-            <Check className='size-4' />
-          ) : (
-            <Copy className='size-4' />
-          )}
+          {copied ? <Check className='size-4' /> : <Copy className='size-4' />}
           {copied ? 'Copied' : 'Copy'}
         </Button>
         <AlertDialog>
@@ -245,7 +258,7 @@ function DetailBody({
               size='icon'
               aria-label='Remove from list'
               className={`
-                text-muted-foreground
+                text-muted-foreground rounded-full
                 hover:bg-destructive/10 hover:text-destructive
               `}
             >
@@ -282,9 +295,143 @@ function DetailBody({
   );
 }
 
+function DetailSection({
+  title,
+  children,
+}: {
+  title: string;
+  children: ReactNode;
+}) {
+  return (
+    <section>
+      <h3
+        className={`
+          text-muted-foreground mb-3 flex items-center gap-2 text-xs
+          font-semibold tracking-wider uppercase
+        `}
+      >
+        <span className='bg-primary size-1.5 rounded-full' />
+        {title}
+      </h3>
+      {children}
+    </section>
+  );
+}
+
+/**
+ * Sent → Replied → Interview → Offer, each step clickable; Rejected sits
+ * apart, as the way out of the process.
+ */
+function ProgressSteps({
+  status,
+  onChange,
+}: {
+  status: ApplicationStatus;
+  onChange: (status: ApplicationStatus) => void;
+}) {
+  const rejected = status === 'REJECTED';
+  const reached = rejected ? -1 : PIPELINE_STEPS.indexOf(status);
+
+  return (
+    <div className='rounded-2xl border p-4'>
+      <ol className='grid grid-cols-4'>
+        {PIPELINE_STEPS.map((step, index) => {
+          const done = index < reached;
+          const current = index === reached;
+          return (
+            <li key={step} className='relative flex flex-col items-center'>
+              {/* The line to the previous step */}
+              {index > 0 && (
+                <span
+                  aria-hidden
+                  className={cn(
+                    'absolute top-4 right-1/2 h-0.5 w-full -translate-y-1/2',
+                    index <= reached ? 'bg-primary' : 'bg-border',
+                  )}
+                />
+              )}
+              <button
+                type='button'
+                aria-pressed={current}
+                aria-label={`Mark as ${STATUS_META[step].label}`}
+                className={cn(
+                  `
+                    bg-background relative z-10 flex size-8 items-center
+                    justify-center rounded-full border-2 text-xs font-bold
+                    transition-colors
+                    hover:border-primary
+                  `,
+                  done && 'bg-primary border-primary text-white',
+                  current &&
+                    'border-primary text-primary ring-primary/15 ring-4',
+                  !done && !current && 'text-muted-foreground',
+                )}
+                onClick={() => onChange(step)}
+              >
+                {done ? <Check className='size-4' /> : index + 1}
+              </button>
+              <span
+                className={cn(
+                  'mt-2 text-xs font-medium',
+                  current ? 'text-foreground' : 'text-muted-foreground',
+                )}
+              >
+                {STATUS_META[step].label}
+              </span>
+            </li>
+          );
+        })}
+      </ol>
+
+      <div
+        className={cn(
+          'mt-4 flex items-center justify-between gap-3 border-t pt-3 text-sm',
+          rejected && 'text-rose-700',
+        )}
+      >
+        {rejected ? (
+          <>
+            <span className='flex items-center gap-2 font-medium'>
+              <XCircle className='size-4' />
+              Not moving forward
+            </span>
+            <Button
+              variant='ghost'
+              size='sm'
+              className='text-muted-foreground gap-1.5 rounded-full'
+              onClick={() => onChange('SENT')}
+            >
+              <RotateCcw className='size-3.5' />
+              Reopen
+            </Button>
+          </>
+        ) : (
+          <>
+            <span className='text-muted-foreground'>
+              {STATUS_META[status].hint}
+            </span>
+            <Button
+              variant='ghost'
+              size='sm'
+              className={`
+                text-muted-foreground gap-1.5 rounded-full
+                hover:bg-rose-500/10 hover:text-rose-700
+              `}
+              onClick={() => onChange('REJECTED')}
+            >
+              <XCircle className='size-3.5' />
+              Mark as rejected
+            </Button>
+          </>
+        )}
+      </div>
+    </div>
+  );
+}
+
 function MetaRow({ label, value }: { label: string; value: string }) {
   return (
-    <div className='flex items-baseline justify-between gap-4'>
+    <div className='flex items-baseline justify-between gap-4 px-4 py-3'>
       <dt className='text-muted-foreground shrink-0'>{label}</dt>
       <dd className='truncate text-right font-medium'>{value}</dd>
     </div>

@@ -1,4 +1,5 @@
 import { useAuth } from '@clerk/nextjs';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
 import { useService } from '@/hooks/use-http';
@@ -13,20 +14,44 @@ import { toastApiError } from '@/utils/toast-error-message.util';
 
 const PAGE_SIZE = 10;
 const SEARCH_DEBOUNCE_MS = 300;
+const STATUSES: ApplicationStatus[] = [
+  'SENT',
+  'REPLIED',
+  'INTERVIEW',
+  'OFFER',
+  'REJECTED',
+];
+
+const statusParam = (value: string | null) =>
+  STATUSES.find((status) => status === value);
+
+const pageParam = (value: string | null) => {
+  const page = Number(value);
+  return Number.isInteger(page) && page > 1 ? page : 1;
+};
 
 /**
  * The user's sent applications: one filtered, searched page at a time, with
- * status changes applied optimistically (and rolled back if they fail).
+ * status changes applied optimistically (and rolled back if they fail). The
+ * filter, search and page live in the URL (`?status=&q=&page=`), so a reload
+ * or a shared link opens the same view.
  */
 export function useApplications() {
   const applicationsService = useService(ApplicationsService);
   // Requests sent before Clerk has a session go out without a token
   const { isLoaded } = useAuth();
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const pathname = usePathname();
 
-  const [status, setStatusFilter] = useState<ApplicationStatus | undefined>();
-  const [search, setSearchInput] = useState('');
-  const [debouncedSearch, setDebouncedSearch] = useState('');
-  const [page, setPage] = useState(1);
+  const [status, setStatusFilter] = useState(() =>
+    statusParam(searchParams.get('status')),
+  );
+  const [search, setSearchInput] = useState(() => searchParams.get('q') ?? '');
+  const [debouncedSearch, setDebouncedSearch] = useState(() =>
+    (searchParams.get('q') ?? '').trim(),
+  );
+  const [page, setPage] = useState(() => pageParam(searchParams.get('page')));
   const [data, setData] = useState<ApplicationsPage | null>(null);
   const [loading, setLoading] = useState(true);
   const [failed, setFailed] = useState(false);
@@ -34,12 +59,37 @@ export function useApplications() {
   const requestId = useRef(0);
 
   useEffect(() => {
+    const next = search.trim();
+    // Only a new search goes back to page 1 (not the one read from the URL)
+    if (next === debouncedSearch) return;
     const timer = setTimeout(() => {
-      setDebouncedSearch(search.trim());
+      setDebouncedSearch(next);
       setPage(1);
     }, SEARCH_DEBOUNCE_MS);
     return () => clearTimeout(timer);
-  }, [search]);
+  }, [debouncedSearch, search]);
+
+  /** The URL of a page of this view (filter and search kept). */
+  const pageHref = useCallback(
+    (target: number) => {
+      const params = new URLSearchParams();
+      if (status) params.set('status', status);
+      if (debouncedSearch) params.set('q', debouncedSearch);
+      if (target > 1) params.set('page', String(target));
+      const query = params.toString();
+      return query ? `${pathname}?${query}` : pathname;
+    },
+    [debouncedSearch, pathname, status],
+  );
+
+  // Replace, not push: Back leaves the page instead of undoing each filter
+  useEffect(() => {
+    const target = pageHref(page);
+    const query = searchParams.toString();
+    if (target !== (query ? `${pathname}?${query}` : pathname)) {
+      router.replace(target, { scroll: false });
+    }
+  }, [page, pageHref, pathname, router, searchParams]);
 
   const load = useCallback(async () => {
     const id = ++requestId.current;
@@ -52,9 +102,10 @@ export function useApplications() {
         pageSize: PAGE_SIZE,
       });
       if (id !== requestId.current) return;
-      // Removing the last row of a page leaves it empty: step back one
+      // Past the last page (its last row removed, or an old link): go to
+      // the last page there is
       if (!next.items.length && page > 1) {
-        setPage(page - 1);
+        setPage(Math.max(1, Math.ceil(next.total / PAGE_SIZE)));
         return;
       }
       setData(next);
@@ -162,6 +213,7 @@ export function useApplications() {
     pageCount: Math.max(1, Math.ceil(total / PAGE_SIZE)),
     pageSize: PAGE_SIZE,
     setPage,
+    pageHref,
     update,
     remove,
   };

@@ -90,20 +90,21 @@ function SortableCertificationItem({
     >
       <div className='mb-3 flex items-center justify-between'>
         {/* Drag Handle */}
-        <button
+        <Button
           type='button'
+          variant='ghost'
+          size='icon-sm'
+          aria-label='Drag to reorder'
           className={cn(
-            'cursor-grab touch-none rounded p-1',
-            'text-slate-400 transition-colors',
-            'hover:bg-slate-100 hover:text-slate-600',
-            'dark:hover:bg-slate-700',
+            'text-muted-foreground cursor-grab touch-none',
+            'hover:bg-muted hover:text-foreground',
             isDragging && 'cursor-grabbing',
           )}
           {...attributes}
           {...listeners}
         >
           <GripVertical className='h-4 w-4' />
-        </button>
+        </Button>
 
         {/* Delete Button */}
         <Button

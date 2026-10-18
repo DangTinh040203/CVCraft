@@ -1,7 +1,7 @@
 'use client';
 
 import { useUser } from '@clerk/nextjs';
-import { cn } from '@repo/ui/lib/utils';
+import { ToggleGroup, ToggleGroupItem } from '@repo/ui/components/toggle-group';
 import { m } from 'framer-motion';
 import { useRouter } from 'next/navigation';
 import { useMemo, useState } from 'react';
@@ -113,38 +113,39 @@ export function TemplatesGallery() {
         </m.div>
 
         <m.div
-          className='mb-10 flex flex-wrap justify-center gap-2'
+          className='mb-10 flex justify-center'
           initial='hidden'
           whileInView='visible'
           viewport={{ once: true }}
-          variants={staggerContainer}
+          variants={fadeInUp}
         >
-          {filters.map((f) => (
-            <m.button
-              key={f.key}
-              type='button'
-              variants={fadeInUp}
-              whileHover={{ scale: 1.06, y: -2 }}
-              whileTap={{ scale: 0.95 }}
-              transition={{ type: 'spring', stiffness: 400, damping: 17 }}
-              onClick={() => setFilter(f.key)}
-              className={cn(
-                `
-                  cursor-pointer rounded-full px-5 py-2 text-sm font-bold
-                  transition-colors
-                `,
-                filter === f.key
-                  ? 'bg-primary text-primary-foreground shadow-md'
-                  : `
-                    bg-background text-foreground border-border/80 border
-                    shadow-sm
-                    hover:border-primary/40 hover:bg-primary/5
-                  `,
-              )}
-            >
-              {f.label}
-            </m.button>
-          ))}
+          <ToggleGroup
+            type='single'
+            spacing={2}
+            aria-label='Filter templates'
+            value={filter}
+            // Always one filter: clicking the active one doesn't clear it
+            onValueChange={(value) => value && setFilter(value as Filter)}
+            className='flex-wrap justify-center'
+          >
+            {filters.map((f) => (
+              <ToggleGroupItem
+                key={f.key}
+                value={f.key}
+                className={`
+                  bg-background border-border/80 h-10 cursor-pointer
+                  rounded-full border px-5 font-bold shadow-sm transition-all
+                  hover:border-primary/40 hover:bg-primary/5
+                  hover:text-foreground
+                  data-[state=on]:bg-primary
+                  data-[state=on]:text-primary-foreground
+                  data-[state=on]:border-primary data-[state=on]:shadow-md
+                `}
+              >
+                {f.label}
+              </ToggleGroupItem>
+            ))}
+          </ToggleGroup>
         </m.div>
       </div>
 

@@ -1,4 +1,5 @@
 import { type Metadata } from 'next';
+import { Suspense } from 'react';
 
 import { ApplicationsScreen } from '@/components/applications-screen/applications-screen';
 
@@ -10,5 +11,10 @@ export const metadata: Metadata = {
 };
 
 export default function ApplicationsPage() {
-  return <ApplicationsScreen />;
+  // The screen reads its filter and page from the URL
+  return (
+    <Suspense>
+      <ApplicationsScreen />
+    </Suspense>
+  );
 }

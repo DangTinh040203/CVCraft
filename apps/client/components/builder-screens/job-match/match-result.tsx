@@ -1,5 +1,12 @@
 'use client';
 
+import { Badge } from '@repo/ui/components/badge';
+import { Button } from '@repo/ui/components/button';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from '@repo/ui/components/tooltip';
 import { cn } from '@repo/ui/lib/utils';
 import { m } from 'framer-motion';
 import {
@@ -183,39 +190,48 @@ export function MatchResultView({
                 {result.missingKeywords.map((keyword) => {
                   const added = addedKeywords.has(keyword);
                   return (
-                    <button
-                      key={keyword}
-                      type='button'
-                      disabled={added}
-                      onClick={() => onAddKeyword(keyword)}
-                      title={added ? 'Added to Skills' : 'Add to Skills'}
-                      className={cn(
-                        `
-                          inline-flex items-center gap-1 rounded-full border
-                          px-2.5 py-1 text-xs font-medium transition-colors
-                        `,
-                        added
-                          ? `
-                            border-emerald-200 bg-emerald-50 text-emerald-700
-                            dark:border-emerald-500/30 dark:bg-emerald-500/15
-                            dark:text-emerald-300
-                          `
-                          : `
-                            cursor-pointer border-dashed border-rose-300
-                            text-rose-700
-                            hover:bg-rose-50
-                            dark:border-rose-500/40 dark:text-rose-300
-                            dark:hover:bg-rose-500/10
-                          `,
-                      )}
-                    >
-                      {added ? (
-                        <Check className='size-3' />
-                      ) : (
-                        <Plus className='size-3' />
-                      )}
-                      {keyword}
-                    </button>
+                    <Tooltip key={keyword}>
+                      <TooltipTrigger asChild>
+                        <Badge
+                          asChild
+                          variant='outline'
+                          // Classes here, not on the button: Badge merges them
+                          className={cn(
+                            'gap-1 rounded-full px-2.5 py-1 font-medium',
+                            added
+                              ? `
+                                border-emerald-200 bg-emerald-50 text-emerald-700
+                                dark:border-emerald-500/30 dark:bg-emerald-500/15
+                                dark:text-emerald-300
+                              `
+                              : `
+                                cursor-pointer border-dashed border-rose-300
+                                bg-transparent text-rose-700
+                                hover:bg-rose-50
+                                dark:border-rose-500/40 dark:text-rose-300
+                                dark:hover:bg-rose-500/10
+                              `,
+                          )}
+                        >
+                          <button
+                            type='button'
+                            // Not `disabled`: the tooltip still shows on hover
+                            aria-disabled={added}
+                            onClick={() => !added && onAddKeyword(keyword)}
+                          >
+                            {added ? (
+                              <Check className='size-3' />
+                            ) : (
+                              <Plus className='size-3' />
+                            )}
+                            {keyword}
+                          </button>
+                        </Badge>
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        {added ? 'Added to Skills' : 'Add to Skills'}
+                      </TooltipContent>
+                    </Tooltip>
                   );
                 })}
               </div>
@@ -298,19 +314,17 @@ export function MatchResultView({
                   <div className='min-w-0 flex-1 space-y-2'>
                     <p className='text-sm leading-relaxed'>{suggestion.text}</p>
                     {section && (
-                      <button
+                      <Button
                         type='button'
+                        variant='link'
+                        size='sm'
+                        className='h-auto gap-1 p-0 text-xs font-semibold'
                         onClick={() => onGoToSection(suggestion.section)}
-                        className={`
-                          text-primary inline-flex cursor-pointer items-center
-                          gap-1 text-xs font-semibold
-                          hover:underline
-                        `}
                       >
                         <section.icon className='size-3.5' />
                         Edit {section.label}
                         <ArrowRight className='size-3' />
-                      </button>
+                      </Button>
                     )}
                   </div>
                 </li>

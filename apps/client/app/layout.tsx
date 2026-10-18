@@ -3,6 +3,7 @@ import '@/styles/theme.css';
 
 import { ClerkProvider } from '@clerk/nextjs';
 import { Toaster } from '@repo/ui/components/sonner';
+import { TooltipProvider } from '@repo/ui/components/tooltip';
 import { type Metadata } from 'next';
 import { Geist_Mono, Plus_Jakarta_Sans } from 'next/font/google';
 import NextTopLoader from 'nextjs-toploader';
@@ -61,7 +62,8 @@ export default function RootLayout({ children }: { children: ReactNode }) {
                 easing='ease-in-out'
               />
               <ScrollToTop />
-              {children}
+              {/* One provider for every tooltip in the app */}
+              <TooltipProvider delayDuration={200}>{children}</TooltipProvider>
             </MotionProvider>
           </StoreProvider>
         </body>

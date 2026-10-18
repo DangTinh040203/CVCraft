@@ -12,6 +12,8 @@ function Progress({
   return (
     <ProgressPrimitive.Root
       data-slot='progress'
+      // Without it Radix reports the bar as indeterminate (no aria-valuenow)
+      value={value}
       className={cn(
         'bg-primary/20 relative h-2 w-full overflow-hidden rounded-full',
         className,

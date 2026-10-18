@@ -3,7 +3,6 @@ import { Button } from '@repo/ui/components/button';
 import {
   Tooltip,
   TooltipContent,
-  TooltipProvider,
   TooltipTrigger,
 } from '@repo/ui/components/tooltip';
 import { cn } from '@repo/ui/lib/utils';
@@ -38,21 +37,23 @@ const ResumeControl = () => {
   const importInputRef = React.useRef<HTMLInputElement>(null);
   // The panel stays mounted, so its job description and last score survive
   // closing it to edit the resume
-  // `?match=1` (from My applications' "Apply for a job") opens it right away
+  // `?match=1` (from My applications' "Apply for a job") opens it right away.
+  // The flag stays until the panel is closed: this component can remount
+  // while the builder loads, and would otherwise come back with it closed.
   const searchParams = useSearchParams();
   const router = useRouter();
-  const [matchOpen, setMatchOpen] = React.useState(
+  const [matchOpen, setMatchOpenState] = React.useState(
     () => searchParams.get('match') === '1',
   );
 
-  // Drop the flag, so a reload or Back doesn't reopen the panel
-  React.useEffect(() => {
-    if (searchParams.get('match') !== '1') return;
+  const setMatchOpen = (open: boolean) => {
+    setMatchOpenState(open);
+    if (open || searchParams.get('match') !== '1') return;
     const params = new URLSearchParams(searchParams.toString());
     params.delete('match');
     const query = params.toString();
     router.replace(`/builder${query ? `?${query}` : ''}`, { scroll: false });
-  }, [router, searchParams]);
+  };
 
   const handleImport = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -124,33 +125,31 @@ const ResumeControl = () => {
             sm:w-auto
           `}
         >
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button
-                  variant='gradient'
-                  className={cn(
-                    `
-                      w-full shrink-0 gap-2 transition-all duration-200
-                      sm:w-auto
-                    `,
-                  )}
-                  onClick={sync}
-                  disabled={isSyncing}
-                >
-                  {isSyncing ? (
-                    <Loader2 className='h-4 w-4 animate-spin' />
-                  ) : (
-                    <Save className='h-4 w-4' />
-                  )}
-                  Save
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent>
-                <p>Save your changes (Ctrl+S)</p>
-              </TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                variant='gradient'
+                className={cn(
+                  `
+                    w-full shrink-0 gap-2 transition-all duration-200
+                    sm:w-auto
+                  `,
+                )}
+                onClick={sync}
+                disabled={isSyncing}
+              >
+                {isSyncing ? (
+                  <Loader2 className='h-4 w-4 animate-spin' />
+                ) : (
+                  <Save className='h-4 w-4' />
+                )}
+                Save
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>Save your changes (Ctrl+S)</p>
+            </TooltipContent>
+          </Tooltip>
         </motion.div>
 
         <motion.div
@@ -203,34 +202,32 @@ const ResumeControl = () => {
             sm:w-auto
           `}
         >
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button
-                  variant='secondary'
-                  className={`
-                    border-primary w-full gap-2 border shadow-xl
-                    sm:w-auto
-                  `}
-                  onClick={() => importInputRef.current?.click()}
-                  disabled={isImporting || !resume}
-                >
-                  {isImporting ? (
-                    <Loader2 className='h-4 w-4 animate-spin' />
-                  ) : (
-                    <Upload className='h-4 w-4' />
-                  )}
-                  {isImporting ? 'Importing...' : 'Import Resume'}
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent>
-                <p>
-                  Upload a PDF resume and let AI fill in your details
-                  automatically.
-                </p>
-              </TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                variant='secondary'
+                className={`
+                  border-primary w-full gap-2 border shadow-xl
+                  sm:w-auto
+                `}
+                onClick={() => importInputRef.current?.click()}
+                disabled={isImporting || !resume}
+              >
+                {isImporting ? (
+                  <Loader2 className='h-4 w-4 animate-spin' />
+                ) : (
+                  <Upload className='h-4 w-4' />
+                )}
+                {isImporting ? 'Importing...' : 'Import Resume'}
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>
+                Upload a PDF resume and let AI fill in your details
+                automatically.
+              </p>
+            </TooltipContent>
+          </Tooltip>
         </div>
 
         <div

@@ -22,7 +22,12 @@ import {
   SelectValue,
 } from '@repo/ui/components/select';
 import { Slider } from '@repo/ui/components/slider';
-import { cn } from '@repo/ui/lib/utils';
+import { ToggleGroup, ToggleGroupItem } from '@repo/ui/components/toggle-group';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from '@repo/ui/components/tooltip';
 import {
   ALargeSmall,
   Bold,
@@ -397,30 +402,45 @@ const TemplateFormat = () => {
                   </Label>
                 </div>
 
-                <div className='grid grid-cols-4 gap-3'>
+                <ToggleGroup
+                  type='single'
+                  spacing={3}
+                  aria-label='Accent color'
+                  value={format.color}
+                  // Always one color: clicking the current one keeps it
+                  onValueChange={(value) =>
+                    value && updateFormat({ color: value })
+                  }
+                  className='grid w-full grid-cols-4'
+                >
                   {COLOR_OPTIONS.map((option) => (
-                    <button
-                      key={option.value}
-                      onClick={() => updateFormat({ color: option.value })}
-                      className={cn(
-                        `
-                          group relative flex h-10 w-full cursor-pointer
-                          items-center justify-center rounded-lg border-2
-                          transition-all duration-200
-                        `,
-                        format.color === option.value
-                          ? 'border-primary'
-                          : 'border-transparent',
-                      )}
-                      title={option.labelKey}
-                    >
-                      <div
-                        className='h-6 w-6 rounded-full shadow-sm'
-                        style={{ background: option.color }}
-                      />
-                    </button>
+                    <Tooltip key={option.value}>
+                      {/* The span is the trigger: on the item itself, the
+                          tooltip's data-state would replace its "on" state */}
+                      <TooltipTrigger asChild>
+                        <span className='flex'>
+                          <ToggleGroupItem
+                            value={option.value}
+                            aria-label={option.labelKey}
+                            className={`
+                              hover:bg-muted
+                              data-[state=on]:border-primary
+                              data-[state=on]:bg-transparent
+                              h-10 w-full cursor-pointer rounded-lg border-2
+                              border-transparent
+                            `}
+                          >
+                            <span
+                              className='size-6 rounded-full shadow-sm'
+                              style={{ background: option.color }}
+                            />
+                          </ToggleGroupItem>
+                        </span>
+                      </TooltipTrigger>
+                      <TooltipContent>{option.labelKey}</TooltipContent>
+                    </Tooltip>
                   ))}
-                </div>
+                </ToggleGroup>
               </div>
             </AccordionContent>
           </AccordionItem>

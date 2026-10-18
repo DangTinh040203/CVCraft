@@ -3,6 +3,8 @@
 import { useUser } from '@clerk/nextjs';
 import { Button } from '@repo/ui/components/button';
 import { Input } from '@repo/ui/components/input';
+import { Label } from '@repo/ui/components/label';
+import { RadioGroup, RadioGroupItem } from '@repo/ui/components/radio-group';
 import { Textarea } from '@repo/ui/components/textarea';
 import { cn } from '@repo/ui/lib/utils';
 import {
@@ -200,41 +202,42 @@ export function ApplicationEmailPanel({
             </p>
           </div>
 
-          <div
-            role='radiogroup'
+          <RadioGroup
             aria-label='Tone'
+            value={email.tone}
+            disabled={writing}
+            onValueChange={(value) => email.setTone(value as EmailTone)}
             className='grid grid-cols-3 gap-2'
           >
-            {TONES.map((option) => {
-              const selected = email.tone === option.value;
-              return (
-                <button
-                  key={option.value}
-                  type='button'
-                  role='radio'
-                  aria-checked={selected}
-                  disabled={writing}
-                  onClick={() => email.setTone(option.value)}
-                  className={cn(
-                    `
-                      cursor-pointer rounded-xl border px-3 py-2.5 text-left
-                      transition-colors
-                    `,
-                    selected
-                      ? 'border-primary bg-primary/5 ring-primary/30 ring-2'
-                      : 'hover:bg-muted/60',
-                  )}
-                >
-                  <span className='block text-sm font-semibold'>
-                    {option.label}
-                  </span>
-                  <span className='text-muted-foreground block text-xs'>
-                    {option.hint}
-                  </span>
-                </button>
-              );
-            })}
-          </div>
+            {TONES.map((option) => (
+              <Label
+                key={option.value}
+                htmlFor={`tone-${option.value}`}
+                className={`
+                  hover:bg-muted/60
+                  has-data-[state=checked]:border-primary
+                  has-data-[state=checked]:bg-primary/5
+                  has-data-[state=checked]:ring-primary/30
+                  has-data-[state=checked]:ring-2
+                  flex cursor-pointer flex-col items-stretch gap-0.5 rounded-xl
+                  border px-3 py-2.5
+                `}
+              >
+                <span className={`
+                  flex items-center justify-between gap-2 text-sm font-semibold
+                `}>
+                  {option.label}
+                  <RadioGroupItem
+                    id={`tone-${option.value}`}
+                    value={option.value}
+                  />
+                </span>
+                <span className='text-muted-foreground text-xs font-normal'>
+                  {option.hint}
+                </span>
+              </Label>
+            ))}
+          </RadioGroup>
 
           <Field
             label='Greeting'
