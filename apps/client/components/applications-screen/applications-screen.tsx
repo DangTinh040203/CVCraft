@@ -166,7 +166,8 @@ export function ApplicationsScreen() {
             />
           )}
 
-          {applications.total > applications.pageSize && (
+          {/* Shown even with one page: the count says the list is complete */}
+          {applications.total > 0 && (
             <ApplicationsPagination
               page={applications.page}
               pageCount={applications.pageCount}
