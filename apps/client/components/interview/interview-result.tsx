@@ -20,9 +20,9 @@ import {
 } from 'lucide-react';
 import { type ReactNode } from 'react';
 
-import { formatClock } from '@/components/builder-screens/interview/interview-live';
 import { matchBand } from '@/components/builder-screens/job-match/match-band';
 import { ScoreRing } from '@/components/builder-screens/job-match/score-ring';
+import { formatClock } from '@/components/interview/interview-live';
 import {
   type InterviewFeedback,
   type InterviewVerdict,
@@ -268,10 +268,12 @@ export function InterviewResult({
                         </span>
                       </span>
                     </AccordionTrigger>
-                    <AccordionContent className={`
-                      space-y-3
-                      sm:pl-11
-                    `}>
+                    <AccordionContent
+                      className={`
+                        space-y-3
+                        sm:pl-11
+                      `}
+                    >
                       {question.feedback && (
                         <p className='text-muted-foreground leading-relaxed'>
                           {question.feedback}

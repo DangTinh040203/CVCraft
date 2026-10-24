@@ -21,8 +21,8 @@ export class InterviewSession {
   userId: string;
   socketId: string;
   jobDescription: string;
-  /** The resume as plain text, as the interviewer sees it. */
-  resumeText: string;
+  /** The resume as plain text, as the interviewer sees it (null: JD only). */
+  resumeText: string | null;
   interviewType: InterviewType;
   language: string;
   totalQuestions: number;

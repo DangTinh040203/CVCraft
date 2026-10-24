@@ -50,8 +50,8 @@ export interface EvaluationPromptInput {
   questionsAnswered: number;
   totalQuestions: number;
   durationMinutes: number;
-  /** Sanitized. */
-  resume: string;
+  /** Sanitized; null when the interview was based on the job alone. */
+  resume: string | null;
   /** Sanitized. */
   jobDescription: string;
   /** Sanitized. */
@@ -59,6 +59,12 @@ export interface EvaluationPromptInput {
 }
 
 export function evaluationPrompt(input: EvaluationPromptInput): string {
+  const resume = input.resume
+    ? `<resume>
+${input.resume}
+</resume>`
+    : `No resume was given: the questions came from the job description alone. Judge the answers against the role, not against a resume.`;
+
   return `
 [SYSTEM INSTRUCTION - HIGHEST PRIORITY]
 You are a senior interview coach. Evaluate this spoken mock interview as a whole, strictly but fairly.
@@ -81,9 +87,7 @@ PER QUESTION ("questions"): one entry per question the interviewer asked and the
 The candidate reads this feedback: address them directly as "you" (never "the candidate"), like a coach would.
 Write every text field in ${input.language}.
 
-<resume>
-${input.resume}
-</resume>
+${resume}
 
 <job_description>
 ${input.jobDescription}

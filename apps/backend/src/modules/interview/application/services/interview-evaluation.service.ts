@@ -83,9 +83,11 @@ export class InterviewEvaluationService {
         questionsAnswered: session.questionsAnswered,
         totalQuestions: session.totalQuestions,
         durationMinutes: Math.max(1, Math.round(session.durationSeconds / 60)),
-        resume: PromptSanitizer.sanitize(
-          session.resumeText.slice(0, MAX_CONTEXT_CHARS),
-        ),
+        resume: session.resumeText
+          ? PromptSanitizer.sanitize(
+              session.resumeText.slice(0, MAX_CONTEXT_CHARS),
+            )
+          : null,
         jobDescription: PromptSanitizer.sanitize(
           session.jobDescription.slice(0, MAX_CONTEXT_CHARS),
         ),

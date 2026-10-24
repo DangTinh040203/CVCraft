@@ -42,8 +42,11 @@ import { resumeToText } from '@/modules/resume/application/services/resume-match
 export interface StartInterviewInput {
   userId: string;
   socketId: string;
-  /** The resume as the editor has it (unsaved edits included). */
-  resume: Record<string, unknown>;
+  /**
+   * The resume as the editor has it (unsaved edits included); none when the
+   * interview works from the job description alone.
+   */
+  resume?: Record<string, unknown>;
   jobDescription: string;
   interviewType: InterviewType;
   questionCount: number;
@@ -192,7 +195,7 @@ export class InterviewService {
       userId: input.userId,
       socketId: input.socketId,
       jobDescription: input.jobDescription.trim(),
-      resumeText: resumeToText(input.resume),
+      resumeText: input.resume ? resumeToText(input.resume) : null,
       interviewType: input.interviewType,
       language: input.language,
       totalQuestions: input.questionCount,
@@ -201,7 +204,9 @@ export class InterviewService {
     const providerSessionId = await this.provider.connect(
       {
         systemInstruction: interviewSystemPrompt({
-          resume: PromptSanitizer.sanitize(session.resumeText),
+          resume: session.resumeText
+            ? PromptSanitizer.sanitize(session.resumeText)
+            : null,
           jobDescription: PromptSanitizer.sanitize(session.jobDescription),
           interviewType: session.interviewType,
           totalQuestions: session.totalQuestions,

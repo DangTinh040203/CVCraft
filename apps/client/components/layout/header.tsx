@@ -24,6 +24,7 @@ import {
   Home,
   LogOut,
   Menu,
+  Mic,
   PenSquare,
   Send,
   User,
@@ -36,6 +37,7 @@ import { useEffect, useState } from 'react';
 const navLinks = [
   { href: '/', label: 'Home', icon: Home },
   { href: '/templates', label: 'Templates', icon: FileText },
+  { href: '/interview', label: 'Mock Interview', icon: Mic },
 ];
 
 // Only shown while the user is in the builder

@@ -36,6 +36,8 @@ interface InterviewSetupProps {
   sourceFile: string | null;
   error: string | null;
   onDismissError: () => void;
+  /** The interviewer also reads the editor's resume (the builder). */
+  withResume: boolean;
 }
 
 function Field({
@@ -77,6 +79,7 @@ export function InterviewSetup({
   sourceFile,
   error,
   onDismissError,
+  withResume,
 }: InterviewSetupProps) {
   return (
     <div className='space-y-7'>
@@ -111,7 +114,11 @@ export function InterviewSetup({
         onPdf={onPdf}
         reading={reading}
         sourceFile={sourceFile}
-        hint='The interviewer reads this and your resume as it is in the editor, unsaved changes included, then asks questions fitted to the role and its seniority.'
+        hint={
+          withResume
+            ? 'The interviewer reads this and your resume as it is in the editor, unsaved changes included, then asks questions fitted to the role and its seniority.'
+            : 'The interviewer reads this, then asks questions fitted to the role and its seniority: its responsibilities, skills and technologies.'
+        }
       />
 
       <Field label='Interview type'>

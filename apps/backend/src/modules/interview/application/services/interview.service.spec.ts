@@ -101,6 +101,17 @@ describe('InterviewService', () => {
     expect(provider.connect).not.toHaveBeenCalled();
   });
 
+  it('runs from the job description alone when there is no resume', async () => {
+    const { service, provider, callbacks } = setup();
+    const { resume: _resume, ...jobOnly } = input;
+    const session = await service.start(jobOnly, callbacks);
+
+    expect(session.resumeText).toBeNull();
+    const [config] = provider.connect.mock.calls[0];
+    expect(config.systemInstruction).toContain('There is no resume');
+    expect(config.systemInstruction).toContain(input.jobDescription);
+  });
+
   it('allows one interview per user at a time', async () => {
     const { service, callbacks } = setup();
     await service.start(input, callbacks);

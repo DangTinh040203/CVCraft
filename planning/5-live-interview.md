@@ -442,11 +442,13 @@ services/interview-socket.service.ts     # bọc socket.io-client: emit/on có t
 hooks/use-interview.ts                   # state machine + capture + playback + cleanup
 types/interview.type.ts
 constants/interview.constant.ts          # loại, số câu, giọng, ngôn ngữ, tốc độ, AUDIO_CONFIG
-components/builder-screens/interview/
-  interview-sheet.tsx                    # khung Sheet, đổi màn theo state
+components/interview/                   # dùng chung cho builder và trang /interview
+  interview-panel.tsx                    # nội dung setup -> live -> result, đổi màn theo state
+  interview-sheet.tsx                    # khung Sheet trong builder (gửi kèm resume)
   interview-setup.tsx                    # form
   interview-active.tsx                   # waveform, tiến độ, đồng hồ, mute, End
   interview-result.tsx                   # điểm, tiêu chí, từng câu, mạnh/yếu
+components/interview-screen/             # trang /interview (link header): chỉ JD, không resume
 ```
 
 ---
@@ -655,7 +657,12 @@ không render lại).
 ### B10. UI (dùng `@repo/ui`)
 
 - Mở từ builder: nút "Mock interview" trong `resume-control.tsx`, và nút
-  **"Practice interview"** trong kết quả Job Match (truyền sẵn JD).
+  **"Practice interview"** trong kết quả Job Match (truyền sẵn JD). Ở đây
+  interviewer đọc **resume trong editor + JD**.
+- Trang riêng `/interview` (link "Mock Interview" trên header, cần đăng nhập):
+  không có resume nên `useInterview({ withResume: false })` không gửi `resume`;
+  BE hỏi và chấm **chỉ dựa trên JD** (`resume` trong `StartInterviewDto` là
+  optional). Trang có link `/builder?interview=1` để mở sheet trong builder.
 - Dùng `Sheet` như Job Match; màn đổi theo `state`.
 - **Setup:** JD (`Textarea`), loại (`ToggleGroup`), số câu (`Slider`), ngôn ngữ và
   giọng (`Select`), tốc độ (`Slider`), ghi chú "cần micro + tai nghe để tránh vọng".

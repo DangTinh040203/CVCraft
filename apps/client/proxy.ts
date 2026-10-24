@@ -2,7 +2,7 @@ import { clerkMiddleware } from '@clerk/nextjs/server';
 import { NextResponse } from 'next/server';
 
 /** Pages that need an account; signed-out visitors sign in, then return. */
-const SIGNED_IN_ONLY = ['/builder', '/applications'];
+const SIGNED_IN_ONLY = ['/builder', '/applications', '/interview'];
 
 export const proxy = clerkMiddleware(async (auth, req) => {
   const { isAuthenticated } = await auth();

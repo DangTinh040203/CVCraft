@@ -18,7 +18,8 @@ export interface InterviewSettings {
 }
 
 export interface StartInterviewPayload extends InterviewSettings {
-  resume: Resume;
+  /** Left out by the standalone interview: questions come from the JD. */
+  resume?: Resume;
 }
 
 export interface InterviewTurnUpdate {

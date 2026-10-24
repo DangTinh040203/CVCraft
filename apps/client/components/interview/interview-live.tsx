@@ -15,7 +15,7 @@ import { Button } from '@repo/ui/components/button';
 import { cn } from '@repo/ui/lib/utils';
 import { Loader2, Mic, MicOff, Quote, Square } from 'lucide-react';
 
-import { VoiceOrb } from '@/components/builder-screens/interview/voice-orb';
+import { VoiceOrb } from '@/components/interview/voice-orb';
 import { INTERVIEW_TIME_LIMIT_SECONDS } from '@/constants/interview.constant';
 import { type UseInterview } from '@/hooks/use-interview';
 

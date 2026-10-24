@@ -32,10 +32,14 @@ export type InterviewSpeaker = 'interviewer' | 'candidate';
  * evaluation. Half-duplex on purpose: the mic is closed while the
  * interviewer speaks (and briefly after), or the speakers' echo would be
  * taken for the candidate cutting in.
+ *
+ * With `withResume`, the interviewer also reads the editor's resume (the
+ * builder); without it, the questions come from the job description alone.
  */
-export function useInterview() {
+export function useInterview({ withResume }: { withResume: boolean }) {
   const { session } = useSession();
-  const { resume } = useAppSelector(resumeSelector);
+  const { resume: editorResume } = useAppSelector(resumeSelector);
+  const resume = withResume ? editorResume : undefined;
   const interviewService = useService(InterviewService);
 
   const [phase, setPhase] = useState<InterviewPhase>('setup');
@@ -135,7 +139,7 @@ export function useInterview() {
 
   const start = useCallback(
     async (settings: InterviewSettings) => {
-      if (!resume || !session) return;
+      if ((withResume && !resume) || !session) return;
       setError(null);
       setFeedback(null);
       setCaption(null);
@@ -172,7 +176,10 @@ export function useInterview() {
       socketRef.current = socket;
 
       socket.on('connect', () => {
-        socket.emit('interview:start', { ...settings, resume });
+        socket.emit('interview:start', {
+          ...settings,
+          ...(resume && { resume }),
+        });
       });
       socket.on('connect_error', (connectError) => {
         fail(
@@ -238,7 +245,7 @@ export function useInterview() {
       socket.on('interview:session-lost', ({ message }) => fail(message));
       socket.on('interview:error', ({ message }) => fail(message));
     },
-    [resume, session, handBackIfDone, fail, teardown, refreshQuota],
+    [withResume, resume, session, handBackIfDone, fail, teardown, refreshQuota],
   );
 
   /** Ends early; the answers so far are evaluated. */
@@ -275,7 +282,7 @@ export function useInterview() {
     dismissError: () => setError(null),
     quota,
     refreshQuota,
-    canStart: !!resume && !!session,
+    canStart: (!withResume || !!resume) && !!session,
     progress,
     caption,
     speaker,

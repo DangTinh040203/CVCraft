@@ -3,6 +3,7 @@ import {
   IsIn,
   IsInt,
   IsObject,
+  IsOptional,
   IsString,
   Max,
   MaxLength,
@@ -21,9 +22,11 @@ import {
 } from '@/modules/interview/application/constants';
 
 export class StartInterviewDto {
-  // The resume as the editor has it (unsaved edits included)
+  // The resume as the editor has it (unsaved edits included); left out by the
+  // standalone interview, which works from the job description alone
+  @IsOptional()
   @IsObject({ message: 'Resume must be an object' })
-  resume: Record<string, unknown>;
+  resume?: Record<string, unknown>;
 
   @IsString({ message: 'Job description must be text' })
   @MinLength(80, {

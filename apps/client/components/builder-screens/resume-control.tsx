@@ -21,8 +21,8 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import React from 'react';
 
 import DownloadPdf from '@/components/builder-screens/download-pdf';
-import { InterviewSheet } from '@/components/builder-screens/interview/interview-sheet';
 import { JobMatchSheet } from '@/components/builder-screens/job-match/job-match-sheet';
+import { InterviewSheet } from '@/components/interview/interview-sheet';
 import { useImportResume } from '@/hooks/use-import-resume';
 import { useSyncResume } from '@/hooks/use-sync-resume';
 import {
@@ -39,7 +39,8 @@ const ResumeControl = () => {
   const importInputRef = React.useRef<HTMLInputElement>(null);
   // The panel stays mounted, so its job description and last score survive
   // closing it to edit the resume
-  // `?match=1` (from My applications' "Apply for a job") opens it right away.
+  // `?match=1` (from My applications' "Apply for a job") opens it right away,
+  // and `?interview=1` (from the mock interview page) the interview panel.
   // The flag stays until the panel is closed: this component can remount
   // while the builder loads, and would otherwise come back with it closed.
   const searchParams = useSearchParams();
@@ -48,16 +49,27 @@ const ResumeControl = () => {
     () => searchParams.get('match') === '1',
   );
 
-  const setMatchOpen = (open: boolean) => {
-    setMatchOpenState(open);
-    if (open || searchParams.get('match') !== '1') return;
+  const clearFlag = (flag: 'match' | 'interview') => {
+    if (searchParams.get(flag) !== '1') return;
     const params = new URLSearchParams(searchParams.toString());
-    params.delete('match');
+    params.delete(flag);
     const query = params.toString();
     router.replace(`/builder${query ? `?${query}` : ''}`, { scroll: false });
   };
 
-  const [interviewOpen, setInterviewOpen] = React.useState(false);
+  const setMatchOpen = (open: boolean) => {
+    setMatchOpenState(open);
+    if (!open) clearFlag('match');
+  };
+
+  const [interviewOpen, setInterviewOpenState] = React.useState(
+    () => searchParams.get('interview') === '1',
+  );
+
+  const setInterviewOpen = (open: boolean) => {
+    setInterviewOpenState(open);
+    if (!open) clearFlag('interview');
+  };
   // Set when the interview is opened from a job match, for that job
   const [interviewJd, setInterviewJd] = React.useState<string>();
 
