@@ -6,7 +6,11 @@ import {
   type CreateResumeCommand,
   type UpdateResumeCommand,
 } from '@/modules/resume/application/commands';
-import { type IResumeRepository } from '@/modules/resume/application/interfaces';
+import {
+  type IResumeRepository,
+  type ResumeOwner,
+  type ResumeSharing,
+} from '@/modules/resume/application/interfaces';
 import { Resume } from '@/modules/resume/domain';
 
 const byOrder = { orderBy: { order: 'asc' } } as const;
@@ -95,10 +99,29 @@ export class PrismaAdapterResumeRepository implements IResumeRepository {
    * Checks if a resume exists and returns only the userId for authorization.
    * Avoids loading all relations just to verify ownership.
    */
-  async findOwner(id: string): Promise<{ id: string; userId: string } | null> {
+  async findOwner(id: string): Promise<ResumeOwner | null> {
     return this.prisma.resume.findUnique({
       where: { id },
-      select: { id: true, userId: true },
+      select: { id: true, userId: true, shareSlug: true },
+    });
+  }
+
+  async findPublicBySlug(slug: string): Promise<Resume | null> {
+    const resume = await this.prisma.resume.findFirst({
+      where: { shareSlug: slug, isPublic: true },
+      include: resumeInclude,
+    });
+    return resume ? new Resume(resume) : null;
+  }
+
+  async updateSharing(
+    id: string,
+    sharing: ResumeSharing,
+  ): Promise<ResumeSharing> {
+    return this.prisma.resume.update({
+      where: { id },
+      data: sharing,
+      select: { isPublic: true, shareSlug: true },
     });
   }
 

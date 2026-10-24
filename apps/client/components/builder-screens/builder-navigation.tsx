@@ -21,7 +21,6 @@ const BuilderNavigation = ({
   loading,
   nextLabel,
 }: BuilderNavigationProps) => {
-
   return (
     <div
       className={`

@@ -11,6 +11,11 @@ model Resume {
   templateKey String?
   format      Json? // fontFamily, color, hiddenSections[], sectionOrder[], ...
 
+  // Public read-only link (/r/<shareSlug>); the slug is kept while sharing
+  // is off, so turning it back on revives the same link
+  shareSlug String? @unique
+  isPublic  Boolean @default(false)
+
   information     ResumeInformation[]
   educations      Education[]
   workExperiences WorkExperience[]

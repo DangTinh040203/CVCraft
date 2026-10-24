@@ -127,7 +127,7 @@ export function Template07({ resume }: TemplateProps) {
                       />
                     </div>
                   ) : (
-                    <p className='text-[7.5pt] text-neutral-500'>
+                    <p className='text-[7.5pt] text-neutral-700'>
                       {skillDetail(skill)}
                     </p>
                   )}

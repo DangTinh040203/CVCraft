@@ -3,6 +3,11 @@ import {
   type ApplicationEmailDraft,
   type WriteEmailPayload,
 } from '@/types/application.type';
+import {
+  type AtsResult,
+  type ResumeSharing,
+  type RewritePayload,
+} from '@/types/ats.type';
 import { type MatchResult } from '@/types/match.type';
 import {
   type ParseResumeResponse,
@@ -56,6 +61,36 @@ export class ResumeService extends HttpService {
       { resume: Resume; jobDescription: string },
       MatchResult
     >('/resumes/match', { resume, jobDescription });
+    return data;
+  }
+
+  /** Rewrites one field with AI (bullets or the summary); nothing is saved. */
+  async rewriteText(payload: RewritePayload): Promise<string[]> {
+    const { data } = await this.post<RewritePayload, { lines: string[] }>(
+      '/resumes/rewrite',
+      payload,
+    );
+    return data.lines;
+  }
+
+  /** Checks the resume as the editor has it for ATS readiness. */
+  async checkAts(resume: Resume) {
+    const { data } = await this.post<{ resume: Resume }, AtsResult>(
+      '/resumes/ats-check',
+      { resume },
+    );
+    return data;
+  }
+
+  /** Turns the public link on or off; `regenerate` replaces the link. */
+  async updateSharing(
+    id: string,
+    payload: { enabled: boolean; regenerate?: boolean },
+  ) {
+    const { data } = await this.patch<typeof payload, ResumeSharing>(
+      `/resumes/${id}/share`,
+      payload,
+    );
     return data;
   }
 

@@ -35,10 +35,12 @@ const testimonials = [
 
 const TestimonialsSection = () => {
   return (
-    <section className={`
-      relative overflow-hidden px-2 py-8
-      md:px-4 md:py-24
-    `}>
+    <section
+      className={`
+        relative overflow-hidden px-2 py-8
+        md:px-4 md:py-24
+      `}
+    >
       <div className='container mx-auto'>
         <m.div
           className='mb-20 text-center'
@@ -153,10 +155,12 @@ const TestimonialsSection = () => {
                       />
                     </m.div>
                     <div>
-                      <div className={`
-                        text-base font-bold
-                        md:text-lg
-                      `}>
+                      <div
+                        className={`
+                          text-base font-bold
+                          md:text-lg
+                        `}
+                      >
                         {testimonial.name}
                       </div>
                       <div className='text-primary text-sm font-medium'>

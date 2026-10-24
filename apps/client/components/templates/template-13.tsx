@@ -219,7 +219,7 @@ export function Template13({ resume }: TemplateProps) {
               {skills.map((skill) => (
                 <li key={skill.id}>
                   - {skill.label}{' '}
-                  <span className='text-neutral-500'>({skill.value})</span>
+                  <span>({skill.value})</span>
                 </li>
               ))}
             </ul>

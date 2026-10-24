@@ -31,10 +31,12 @@ const features = [
 
 const FeaturesSection = () => {
   return (
-    <section className={`
-      relative overflow-hidden px-2 py-8
-      md:px-4 md:py-24
-    `}>
+    <section
+      className={`
+        relative overflow-hidden px-2 py-8
+        md:px-4 md:py-24
+      `}
+    >
       <div className='container mx-auto'>
         <m.div
           className='mb-20 text-center'

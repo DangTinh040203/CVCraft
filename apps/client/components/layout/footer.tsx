@@ -48,10 +48,13 @@ const Footer = () => {
           whileInView='visible'
           viewport={{ once: true }}
         >
-          <m.div variants={fadeInUp} className={`
-            col-span-2
-            md:col-span-1
-          `}>
+          <m.div
+            variants={fadeInUp}
+            className={`
+              col-span-2
+              md:col-span-1
+            `}
+          >
             <div className='mb-4 flex items-center gap-2'>
               <m.div
                 className={`

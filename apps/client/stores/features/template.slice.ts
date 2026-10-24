@@ -121,8 +121,7 @@ const LEGACY_PX_DEFAULTS = {
   margin: 20,
 } as const;
 
-const round = (value: number, step: number) =>
-  Math.round(value / step) * step;
+const round = (value: number, step: number) => Math.round(value / step) * step;
 
 /**
  * Fills a saved format with defaults and converts one saved in px to pt/mm:

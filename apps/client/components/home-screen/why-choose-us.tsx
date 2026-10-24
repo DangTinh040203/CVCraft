@@ -37,8 +37,7 @@ const reasons = [
   {
     icon: Award,
     title: 'Expert Approved',
-    description:
-      'Templates designed by hiring managers and career coaches.',
+    description: 'Templates designed by hiring managers and career coaches.',
   },
   {
     icon: TrendingUp,
@@ -49,10 +48,12 @@ const reasons = [
 
 const WhyChooseUsSection = () => {
   return (
-    <section className={`
-      relative overflow-hidden px-2 py-8
-      md:px-4 md:py-24
-    `}>
+    <section
+      className={`
+        relative overflow-hidden px-2 py-8
+        md:px-4 md:py-24
+      `}
+    >
       <div
         className={`
           via-primary/20 absolute top-0 left-0 h-px w-full bg-linear-to-r
@@ -109,8 +110,8 @@ const WhyChooseUsSection = () => {
               md:text-lg
             `}
           >
-            We combined recruitment expertise with cutting-edge AI to build
-            the ultimate career growth toolkit.
+            We combined recruitment expertise with cutting-edge AI to build the
+            ultimate career growth toolkit.
           </p>
         </m.div>
 

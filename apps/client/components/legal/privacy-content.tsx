@@ -5,9 +5,9 @@ export const privacySections: LegalSection[] = [
     heading: '1. Overview',
     body: (
       <p>
-        This Privacy Policy explains what information CraftCV collects, how
-        we use it, and the choices you have. By using CraftCV, you agree to
-        the collection and use of information as described here.
+        This Privacy Policy explains what information CraftCV collects, how we
+        use it, and the choices you have. By using CraftCV, you agree to the
+        collection and use of information as described here.
       </p>
     ),
   },
@@ -30,8 +30,8 @@ export const privacySections: LegalSection[] = [
             device/browser information, collected to improve the Service.
           </li>
           <li>
-            <strong>Uploaded files</strong> — existing resumes or documents
-            you upload for AI parsing or import.
+            <strong>Uploaded files</strong> — existing resumes or documents you
+            upload for AI parsing or import.
           </li>
         </ul>
       </>
@@ -58,11 +58,11 @@ export const privacySections: LegalSection[] = [
     heading: '4. AI Processing',
     body: (
       <p>
-        Resume content you submit for AI features (such as content
-        suggestions, parsing, or job-description matching) is sent to our AI
-        provider strictly to generate that output. We do not permit our AI
-        provider to use your content to train their general-purpose models
-        outside of providing the Service to you.
+        Resume content you submit for AI features (such as content suggestions,
+        parsing, or job-description matching) is sent to our AI provider
+        strictly to generate that output. We do not permit our AI provider to
+        use your content to train their general-purpose models outside of
+        providing the Service to you.
       </p>
     ),
   },
@@ -70,10 +70,10 @@ export const privacySections: LegalSection[] = [
     heading: '5. Cookies & Similar Technologies',
     body: (
       <p>
-        We use cookies and similar technologies to keep you signed in,
-        remember your preferences, and understand how the Service is used.
-        You can control cookies through your browser settings, though
-        disabling them may affect some features.
+        We use cookies and similar technologies to keep you signed in, remember
+        your preferences, and understand how the Service is used. You can
+        control cookies through your browser settings, though disabling them may
+        affect some features.
       </p>
     ),
   },
@@ -82,10 +82,10 @@ export const privacySections: LegalSection[] = [
     body: (
       <p>
         Your data is stored on secure, encrypted infrastructure. We apply
-        industry-standard technical and organizational measures to protect
-        your information against unauthorized access, alteration, or loss.
-        No method of transmission or storage is 100% secure, and we cannot
-        guarantee absolute security.
+        industry-standard technical and organizational measures to protect your
+        information against unauthorized access, alteration, or loss. No method
+        of transmission or storage is 100% secure, and we cannot guarantee
+        absolute security.
       </p>
     ),
   },
@@ -93,7 +93,9 @@ export const privacySections: LegalSection[] = [
     heading: '7. Sharing of Information',
     body: (
       <>
-        <p>We do not sell your personal information. We share data only with:</p>
+        <p>
+          We do not sell your personal information. We share data only with:
+        </p>
         <ul>
           <li>
             Service providers who help us operate CraftCV (authentication,
@@ -102,8 +104,8 @@ export const privacySections: LegalSection[] = [
           </li>
           <li>Authorities, when required to comply with the law.</li>
           <li>
-            A successor entity, in the event of a merger, acquisition, or
-            asset sale, subject to this Privacy Policy.
+            A successor entity, in the event of a merger, acquisition, or asset
+            sale, subject to this Privacy Policy.
           </li>
         </ul>
       </>
@@ -113,10 +115,10 @@ export const privacySections: LegalSection[] = [
     heading: '8. Data Retention',
     body: (
       <p>
-        We retain your account and resume data for as long as your account
-        is active. If you delete your account, we delete or anonymize your
-        personal data within a reasonable period, except where retention is
-        required by law.
+        We retain your account and resume data for as long as your account is
+        active. If you delete your account, we delete or anonymize your personal
+        data within a reasonable period, except where retention is required by
+        law.
       </p>
     ),
   },
@@ -126,7 +128,9 @@ export const privacySections: LegalSection[] = [
       <>
         <p>Depending on your location, you may have the right to:</p>
         <ul>
-          <li>Access, correct, or export the personal data we hold about you.</li>
+          <li>
+            Access, correct, or export the personal data we hold about you.
+          </li>
           <li>Request deletion of your account and associated data.</li>
           <li>Opt out of non-essential communications at any time.</li>
         </ul>
@@ -141,10 +145,9 @@ export const privacySections: LegalSection[] = [
     heading: "10. Children's Privacy",
     body: (
       <p>
-        CraftCV is not intended for children under 16, and we do not
-        knowingly collect personal information from them. If you believe a
-        child has provided us with personal data, please contact us so we
-        can remove it.
+        CraftCV is not intended for children under 16, and we do not knowingly
+        collect personal information from them. If you believe a child has
+        provided us with personal data, please contact us so we can remove it.
       </p>
     ),
   },
@@ -153,8 +156,8 @@ export const privacySections: LegalSection[] = [
     body: (
       <p>
         Your information may be processed and stored in countries other than
-        your own. We take steps to ensure appropriate safeguards are in
-        place when your data is transferred internationally.
+        your own. We take steps to ensure appropriate safeguards are in place
+        when your data is transferred internationally.
       </p>
     ),
   },
@@ -162,9 +165,9 @@ export const privacySections: LegalSection[] = [
     heading: '12. Changes to This Policy',
     body: (
       <p>
-        We may update this Privacy Policy from time to time. Material
-        changes will be communicated through the Service or by email before
-        they take effect.
+        We may update this Privacy Policy from time to time. Material changes
+        will be communicated through the Service or by email before they take
+        effect.
       </p>
     ),
   },

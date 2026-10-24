@@ -36,10 +36,12 @@ export function LegalPage({
         />
       </div>
 
-      <div className={`
-        container mx-auto px-4 pt-24 pb-16
-        md:px-6 md:pt-32
-      `}>
+      <div
+        className={`
+          container mx-auto px-4 pt-24 pb-16
+          md:px-6 md:pt-32
+        `}
+      >
         <div className='mx-auto max-w-3xl'>
           <h1
             className={`
@@ -49,10 +51,12 @@ export function LegalPage({
           >
             {title}
           </h1>
-          <p className={`
-            text-muted-foreground mb-1 text-base
-            md:text-lg
-          `}>
+          <p
+            className={`
+              text-muted-foreground mb-1 text-base
+              md:text-lg
+            `}
+          >
             {description}
           </p>
           <p className='text-muted-foreground mb-12 text-sm'>

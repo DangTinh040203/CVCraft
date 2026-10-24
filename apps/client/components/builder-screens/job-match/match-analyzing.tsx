@@ -15,16 +15,21 @@ const STEPS = [
 const STEP_MS = 3500;
 
 /** Shown while a match runs: progress through the steps, then a skeleton. */
-export function MatchAnalyzing() {
+export function MatchAnalyzing({
+  steps = STEPS,
+}: {
+  /** What the progress list says is happening, in order. */
+  steps?: string[];
+}) {
   const [step, setStep] = useState(0);
 
   useEffect(() => {
     const timer = setInterval(
-      () => setStep((current) => Math.min(current + 1, STEPS.length - 1)),
+      () => setStep((current) => Math.min(current + 1, steps.length - 1)),
       STEP_MS,
     );
     return () => clearInterval(timer);
-  }, []);
+  }, [steps.length]);
 
   return (
     <div className='space-y-8 py-2' aria-live='polite' aria-busy='true'>
@@ -48,7 +53,7 @@ export function MatchAnalyzing() {
       </div>
 
       <ol className='space-y-3'>
-        {STEPS.map((label, index) => {
+        {steps.map((label, index) => {
           const done = index < step;
           const active = index === step;
           return (

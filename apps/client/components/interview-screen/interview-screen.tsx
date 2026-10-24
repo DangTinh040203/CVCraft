@@ -208,9 +208,11 @@ export function InterviewScreen() {
               <h2 className='text-sm font-semibold'>
                 Want questions on your resume too?
               </h2>
-              <p className={`
-                text-muted-foreground mt-1.5 text-xs leading-relaxed
-              `}>
+              <p
+                className={`
+                  text-muted-foreground mt-1.5 text-xs leading-relaxed
+                `}
+              >
                 From the builder, the interviewer also reads your resume and
                 asks about your own experience.
               </p>

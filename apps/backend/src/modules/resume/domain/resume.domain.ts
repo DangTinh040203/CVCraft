@@ -77,6 +77,8 @@ export class Resume {
   avatar: string | null;
   templateKey: string | null;
   format: unknown;
+  shareSlug: string | null;
+  isPublic: boolean;
 
   information: Array<ResumeInformation>;
   educations: Array<Education>;

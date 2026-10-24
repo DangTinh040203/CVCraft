@@ -8,7 +8,6 @@ import React from 'react';
 
 import { fadeInUp, staggerContainer } from '@/styles/animation';
 
-
 const statMeta = [
   { color: 'bg-green-500', count: '50k+', label: 'Professionals' },
   { color: 'bg-yellow-500', count: '120k+', label: 'Connections' },
@@ -79,9 +78,7 @@ const HeroSection = () => {
           `}
         >
           <CheckCircle2 className='text-primary h-3.5 w-3.5' />
-          <span className='text-primary text-xs font-bold'>
-            98% ATS Match
-          </span>
+          <span className='text-primary text-xs font-bold'>98% ATS Match</span>
         </div>
       </m.div>
 
@@ -126,9 +123,7 @@ const HeroSection = () => {
             }}
           >
             <Sparkles className='text-primary h-4 w-4' />
-            <span className='text-sm font-medium'>
-              AI-Powered CV Builder
-            </span>
+            <span className='text-sm font-medium'>AI-Powered CV Builder</span>
             <Badge
               className={`bg-primary/20 text-primary border-none text-[10px]`}
             >
@@ -175,12 +170,13 @@ const HeroSection = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.3 }}
           >
-            Welcome to CraftCV, the largest professional CV building
-            platform.
-            <br className={`
-              hidden
-              md:block
-            `} />
+            Welcome to CraftCV, the largest professional CV building platform.
+            <br
+              className={`
+                hidden
+                md:block
+              `}
+            />
             Craft stunning, ATS-friendly resumes in minutes with AI.
           </m.p>
 

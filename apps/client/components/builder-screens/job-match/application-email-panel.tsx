@@ -223,9 +223,12 @@ export function ApplicationEmailPanel({
                   border px-3 py-2.5
                 `}
               >
-                <span className={`
-                  flex items-center justify-between gap-2 text-sm font-semibold
-                `}>
+                <span
+                  className={`
+                    flex items-center justify-between gap-2 text-sm
+                    font-semibold
+                  `}
+                >
                   {option.label}
                   <RadioGroupItem
                     id={`tone-${option.value}`}

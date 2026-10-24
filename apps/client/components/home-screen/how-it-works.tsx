@@ -32,10 +32,12 @@ const steps = [
 
 const HowItWorksSection = () => {
   return (
-    <section className={`
-      relative overflow-hidden px-2 py-8
-      md:px-4 md:py-24
-    `}>
+    <section
+      className={`
+        relative overflow-hidden px-2 py-8
+        md:px-4 md:py-24
+      `}
+    >
       <div
         className={`
           via-primary/20 absolute top-0 left-0 h-px w-full bg-linear-to-r
@@ -88,10 +90,12 @@ const HowItWorksSection = () => {
           </p>
         </m.div>
 
-        <div className={`
-          relative grid gap-12
-          md:grid-cols-3
-        `}>
+        <div
+          className={`
+            relative grid gap-12
+            md:grid-cols-3
+          `}
+        >
           <m.div
             className={`
               from-primary via-accent to-primary absolute top-10 right-1/4

@@ -25,15 +25,12 @@ import { ApplicationEmailPanel } from '@/components/builder-screens/job-match/ap
 import { JobDescriptionStep } from '@/components/builder-screens/job-match/job-description-step';
 import { MatchAnalyzing } from '@/components/builder-screens/job-match/match-analyzing';
 import { MatchResultView } from '@/components/builder-screens/job-match/match-result';
+import { useAddSkillKeyword } from '@/hooks/use-add-skill-keyword';
 import { useApplicationEmail } from '@/hooks/use-application-email';
 import { useJobMatch } from '@/hooks/use-job-match';
-import { resumeSelector, updateResume } from '@/stores/features/resume.slice';
 import { updatePreviewMode } from '@/stores/features/template.slice';
-import { useAppDispatch, useAppSelector } from '@/stores/store';
+import { useAppDispatch } from '@/stores/store';
 import { type MatchSuggestion } from '@/types/match.type';
-
-/** Where keywords added from a match go, so they're easy to review. */
-const ADDED_SKILLS_LABEL = 'Additional Skills';
 
 interface JobMatchSheetProps {
   open: boolean;
@@ -53,11 +50,12 @@ export function JobMatchSheet({
   onPracticeInterview,
 }: JobMatchSheetProps) {
   const match = useJobMatch();
-  const { resume } = useAppSelector(resumeSelector);
   const dispatch = useAppDispatch();
   const router = useRouter();
   const searchParams = useSearchParams();
-  const [addedKeywords, setAddedKeywords] = useState<Set<string>>(new Set());
+  // The chip turns green; the result view reminds to save (a toast would
+  // cover the panel's footer)
+  const { addedKeywords, addKeyword } = useAddSkillKeyword();
   // The email for the matched job: its own screen in this panel, kept while
   // the user goes back to the results
   const email = useApplicationEmail(match.jobDescription, match.result);
@@ -73,40 +71,6 @@ export function JobMatchSheet({
           ? 'email'
           : 'result'
         : 'invalid';
-
-  const addKeyword = (keyword: string) => {
-    if (!resume) return;
-    const skills = resume.skills;
-    const group = skills.find(
-      (skill) =>
-        skill.label.trim().toLowerCase() === ADDED_SKILLS_LABEL.toLowerCase(),
-    );
-    dispatch(
-      updateResume({
-        skills: group
-          ? skills.map((skill) =>
-              skill === group
-                ? {
-                    ...skill,
-                    value: [skill.value, keyword].filter(Boolean).join(', '),
-                  }
-                : skill,
-            )
-          : [
-              ...skills,
-              {
-                id: crypto.randomUUID(),
-                label: ADDED_SKILLS_LABEL,
-                value: keyword,
-                resumeId: resume.id,
-              },
-            ],
-      }),
-    );
-    // The chip turns green; the result view reminds to save (a toast
-    // would cover the panel's footer)
-    setAddedKeywords((current) => new Set(current).add(keyword));
-  };
 
   const goToSection = (section: MatchSuggestion['section']) => {
     onOpenChange(false);

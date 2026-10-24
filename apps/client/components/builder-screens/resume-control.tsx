@@ -14,14 +14,18 @@ import {
   Loader2,
   Mic,
   Save,
+  Share2,
+  ShieldCheck,
   Target,
   Upload,
 } from 'lucide-react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import React from 'react';
 
+import { AtsCheckSheet } from '@/components/builder-screens/ats-check/ats-check-sheet';
 import DownloadPdf from '@/components/builder-screens/download-pdf';
 import { JobMatchSheet } from '@/components/builder-screens/job-match/job-match-sheet';
+import { ShareResumeDialog } from '@/components/builder-screens/share-resume-dialog';
 import { InterviewSheet } from '@/components/interview/interview-sheet';
 import { useImportResume } from '@/hooks/use-import-resume';
 import { useSyncResume } from '@/hooks/use-sync-resume';
@@ -70,6 +74,9 @@ const ResumeControl = () => {
     setInterviewOpenState(open);
     if (!open) clearFlag('interview');
   };
+  // Mounted while closed, so the last check (and its score) is kept
+  const [atsOpen, setAtsOpen] = React.useState(false);
+  const [shareOpen, setShareOpen] = React.useState(false);
   // Set when the interview is opened from a job match, for that job
   const [interviewJd, setInterviewJd] = React.useState<string>();
 
@@ -260,6 +267,35 @@ const ResumeControl = () => {
             lg:w-auto
           `}
         >
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                variant='secondary'
+                className={`
+                  border-primary w-full gap-2 border shadow-xl
+                  lg:w-auto
+                `}
+                onClick={() => setAtsOpen(true)}
+                disabled={!resume}
+              >
+                <ShieldCheck className='h-4 w-4' />
+                ATS Check
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>
+                Score your resume the way applicant tracking systems read it.
+              </p>
+            </TooltipContent>
+          </Tooltip>
+        </div>
+
+        <div
+          className={`
+            w-full
+            lg:w-auto
+          `}
+        >
           <Button
             variant='secondary'
             className={`
@@ -302,7 +338,37 @@ const ResumeControl = () => {
             </TooltipContent>
           </Tooltip>
         </div>
+
+        <div
+          className={`
+            w-full
+            lg:w-auto
+          `}
+        >
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                variant='secondary'
+                className={`
+                  border-primary w-full gap-2 border shadow-xl
+                  lg:w-auto
+                `}
+                onClick={() => setShareOpen(true)}
+                disabled={!resume}
+              >
+                <Share2 className='h-4 w-4' />
+                Share
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>Get a public link and QR code for your resume.</p>
+            </TooltipContent>
+          </Tooltip>
+        </div>
       </div>
+
+      <AtsCheckSheet open={atsOpen} onOpenChange={setAtsOpen} />
+      <ShareResumeDialog open={shareOpen} onOpenChange={setShareOpen} />
 
       <JobMatchSheet
         open={matchOpen}

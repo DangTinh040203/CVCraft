@@ -140,10 +140,10 @@ const TemplatePreviewSection = () => {
                       border-border/60 bg-card relative overflow-hidden
                       rounded-2xl border shadow-lg transition-all duration-500
                       ${
-                      isActive
-                        ? 'border-primary/40 scale-100 shadow-2xl'
-                        : `scale-90 opacity-50`
-                    }
+                        isActive
+                          ? 'border-primary/40 scale-100 shadow-2xl'
+                          : `scale-90 opacity-50`
+                      }
                     `}
                   >
                     <TemplateThumbnail>

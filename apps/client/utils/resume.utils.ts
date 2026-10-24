@@ -7,6 +7,7 @@ import {
 } from '@/stores/features/template.slice';
 import {
   type ParseResumeResponse,
+  type PublicResume,
   type Resume,
   type UpdateResumeDto,
 } from '@/types/resume.type';
@@ -22,7 +23,8 @@ function richText(value: string | null | undefined): string {
  * Customize panel are emptied so every template drops them.
  */
 export function toResumeData(
-  resume: Resume,
+  // A shared resume has no ids, which this doesn't need
+  resume: PublicResume,
   format: Partial<Format> = defaultFormat,
 ): ResumeData {
   const hidden = new Set<SectionType>(format.hiddenSections ?? []);

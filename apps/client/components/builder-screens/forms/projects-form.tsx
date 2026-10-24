@@ -38,6 +38,7 @@ import {
 } from 'lucide-react';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 
+import { AiRewriteButton } from '@/components/builder-screens/ai-rewrite-button';
 import BuilderNavigation from '@/components/builder-screens/builder-navigation';
 import Editor from '@/components/builder-screens/editor';
 import { useSyncResume } from '@/hooks/use-sync-resume';
@@ -238,9 +239,21 @@ function SortableProjectItem({
         </div>
 
         <div>
-          <Label className='mb-1.5 block text-xs text-slate-500'>
-            {'Responsibilities'}
-          </Label>
+          <div className='mb-1.5 flex items-center justify-between gap-2'>
+            <Label className='text-xs text-slate-500'>
+              {'Responsibilities'}
+            </Label>
+            <AiRewriteButton
+              kind='bullets'
+              value={responsibilities}
+              role={item.position}
+              organization={item.title}
+              onApply={(html) => {
+                setResponsibilities(html);
+                onUpdate(item.id, 'responsibilities', html);
+              }}
+            />
+          </div>
           <Editor
             className='[&_.ql-editor]:min-h-[100px]'
             value={responsibilities}

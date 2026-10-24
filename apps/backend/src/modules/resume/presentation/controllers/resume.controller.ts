@@ -5,6 +5,7 @@ import {
   MaxFileSizeValidator,
   Param,
   ParseFilePipe,
+  Patch,
   Post,
   UploadedFile,
   UseInterceptors,
@@ -16,14 +17,19 @@ import { CurrentDbUser } from '@/libs/decorators';
 import { FileMagicBytesValidator } from '@/libs/pipes/file-magic-bytes.pipe';
 import { extractPdfText } from '@/libs/utils/pdf-text.util';
 import {
+  ResumeAtsService,
   ResumeEmailService,
   ResumeMatchingService,
   ResumeParserService,
+  ResumeRewriteService,
   ResumeService,
 } from '@/modules/resume/application/services';
 import {
+  AtsCheckDto,
   MatchResumeDto,
+  RewriteTextDto,
   UpdateResumeDto,
+  UpdateSharingDto,
   WriteEmailDto,
 } from '@/modules/resume/presentation/dtos';
 import { User } from '@/modules/user/domain';
@@ -35,6 +41,8 @@ export class ResumeController {
     private readonly resumeParserService: ResumeParserService,
     private readonly resumeMatchingService: ResumeMatchingService,
     private readonly resumeEmailService: ResumeEmailService,
+    private readonly resumeRewriteService: ResumeRewriteService,
+    private readonly resumeAtsService: ResumeAtsService,
   ) {}
 
   @Get()
@@ -90,9 +98,33 @@ export class ResumeController {
     return this.resumeEmailService.write(payload);
   }
 
+  /** Rewrites one field (job bullets, the summary); nothing is saved. */
+  @Throttle({ default: { ttl: 60000, limit: 15 } })
+  @Post('/rewrite')
+  async rewrite(@Body() payload: RewriteTextDto) {
+    return this.resumeRewriteService.rewrite(payload);
+  }
+
+  /** Scores the editor's resume for ATS readiness, without a job description. */
+  @Throttle({ default: { ttl: 60000, limit: 5 } })
+  @Post('/ats-check')
+  async atsCheck(@Body() payload: AtsCheckDto) {
+    return this.resumeAtsService.check(payload.resume);
+  }
+
   @Get('/:id')
   async findById(@Param('id') id: string, @CurrentDbUser() user: User) {
     return this.resumeService.findById(id, user.id);
+  }
+
+  /** Turns the resume's public link on or off (or replaces it). */
+  @Patch('/:id/share')
+  async updateSharing(
+    @Param('id') id: string,
+    @Body() payload: UpdateSharingDto,
+    @CurrentDbUser() user: User,
+  ) {
+    return this.resumeService.updateSharing(id, user.id, payload);
   }
 
   @Post('/:id')

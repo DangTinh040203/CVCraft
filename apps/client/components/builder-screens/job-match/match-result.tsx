@@ -38,7 +38,8 @@ interface MatchResultViewProps {
   onGoToSection: (section: MatchSuggestion['section']) => void;
 }
 
-function Block({
+/** A titled block of a result panel. */
+export function Block({
   icon: Icon,
   title,
   aside,

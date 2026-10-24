@@ -39,6 +39,7 @@ import {
 } from 'lucide-react';
 import { useEffect, useState } from 'react';
 
+import { AiRewriteButton } from '@/components/builder-screens/ai-rewrite-button';
 import BuilderNavigation from '@/components/builder-screens/builder-navigation';
 import Editor from '@/components/builder-screens/editor';
 import { parseResumeDate } from '@/components/templates/resume.types';
@@ -220,9 +221,22 @@ function SortableExperienceItem({
           </div>
         </div>
         <div>
-          <Label className='mb-1.5 block text-xs text-slate-500'>
-            {'Description & Achievements'}
-          </Label>
+          <div className='mb-1.5 flex items-center justify-between gap-2'>
+            <Label className='text-xs text-slate-500'>
+              {'Description & Achievements'}
+            </Label>
+            <AiRewriteButton
+              kind='bullets'
+              value={description}
+              role={item.position}
+              organization={item.company}
+              current={!item.endDate}
+              onApply={(html) => {
+                setDescription(html);
+                onUpdate(item.id, 'description', html);
+              }}
+            />
+          </div>
           <Editor
             className='[&_.ql-editor]:min-h-[100px]'
             value={description}

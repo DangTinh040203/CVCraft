@@ -13,10 +13,12 @@ const statsMeta = [
 
 const StatsSection = () => {
   return (
-    <section className={`
-      relative overflow-hidden px-2 py-8
-      md:px-4 md:py-24
-    `}>
+    <section
+      className={`
+        relative overflow-hidden px-2 py-8
+        md:px-4 md:py-24
+      `}
+    >
       <div
         className={`
           via-primary/20 absolute top-0 left-0 h-px w-full bg-linear-to-r

@@ -72,6 +72,9 @@ export interface Resume {
   avatar: string | null;
   templateKey: string | null;
   format: Partial<Format> | null;
+  /** The public link is /r/<shareSlug>, while `isPublic`. */
+  shareSlug?: string | null;
+  isPublic?: boolean;
 
   information: Array<ResumeInformation>;
   educations: Array<Education>;
@@ -116,3 +119,9 @@ export interface ParseResumeResponse {
   certifications: Array<Omit<Certification, 'id' | 'resumeId'>>;
   languages: Array<Omit<Language, 'id' | 'resumeId'>>;
 }
+
+/** What `GET /public/resumes/:slug` returns: the saved resume, no account ids. */
+export type PublicResume = Omit<
+  Resume,
+  'id' | 'userId' | 'shareSlug' | 'isPublic' | 'createdAt'
+>;

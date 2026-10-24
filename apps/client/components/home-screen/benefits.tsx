@@ -27,10 +27,12 @@ const BenefitsSection = () => {
       `}
     >
       <div className='container mx-auto'>
-        <div className={`
-          grid items-center gap-16
-          lg:grid-cols-2
-        `}>
+        <div
+          className={`
+            grid items-center gap-16
+            lg:grid-cols-2
+          `}
+        >
           <m.div
             initial={{ opacity: 0, x: -60 }}
             whileInView={{ opacity: 1, x: 0 }}
@@ -70,8 +72,7 @@ const BenefitsSection = () => {
               `}
             >
               Our CV builder is designed by industry experts to ensure your
-              profile gets the attention it deserves from modern hiring
-              systems.
+              profile gets the attention it deserves from modern hiring systems.
             </p>
 
             <m.div

@@ -37,6 +37,13 @@ const resumeSlice = createSlice({
         state.isDirty = true;
       }
     },
+    /** Saved straight away by the share dialog, so not an unsaved edit. */
+    setSharing: (
+      state,
+      action: { payload: Pick<Resume, 'isPublic' | 'shareSlug'> },
+    ) => {
+      if (state.resume) Object.assign(state.resume, action.payload);
+    },
     /** For unsaved edits kept outside this slice (the Customize format). */
     markResumeDirty: (state) => {
       if (state.resume) state.isDirty = true;
@@ -44,7 +51,12 @@ const resumeSlice = createSlice({
   },
 });
 
-export const { setResume, importResume, updateResume, markResumeDirty } =
-  resumeSlice.actions;
+export const {
+  setResume,
+  importResume,
+  updateResume,
+  setSharing,
+  markResumeDirty,
+} = resumeSlice.actions;
 export const resumeSelector = (state: { resume: ResumeState }) => state.resume;
 export const resumeReducer = resumeSlice.reducer;

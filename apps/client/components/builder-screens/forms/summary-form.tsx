@@ -12,6 +12,7 @@ import { motion } from 'framer-motion';
 import { FileText, Sparkles } from 'lucide-react';
 import { useEffect, useState } from 'react';
 
+import { AiRewriteButton } from '@/components/builder-screens/ai-rewrite-button';
 import BuilderNavigation from '@/components/builder-screens/builder-navigation';
 import Editor from '@/components/builder-screens/editor';
 import { useSyncResume } from '@/hooks/use-sync-resume';
@@ -137,14 +138,24 @@ const SummaryForm = ({ onNext, onBack }: SummaryFormProps) => {
                 {'Professional Summary'}
               </Label>
 
-              {value && (
-                <span className='animate-fade-in text-muted-foreground text-xs'>
-                  {(() => {
-                    const count = value.replace(/<[^>]*>/g, '').length;
-                    return `${count} ${count === 1 ? 'character' : 'characters'}`;
-                  })()}
-                </span>
-              )}
+              <div className='flex items-center gap-3'>
+                {value && (
+                  <span
+                    className={`animate-fade-in text-muted-foreground text-xs`}
+                  >
+                    {(() => {
+                      const count = value.replace(/<[^>]*>/g, '').length;
+                      return `${count} ${count === 1 ? 'character' : 'characters'}`;
+                    })()}
+                  </span>
+                )}
+                <AiRewriteButton
+                  kind='summary'
+                  value={value}
+                  role={resume?.subTitle}
+                  onApply={handleChange}
+                />
+              </div>
             </div>
 
             <div
