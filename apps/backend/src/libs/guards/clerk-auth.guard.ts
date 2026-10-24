@@ -24,7 +24,7 @@ export class ClerkAuthGuard implements CanActivate {
   ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
-    // WebSocket handshakes authenticate in their gateway (none yet)
+    // WebSocket handshakes authenticate in their gateway (InterviewGateway)
     if (context.getType() === 'ws') {
       return true;
     }

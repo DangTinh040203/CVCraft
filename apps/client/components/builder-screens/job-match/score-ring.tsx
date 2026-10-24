@@ -3,7 +3,10 @@
 import { cn } from '@repo/ui/lib/utils';
 import { m } from 'framer-motion';
 
-import { matchBand } from '@/components/builder-screens/job-match/match-band';
+import {
+  type MatchBand,
+  matchBand,
+} from '@/components/builder-screens/job-match/match-band';
 import CountUp from '@/components/common/count-up';
 
 const SIZE = 132;
@@ -12,15 +15,23 @@ const RADIUS = (SIZE - STROKE) / 2;
 const CIRCUMFERENCE = 2 * Math.PI * RADIUS;
 
 /** The overall score as a ring that fills up, colored by its band. */
-export function ScoreRing({ score }: { score: number }) {
-  const band = matchBand(score);
-
+export function ScoreRing({
+  score,
+  label = 'Match score',
+  band = matchBand(score),
+}: {
+  score: number;
+  /** Read by screen readers before the score. */
+  label?: string;
+  /** Colors for a scale other than the match score's. */
+  band?: MatchBand;
+}) {
   return (
     <div
       className='relative shrink-0'
       style={{ width: SIZE, height: SIZE }}
       role='img'
-      aria-label={`Match score ${score} out of 100`}
+      aria-label={`${label} ${score} out of 100`}
     >
       <svg width={SIZE} height={SIZE} className='-rotate-90'>
         <circle

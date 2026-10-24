@@ -16,6 +16,7 @@ import { GlobalExceptionFilter } from '@/libs/filters/http-exception.filter';
 import { ClerkAuthGuard } from '@/libs/guards/clerk-auth.guard';
 import { RequestIdMiddleware } from '@/libs/middlewares/request-id.middleware';
 import { ApplicationsModule } from '@/modules/applications/applications.module';
+import { InterviewModule } from '@/modules/interview/interview.module';
 import { PdfModule } from '@/modules/pdf/pdf.module';
 import { ResumeModule } from '@/modules/resume/resume.module';
 import { UserModule } from '@/modules/user/user.module';
@@ -26,6 +27,7 @@ import { UserModule } from '@/modules/user/user.module';
     ResumeModule,
     PdfModule,
     ApplicationsModule,
+    InterviewModule,
     DatabaseModule,
     CacheModule,
     ConfigModule.forRoot({

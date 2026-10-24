@@ -13,6 +13,7 @@ import helmet from 'helmet';
 import morgan from 'morgan';
 
 import { AppModule } from '@/app/app.module';
+import { SocketIoAdapter } from '@/libs/adapters/socket-io.adapter';
 import { Env } from '@/libs/configs/env.config';
 import { loggerConfig } from '@/libs/configs/logger.config';
 import { formatError } from '@/libs/utils/format-error.util';
@@ -78,10 +79,9 @@ class BootstrapApplication {
       }),
     );
 
-    this.app.enableCors({
-      origin: this.configService.getOrThrow<string>(Env.FRONTEND_ORIGIN),
-      credentials: true,
-    });
+    const origin = this.configService.getOrThrow<string>(Env.FRONTEND_ORIGIN);
+    this.app.enableCors({ origin, credentials: true });
+    this.app.useWebSocketAdapter(new SocketIoAdapter(this.app, origin));
 
     this.app.use(helmet());
 

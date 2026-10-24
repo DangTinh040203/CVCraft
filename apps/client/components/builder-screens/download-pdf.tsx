@@ -19,7 +19,7 @@ const DownloadPdf = () => {
       variant='outline'
       className={`
         w-full shrink-0 gap-2 shadow-2xl
-        sm:w-auto
+        lg:w-auto
       `}
     >
       {isDownloading ? (

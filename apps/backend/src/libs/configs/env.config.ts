@@ -29,6 +29,8 @@ export enum Env {
   MAIL_FROM_ADDRESS = 'MAIL_FROM_ADDRESS',
   MAIL_DAILY_LIMIT_PER_USER = 'MAIL_DAILY_LIMIT_PER_USER',
   GEMINI_FALLBACK_MODEL = 'GEMINI_FALLBACK_MODEL',
+
+  INTERVIEW_DAILY_LIMIT_PER_USER = 'INTERVIEW_DAILY_LIMIT_PER_USER',
 }
 
 export const validationSchema = Joi.object({
@@ -54,7 +56,8 @@ export const validationSchema = Joi.object({
   [Env.THROTTLE_LIMIT]: Joi.number().default(10),
 
   [Env.GEMINI_API_KEY]: Joi.string().required(),
-  [Env.GEMINI_LIVE_MODEL]: Joi.string(),
+  // Voice mock interviews (a native-audio Live API model)
+  [Env.GEMINI_LIVE_MODEL]: Joi.string().default('gemini-3.8-live'),
   [Env.GEMINI_MODEL]: Joi.string().default('gemini-3.5-flash-lite'),
   // Used when GEMINI_MODEL stays overloaded; empty to disable
   [Env.GEMINI_FALLBACK_MODEL]: Joi.string()
@@ -65,4 +68,10 @@ export const validationSchema = Joi.object({
   [Env.RESEND_API_KEY]: Joi.string().optional(),
   [Env.MAIL_FROM_ADDRESS]: Joi.string().email().optional(),
   [Env.MAIL_DAILY_LIMIT_PER_USER]: Joi.number().integer().min(1).default(5),
+
+  // Live audio is billed by the minute: interviews started per rolling 24h
+  [Env.INTERVIEW_DAILY_LIMIT_PER_USER]: Joi.number()
+    .integer()
+    .min(1)
+    .default(5),
 });

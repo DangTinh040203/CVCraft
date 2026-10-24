@@ -1,0 +1,35 @@
+enum InterviewType {
+  TECHNICAL
+  BEHAVIORAL
+  ALL
+}
+
+enum InterviewStatus {
+  IN_PROGRESS
+  COMPLETED
+  CANCELLED
+}
+
+/// A voice mock interview: counts toward the daily limit (Gemini Live is
+/// billed by the minute) and keeps the evaluation once it is scored.
+model InterviewSession {
+  id                String          @id @default(uuid())
+  userId            String
+  user              User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  interviewType     InterviewType
+  language          String
+  totalQuestions    Int
+  questionsAnswered Int             @default(0)
+  status            InterviewStatus @default(IN_PROGRESS)
+  jobDescription    String          @db.Text
+  /// Weighted 0-100 score and PASS / BORDERLINE / FAIL, once evaluated
+  overallScore      Int?
+  verdict           String?
+  /// The full evaluation and transcript as sent to the user
+  feedback          Json?
+  startedAt         DateTime        @default(now())
+  endedAt           DateTime?
+
+  @@index([userId, startedAt])
+  @@map("interview_sessions")
+}

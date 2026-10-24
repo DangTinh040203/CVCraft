@@ -7,6 +7,8 @@ export const Env = createEnv({
     NEXT_PUBLIC_CLERK_SIGN_IN_URL: z.string().min(1),
     NEXT_PUBLIC_REDIRECT_URL: z.string().min(1),
     NEXT_PUBLIC_API_URL: z.string().url(),
+    // Socket.IO server (mock interview); defaults to the API's origin
+    NEXT_PUBLIC_WS_URL: z.string().url().optional(),
   },
   server: {
     CLERK_SECRET_KEY: z.string().min(1),
@@ -18,6 +20,7 @@ export const Env = createEnv({
     NEXT_PUBLIC_CLERK_SIGN_IN_URL: process.env.NEXT_PUBLIC_CLERK_SIGN_IN_URL,
     NEXT_PUBLIC_REDIRECT_URL: process.env.NEXT_PUBLIC_REDIRECT_URL,
     NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL,
+    NEXT_PUBLIC_WS_URL: process.env.NEXT_PUBLIC_WS_URL,
     CLERK_SECRET_KEY: process.env.CLERK_SECRET_KEY,
   },
 

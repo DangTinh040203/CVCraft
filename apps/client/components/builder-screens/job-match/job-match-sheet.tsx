@@ -12,6 +12,7 @@ import {
   ArrowRight,
   FileWarning,
   Loader2,
+  Mic,
   PenLine,
   RotateCw,
   Send,
@@ -37,6 +38,8 @@ const ADDED_SKILLS_LABEL = 'Additional Skills';
 interface JobMatchSheetProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  /** Opens the mock interview for the matched job. */
+  onPracticeInterview: (jobDescription: string) => void;
 }
 
 /**
@@ -44,7 +47,11 @@ interface JobMatchSheetProps {
  * resume stays in view: paste or upload the JD, read the score, jump to the
  * section a suggestion is about, then re-analyze to see the score move.
  */
-export function JobMatchSheet({ open, onOpenChange }: JobMatchSheetProps) {
+export function JobMatchSheet({
+  open,
+  onOpenChange,
+  onPracticeInterview,
+}: JobMatchSheetProps) {
   const match = useJobMatch();
   const { resume } = useAppSelector(resumeSelector);
   const dispatch = useAppDispatch();
@@ -247,6 +254,14 @@ export function JobMatchSheet({ open, onOpenChange }: JobMatchSheetProps) {
                       Re-analyze
                     </Button>
                   </div>
+                  <Button
+                    variant='outline'
+                    className='h-9 w-full gap-1.5 text-sm'
+                    onClick={() => onPracticeInterview(match.jobDescription)}
+                  >
+                    <Mic className='size-3.5' />
+                    Practice the interview for this job
+                  </Button>
                 </>
               ) : (
                 <Button

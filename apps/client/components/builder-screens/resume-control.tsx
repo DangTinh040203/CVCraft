@@ -12,6 +12,7 @@ import {
   EyeOff,
   FileText,
   Loader2,
+  Mic,
   Save,
   Target,
   Upload,
@@ -20,6 +21,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import React from 'react';
 
 import DownloadPdf from '@/components/builder-screens/download-pdf';
+import { InterviewSheet } from '@/components/builder-screens/interview/interview-sheet';
 import { JobMatchSheet } from '@/components/builder-screens/job-match/job-match-sheet';
 import { useImportResume } from '@/hooks/use-import-resume';
 import { useSyncResume } from '@/hooks/use-sync-resume';
@@ -53,6 +55,15 @@ const ResumeControl = () => {
     params.delete('match');
     const query = params.toString();
     router.replace(`/builder${query ? `?${query}` : ''}`, { scroll: false });
+  };
+
+  const [interviewOpen, setInterviewOpen] = React.useState(false);
+  // Set when the interview is opened from a job match, for that job
+  const [interviewJd, setInterviewJd] = React.useState<string>();
+
+  const openInterview = (jobDescription?: string) => {
+    setInterviewJd(jobDescription);
+    setInterviewOpen(true);
   };
 
   const handleImport = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -116,13 +127,14 @@ const ResumeControl = () => {
       <div
         className={`
           grid grid-cols-2 gap-2
-          sm:flex sm:flex-wrap sm:gap-4
+          sm:grid-cols-3 sm:gap-3
+          lg:flex lg:flex-wrap lg:gap-4
         `}
       >
         <motion.div
           className={`
             w-full
-            sm:w-auto
+            lg:w-auto
           `}
         >
           <Tooltip>
@@ -132,7 +144,7 @@ const ResumeControl = () => {
                 className={cn(
                   `
                     w-full shrink-0 gap-2 transition-all duration-200
-                    sm:w-auto
+                    lg:w-auto
                   `,
                 )}
                 onClick={sync}
@@ -155,7 +167,7 @@ const ResumeControl = () => {
         <motion.div
           className={`
             w-full
-            sm:w-auto
+            lg:w-auto
           `}
           whileHover={{ scale: 1.02 }}
           whileTap={{ scale: 0.98 }}
@@ -165,7 +177,7 @@ const ResumeControl = () => {
             className={cn(
               `
                 w-full shrink-0 gap-2 transition-colors duration-200
-                sm:w-auto
+                lg:w-auto
               `,
             )}
             onClick={handleTogglePreviewMode}
@@ -189,7 +201,7 @@ const ResumeControl = () => {
           <div
             className={`
               w-full
-              sm:w-auto
+              lg:w-auto
             `}
           >
             <DownloadPdf />
@@ -199,7 +211,7 @@ const ResumeControl = () => {
         <div
           className={`
             w-full
-            sm:w-auto
+            lg:w-auto
           `}
         >
           <Tooltip>
@@ -208,7 +220,7 @@ const ResumeControl = () => {
                 variant='secondary'
                 className={`
                   border-primary w-full gap-2 border shadow-xl
-                  sm:w-auto
+                  lg:w-auto
                 `}
                 onClick={() => importInputRef.current?.click()}
                 disabled={isImporting || !resume}
@@ -233,14 +245,14 @@ const ResumeControl = () => {
         <div
           className={`
             w-full
-            sm:w-auto
+            lg:w-auto
           `}
         >
           <Button
             variant='secondary'
             className={`
               border-primary w-full gap-2 border shadow-xl
-              sm:w-auto
+              lg:w-auto
             `}
             onClick={() => setMatchOpen(true)}
             disabled={!resume}
@@ -249,9 +261,52 @@ const ResumeControl = () => {
             Match to Job
           </Button>
         </div>
+
+        <div
+          className={`
+            w-full
+            lg:w-auto
+          `}
+        >
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                variant='secondary'
+                className={`
+                  border-primary w-full gap-2 border shadow-xl
+                  lg:w-auto
+                `}
+                onClick={() => openInterview()}
+                disabled={!resume}
+              >
+                <Mic className='h-4 w-4' />
+                Mock Interview
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>
+                Practice out loud with an AI interviewer, then get feedback.
+              </p>
+            </TooltipContent>
+          </Tooltip>
+        </div>
       </div>
 
-      <JobMatchSheet open={matchOpen} onOpenChange={setMatchOpen} />
+      <JobMatchSheet
+        open={matchOpen}
+        onOpenChange={setMatchOpen}
+        onPracticeInterview={(jobDescription) => {
+          setMatchOpen(false);
+          openInterview(jobDescription);
+        }}
+      />
+      {/* Mounted while closed too, like the match panel, so its settings
+          are kept between interviews */}
+      <InterviewSheet
+        open={interviewOpen}
+        onOpenChange={setInterviewOpen}
+        jobDescription={interviewJd}
+      />
     </div>
   );
 };
