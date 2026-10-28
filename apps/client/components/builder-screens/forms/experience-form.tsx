@@ -30,19 +30,21 @@ import { Input } from '@repo/ui/components/input';
 import { Label } from '@repo/ui/components/label';
 import { cn } from '@repo/ui/lib/utils';
 import { motion } from 'framer-motion';
-import {
-  AlertCircle,
-  Briefcase,
-  GripVertical,
-  Plus,
-  Trash2,
-} from 'lucide-react';
+import { AlertCircle, Briefcase, Plus } from 'lucide-react';
 import { useEffect, useState } from 'react';
 
 import { AiRewriteButton } from '@/components/builder-screens/ai-rewrite-button';
 import BuilderNavigation from '@/components/builder-screens/builder-navigation';
 import Editor from '@/components/builder-screens/editor';
-import { parseResumeDate } from '@/components/templates/resume.types';
+import {
+  CollapseAllButton,
+  SortableItemHeader,
+  useCollapsedItems,
+} from '@/components/builder-screens/forms/collapsible-item';
+import {
+  formatDateRange,
+  parseResumeDate,
+} from '@/components/templates/resume.types';
 import { useSyncResume } from '@/hooks/use-sync-resume';
 import { updateResume } from '@/stores/features/resume.slice';
 import { useAppDispatch } from '@/stores/store';
@@ -59,6 +61,8 @@ function SortableExperienceItem({
   onUpdate,
   onRemove,
   errors,
+  collapsed = false,
+  onToggle,
 }: {
   item: WorkExperience;
   onUpdate: (
@@ -68,6 +72,9 @@ function SortableExperienceItem({
   ) => void;
   onRemove: (id: string) => void;
   errors?: { company?: string; position?: string };
+  /** Folded to its header row. */
+  collapsed?: boolean;
+  onToggle?: () => void;
 }) {
   const {
     attributes,
@@ -104,43 +111,21 @@ function SortableExperienceItem({
         isDragging && 'relative z-50 opacity-50',
       )}
     >
-      <div className='mb-3 flex items-center justify-between'>
-        {/* Drag Handle */}
-        <Button
-          type='button'
-          variant='ghost'
-          size='icon-sm'
-          aria-label='Drag to reorder'
-          className={cn(
-            'text-muted-foreground cursor-grab touch-none',
-            'hover:bg-muted hover:text-foreground',
-            isDragging && 'cursor-grabbing',
-          )}
-          {...attributes}
-          {...listeners}
-        >
-          <GripVertical className='h-4 w-4' />
-        </Button>
+      <SortableItemHeader
+        title={item.position}
+        placeholder='Untitled role'
+        subtitle={[item.company, formatDateRange(item.startDate, item.endDate)]
+          .filter(Boolean)
+          .join(' · ')}
+        collapsed={collapsed}
+        onToggle={onToggle}
+        onRemove={() => onRemove(item.id)}
+        isDragging={isDragging}
+        attributes={attributes}
+        listeners={listeners}
+      />
 
-        {/* Delete Button */}
-        <Button
-          variant='ghost'
-          size='icon'
-          className={cn(
-            'h-8 w-8 shrink-0 rounded-md',
-            'text-slate-400 opacity-0 transition-opacity',
-            'group-hover:opacity-100',
-            'hover:bg-rose-50 hover:text-rose-500',
-            'dark:hover:bg-rose-500/10',
-          )}
-          onClick={() => onRemove(item.id)}
-          type='button'
-        >
-          <Trash2 className='h-4 w-4' />
-        </Button>
-      </div>
-
-      <div className='grid gap-3'>
+      <div className={cn('grid gap-3', collapsed && 'hidden')}>
         <div
           className={`
             grid gap-3
@@ -271,6 +256,7 @@ const ExperienceForm = ({ onNext, onBack }: ExperienceFormProps) => {
   }, []);
 
   const experienceItems = resume?.workExperiences || [];
+  const collapse = useCollapsedItems(experienceItems);
 
   const validateItems = () => {
     const errors: Record<string, { company?: string; position?: string }> = {};
@@ -292,6 +278,7 @@ const ExperienceForm = ({ onNext, onBack }: ExperienceFormProps) => {
     });
 
     setValidationErrors(errors);
+    collapse.expand(Object.keys(errors));
     return isValid;
   };
 
@@ -429,6 +416,11 @@ const ExperienceForm = ({ onNext, onBack }: ExperienceFormProps) => {
                     </span>
                   )}
                 </div>
+                <CollapseAllButton
+                  count={experienceItems.length}
+                  allCollapsed={collapse.allCollapsed}
+                  onChange={collapse.setAll}
+                />
               </div>
 
               <div
@@ -472,6 +464,8 @@ const ExperienceForm = ({ onNext, onBack }: ExperienceFormProps) => {
                             onUpdate={updateExperienceItem}
                             onRemove={removeExperienceItem}
                             errors={validationErrors[item.id]}
+                            collapsed={collapse.isCollapsed(item.id)}
+                            onToggle={() => collapse.toggle(item.id)}
                           />
                         ))}
                       </div>
@@ -483,6 +477,7 @@ const ExperienceForm = ({ onNext, onBack }: ExperienceFormProps) => {
                           onUpdate={updateExperienceItem}
                           onRemove={removeExperienceItem}
                           errors={validationErrors[activeId]}
+                          collapsed={collapse.isCollapsed(activeId)}
                         />
                       ) : null}
                     </DragOverlay>

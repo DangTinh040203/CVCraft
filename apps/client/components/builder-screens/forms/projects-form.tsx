@@ -29,18 +29,17 @@ import { Input } from '@repo/ui/components/input';
 import { Label } from '@repo/ui/components/label';
 import { cn } from '@repo/ui/lib/utils';
 import { motion } from 'framer-motion';
-import {
-  AlertCircle,
-  FolderGit2,
-  GripVertical,
-  Plus,
-  Trash2,
-} from 'lucide-react';
+import { AlertCircle, FolderGit2, Plus } from 'lucide-react';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 
 import { AiRewriteButton } from '@/components/builder-screens/ai-rewrite-button';
 import BuilderNavigation from '@/components/builder-screens/builder-navigation';
 import Editor from '@/components/builder-screens/editor';
+import {
+  CollapseAllButton,
+  SortableItemHeader,
+  useCollapsedItems,
+} from '@/components/builder-screens/forms/collapsible-item';
 import { useSyncResume } from '@/hooks/use-sync-resume';
 import { updateResume } from '@/stores/features/resume.slice';
 import { useAppDispatch } from '@/stores/store';
@@ -57,11 +56,16 @@ function SortableProjectItem({
   onUpdate,
   onRemove,
   errors,
+  collapsed = false,
+  onToggle,
 }: {
   item: Project;
   onUpdate: (id: string, field: keyof Project, value: string) => void;
   onRemove: (id: string) => void;
   errors?: { title?: string };
+  /** Folded to its header row. */
+  collapsed?: boolean;
+  onToggle?: () => void;
 }) {
   const {
     attributes,
@@ -102,43 +106,19 @@ function SortableProjectItem({
         isDragging && 'relative z-50 opacity-50',
       )}
     >
-      <div className='mb-3 flex items-center justify-between'>
-        {/* Drag Handle */}
-        <Button
-          type='button'
-          variant='ghost'
-          size='icon-sm'
-          aria-label='Drag to reorder'
-          className={cn(
-            'text-muted-foreground cursor-grab touch-none',
-            'hover:bg-muted hover:text-foreground',
-            isDragging && 'cursor-grabbing',
-          )}
-          {...attributes}
-          {...listeners}
-        >
-          <GripVertical className='h-4 w-4' />
-        </Button>
+      <SortableItemHeader
+        title={item.title}
+        placeholder='Untitled project'
+        subtitle={[item.position, item.subTitle].filter(Boolean).join(' · ')}
+        collapsed={collapsed}
+        onToggle={onToggle}
+        onRemove={() => onRemove(item.id)}
+        isDragging={isDragging}
+        attributes={attributes}
+        listeners={listeners}
+      />
 
-        {/* Delete Button */}
-        <Button
-          variant='ghost'
-          size='icon'
-          className={cn(
-            'h-8 w-8 shrink-0 rounded-md',
-            'text-slate-400 opacity-0 transition-opacity',
-            'group-hover:opacity-100',
-            'hover:bg-rose-50 hover:text-rose-500',
-            'dark:hover:bg-rose-500/10',
-          )}
-          onClick={() => onRemove(item.id)}
-          type='button'
-        >
-          <Trash2 className='h-4 w-4' />
-        </Button>
-      </div>
-
-      <div className='grid gap-3'>
+      <div className={cn('grid gap-3', collapsed && 'hidden')}>
         <div
           className={`
             grid gap-3
@@ -293,6 +273,7 @@ const ProjectsForm = ({ onNext, onBack }: ProjectsFormProps) => {
     () => resume?.projects || [],
     [resume?.projects],
   );
+  const collapse = useCollapsedItems(projectItems);
 
   const validateItems = useCallback(() => {
     const errors: Record<string, { title?: string }> = {};
@@ -306,8 +287,9 @@ const ProjectsForm = ({ onNext, onBack }: ProjectsFormProps) => {
     });
 
     setValidationErrors(errors);
+    collapse.expand(Object.keys(errors));
     return isValid;
-  }, [projectItems]);
+  }, [projectItems, collapse]);
 
   const onSubmit = () => {
     if (!validateItems()) {
@@ -444,6 +426,11 @@ const ProjectsForm = ({ onNext, onBack }: ProjectsFormProps) => {
                     </span>
                   )}
                 </div>
+                <CollapseAllButton
+                  count={projectItems.length}
+                  allCollapsed={collapse.allCollapsed}
+                  onChange={collapse.setAll}
+                />
               </div>
 
               <div
@@ -485,6 +472,8 @@ const ProjectsForm = ({ onNext, onBack }: ProjectsFormProps) => {
                             onUpdate={updateProjectItem}
                             onRemove={removeProjectItem}
                             errors={validationErrors[item.id]}
+                            collapsed={collapse.isCollapsed(item.id)}
+                            onToggle={() => collapse.toggle(item.id)}
                           />
                         ))}
                       </div>
@@ -496,6 +485,7 @@ const ProjectsForm = ({ onNext, onBack }: ProjectsFormProps) => {
                           onUpdate={updateProjectItem}
                           onRemove={removeProjectItem}
                           errors={validationErrors[activeId]}
+                          collapsed={collapse.isCollapsed(activeId)}
                         />
                       ) : null}
                     </DragOverlay>

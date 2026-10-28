@@ -37,18 +37,19 @@ import {
 } from '@repo/ui/components/select';
 import { cn } from '@repo/ui/lib/utils';
 import { motion } from 'framer-motion';
-import {
-  AlertCircle,
-  GraduationCap,
-  GripVertical,
-  Plus,
-  Trash2,
-  X,
-} from 'lucide-react';
+import { AlertCircle, GraduationCap, Plus, X } from 'lucide-react';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 
 import BuilderNavigation from '@/components/builder-screens/builder-navigation';
-import { parseResumeDate } from '@/components/templates/resume.types';
+import {
+  CollapseAllButton,
+  SortableItemHeader,
+  useCollapsedItems,
+} from '@/components/builder-screens/forms/collapsible-item';
+import {
+  formatDateRange,
+  parseResumeDate,
+} from '@/components/templates/resume.types';
 import { useSyncResume } from '@/hooks/use-sync-resume';
 import { updateResume } from '@/stores/features/resume.slice';
 import { useAppDispatch } from '@/stores/store';
@@ -93,11 +94,16 @@ function SortableEducationItem({
   onUpdate,
   onRemove,
   errors,
+  collapsed = false,
+  onToggle,
 }: {
   item: Education;
   onUpdate: (id: string, field: keyof Education, value: string | null) => void;
   onRemove: (id: string) => void;
   errors?: { school?: string; degree?: string };
+  /** Folded to its header row. */
+  collapsed?: boolean;
+  onToggle?: () => void;
 }) {
   const {
     attributes,
@@ -129,43 +135,24 @@ function SortableEducationItem({
         isDragging && 'relative z-50 opacity-50',
       )}
     >
-      <div className='mb-3 flex items-center justify-between'>
-        {/* Drag Handle */}
-        <Button
-          type='button'
-          variant='ghost'
-          size='icon-sm'
-          aria-label='Drag to reorder'
-          className={cn(
-            'text-muted-foreground cursor-grab touch-none',
-            'hover:bg-muted hover:text-foreground',
-            isDragging && 'cursor-grabbing',
-          )}
-          {...attributes}
-          {...listeners}
-        >
-          <GripVertical className='h-4 w-4' />
-        </Button>
+      <SortableItemHeader
+        title={item.school}
+        placeholder='Untitled school'
+        subtitle={[
+          [item.degree, item.major].filter(Boolean).join(', '),
+          item.startDate && formatDateRange(item.startDate, item.endDate),
+        ]
+          .filter(Boolean)
+          .join(' · ')}
+        collapsed={collapsed}
+        onToggle={onToggle}
+        onRemove={() => onRemove(item.id)}
+        isDragging={isDragging}
+        attributes={attributes}
+        listeners={listeners}
+      />
 
-        {/* Delete Button */}
-        <Button
-          variant='ghost'
-          size='icon'
-          className={cn(
-            'h-8 w-8 shrink-0 rounded-md',
-            'text-slate-400 opacity-0 transition-opacity',
-            'group-hover:opacity-100',
-            'hover:bg-rose-50 hover:text-rose-500',
-            'dark:hover:bg-rose-500/10',
-          )}
-          onClick={() => onRemove(item.id)}
-          type='button'
-        >
-          <Trash2 className='h-4 w-4' />
-        </Button>
-      </div>
-
-      <div className='grid gap-3'>
+      <div className={cn('grid gap-3', collapsed && 'hidden')}>
         <div
           className={`
             grid gap-3
@@ -340,6 +327,7 @@ const EducationForm = ({ onNext, onBack }: EducationFormProps) => {
     () => resume?.educations || [],
     [resume?.educations],
   );
+  const collapse = useCollapsedItems(educationItems);
 
   const validateItems = useCallback(() => {
     const errors: Record<string, { school?: string; degree?: string }> = {};
@@ -361,8 +349,9 @@ const EducationForm = ({ onNext, onBack }: EducationFormProps) => {
     });
 
     setValidationErrors(errors);
+    collapse.expand(Object.keys(errors));
     return isValid;
-  }, [educationItems]);
+  }, [educationItems, collapse]);
 
   const onSubmit = () => {
     if (!validateItems()) {
@@ -498,6 +487,11 @@ const EducationForm = ({ onNext, onBack }: EducationFormProps) => {
                     </span>
                   )}
                 </div>
+                <CollapseAllButton
+                  count={educationItems.length}
+                  allCollapsed={collapse.allCollapsed}
+                  onChange={collapse.setAll}
+                />
               </div>
 
               <div
@@ -541,6 +535,8 @@ const EducationForm = ({ onNext, onBack }: EducationFormProps) => {
                             onUpdate={updateEducationItem}
                             onRemove={removeEducationItem}
                             errors={validationErrors[item.id]}
+                            collapsed={collapse.isCollapsed(item.id)}
+                            onToggle={() => collapse.toggle(item.id)}
                           />
                         ))}
                       </div>
@@ -552,6 +548,7 @@ const EducationForm = ({ onNext, onBack }: EducationFormProps) => {
                           onUpdate={updateEducationItem}
                           onRemove={removeEducationItem}
                           errors={validationErrors[activeId]}
+                          collapsed={collapse.isCollapsed(activeId)}
                         />
                       ) : null}
                     </DragOverlay>
