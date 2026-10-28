@@ -17,3 +17,4 @@ generated/
 
 # Next.js (regenerated on every dev/build)
 next-env.d.ts
+.env.prod
