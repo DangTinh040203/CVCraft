@@ -8,7 +8,7 @@ import {
   type ResumeSharing,
   type RewritePayload,
 } from '@/types/ats.type';
-import { type MatchResult } from '@/types/match.type';
+import { type MatchResult, type TailorChange } from '@/types/match.type';
 import {
   type ParseResumeResponse,
   type Resume,
@@ -62,6 +62,22 @@ export class ResumeService extends HttpService {
       MatchResult
     >('/resumes/match', { resume, jobDescription });
     return data;
+  }
+
+  /**
+   * Rewrites the fields that matter most for a job description, working in
+   * its keywords where the resume backs them; nothing is saved.
+   */
+  async tailorResume(
+    resume: Resume,
+    jobDescription: string,
+    keywords: string[],
+  ) {
+    const { data } = await this.post<
+      { resume: Resume; jobDescription: string; keywords: string[] },
+      { changes: TailorChange[] }
+    >('/resumes/tailor', { resume, jobDescription, keywords });
+    return data.changes;
   }
 
   /** Rewrites one field with AI (bullets or the summary); nothing is saved. */

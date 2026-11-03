@@ -36,6 +36,8 @@ interface MatchResultViewProps {
   addedKeywords: Set<string>;
   onAddKeyword: (keyword: string) => void;
   onGoToSection: (section: MatchSuggestion['section']) => void;
+  /** Opens the AI rewrite of the resume for this job. */
+  onTailor: () => void;
 }
 
 /** A titled block of a result panel. */
@@ -71,6 +73,7 @@ export function MatchResultView({
   addedKeywords,
   onAddKeyword,
   onGoToSection,
+  onTailor,
 }: MatchResultViewProps) {
   const band = matchBand(result.overallScore);
 
@@ -115,6 +118,35 @@ export function MatchResultView({
             {result.summary}
           </p>
         </div>
+      </section>
+
+      <section
+        className={`
+          border-primary/20 from-primary/10 to-primary/5 flex flex-col gap-3
+          rounded-xl border bg-linear-to-br p-4
+          sm:flex-row sm:items-center
+        `}
+      >
+        <div className='min-w-0 flex-1'>
+          <p className='flex items-center gap-2 text-sm font-semibold'>
+            <Sparkles className='text-primary size-4' />
+            Improve your resume for this job
+          </p>
+          <p className='text-muted-foreground mt-1 text-xs leading-relaxed'>
+            AI rewrites your summary and the most relevant experience around
+            this job&apos;s requirements. You review every change.
+          </p>
+        </div>
+        <Button
+          type='button'
+          variant='gradient'
+          size='sm'
+          className='h-9 shrink-0 gap-1.5'
+          onClick={onTailor}
+        >
+          <Sparkles className='size-3.5' />
+          Improve with AI
+        </Button>
       </section>
 
       <Block

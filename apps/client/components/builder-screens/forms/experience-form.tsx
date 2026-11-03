@@ -93,11 +93,14 @@ function SortableExperienceItem({
   // Local state avoids the Redux dispatch → re-render → quill onChange → dispatch loop
   const [description, setDescription] = useState(item.description);
 
-  // Keep in sync if item is replaced externally (e.g. drag-and-drop reorder)
+  // Keep in sync when the item is swapped (drag-and-drop reorder) or edited
+  // outside this form (an AI rewrite applied from the job match panel). The
+  // form's own edits come back unchanged, so they don't reset the editor.
   useEffect(() => {
-    setDescription(item.description);
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- only on item swap
-  }, [item.id]);
+    setDescription((current) =>
+      current === item.description ? current : item.description,
+    );
+  }, [item.id, item.description]);
 
   return (
     <div

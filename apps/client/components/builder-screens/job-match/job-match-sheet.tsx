@@ -25,9 +25,11 @@ import { ApplicationEmailPanel } from '@/components/builder-screens/job-match/ap
 import { JobDescriptionStep } from '@/components/builder-screens/job-match/job-description-step';
 import { MatchAnalyzing } from '@/components/builder-screens/job-match/match-analyzing';
 import { MatchResultView } from '@/components/builder-screens/job-match/match-result';
+import { TailorPanel } from '@/components/builder-screens/job-match/tailor-panel';
 import { useAddSkillKeyword } from '@/hooks/use-add-skill-keyword';
 import { useApplicationEmail } from '@/hooks/use-application-email';
 import { useJobMatch } from '@/hooks/use-job-match';
+import { useTailorResume } from '@/hooks/use-tailor-resume';
 import { updatePreviewMode } from '@/stores/features/template.slice';
 import { useAppDispatch } from '@/stores/store';
 import { type MatchSuggestion } from '@/types/match.type';
@@ -59,7 +61,9 @@ export function JobMatchSheet({
   // The email for the matched job: its own screen in this panel, kept while
   // the user goes back to the results
   const email = useApplicationEmail(match.jobDescription, match.result);
-  const [panel, setPanel] = useState<'match' | 'email'>('match');
+  // The AI rewrite for the matched job, kept while the user re-analyzes
+  const tailor = useTailorResume(match.jobDescription, match.result);
+  const [panel, setPanel] = useState<'match' | 'email' | 'tailor'>('match');
 
   const analyzing = match.status === 'analyzing';
   const view = analyzing
@@ -67,10 +71,15 @@ export function JobMatchSheet({
     : !match.result
       ? 'input'
       : match.result.isValidJobDescription
-        ? panel === 'email'
-          ? 'email'
-          : 'result'
+        ? panel === 'match'
+          ? 'result'
+          : panel
         : 'invalid';
+
+  const reanalyze = () => {
+    setPanel('match');
+    void match.analyze();
+  };
 
   const goToSection = (section: MatchSuggestion['section']) => {
     onOpenChange(false);
@@ -100,12 +109,18 @@ export function JobMatchSheet({
             </div>
             <div className='min-w-0'>
               <SheetTitle className='text-lg'>
-                {view === 'email' ? 'Apply for this job' : 'Match to a job'}
+                {view === 'email'
+                  ? 'Apply for this job'
+                  : view === 'tailor'
+                    ? 'Improve for this job'
+                    : 'Match to a job'}
               </SheetTitle>
               <SheetDescription>
                 {view === 'email'
                   ? 'Write the email, then send it with your resume.'
-                  : 'See how well your resume fits a role, and what to change.'}
+                  : view === 'tailor'
+                    ? 'Review each AI rewrite, apply it, then re-analyze.'
+                    : 'See how well your resume fits a role, and what to change.'}
               </SheetDescription>
             </div>
           </div>
@@ -117,6 +132,12 @@ export function JobMatchSheet({
             company={match.result.company}
             contactName={match.result.contactName}
             onBack={() => setPanel('match')}
+          />
+        ) : view === 'tailor' ? (
+          <TailorPanel
+            tailor={tailor}
+            onBack={() => setPanel('match')}
+            onReanalyze={reanalyze}
           />
         ) : (
           <>
@@ -162,6 +183,7 @@ export function JobMatchSheet({
                   addedKeywords={addedKeywords}
                   onAddKeyword={addKeyword}
                   onGoToSection={goToSection}
+                  onTailor={() => setPanel('tailor')}
                 />
               )}
             </div>

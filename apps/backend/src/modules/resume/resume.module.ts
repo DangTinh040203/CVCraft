@@ -10,6 +10,7 @@ import {
   ResumeParserService,
   ResumeRewriteService,
   ResumeService,
+  ResumeTailorService,
 } from '@/modules/resume/application/services';
 import { PrismaAdapterResumeRepository } from '@/modules/resume/infrastructure/repositories';
 import {
@@ -26,6 +27,7 @@ import { UserModule } from '@/modules/user/user.module';
     ResumeMatchingService,
     ResumeEmailService,
     ResumeRewriteService,
+    ResumeTailorService,
     ResumeAtsService,
     UserCreatedListener,
 

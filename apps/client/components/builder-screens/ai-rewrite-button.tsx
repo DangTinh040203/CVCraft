@@ -18,7 +18,7 @@ import { type RewriteKind, type RewritePayload } from '@/types/ats.type';
 import { toastApiError } from '@/utils/toast-error-message.util';
 
 /** A fill-in the AI leaves where a number belongs, e.g. "[X%]". */
-const PLACEHOLDER = /(\[[^\]]{1,20}\])/;
+export const PLACEHOLDER = /(\[[^\]]{1,20}\])/;
 
 const escapeHtml = (text: string) =>
   text
@@ -28,7 +28,7 @@ const escapeHtml = (text: string) =>
     .replace(/"/g, '&quot;');
 
 /** The rewrite in the editor's own markup (Quill's bullet list). */
-function toEditorHtml(kind: RewriteKind, lines: string[]) {
+export function toEditorHtml(kind: RewriteKind, lines: string[]) {
   if (kind === 'summary') return `<p>${escapeHtml(lines.join(' '))}</p>`;
   return `<ol>${lines
     .map((line) => `<li data-list="bullet">${escapeHtml(line)}</li>`)
@@ -36,7 +36,7 @@ function toEditorHtml(kind: RewriteKind, lines: string[]) {
 }
 
 /** The line with its placeholders highlighted for the user to fill in. */
-function SuggestedLine({ line }: { line: string }) {
+export function SuggestedLine({ line }: { line: string }) {
   return (
     <>
       {line.split(PLACEHOLDER).map((part, index) =>

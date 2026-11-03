@@ -87,12 +87,17 @@ function SortableProjectItem({
     item.responsibilities,
   );
 
-  // Reset when the item is swapped (e.g. drag-and-drop reorder)
+  // Reset when the item is swapped (drag-and-drop reorder) or edited outside
+  // this form (an AI rewrite applied from the job match panel). The form's
+  // own edits come back unchanged, so they don't reset the editor.
   useEffect(() => {
-    setDetails(item.details);
-    setResponsibilities(item.responsibilities);
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- only on item swap
-  }, [item.id]);
+    setDetails((current) =>
+      current === item.details ? current : item.details,
+    );
+    setResponsibilities((current) =>
+      current === item.responsibilities ? current : item.responsibilities,
+    );
+  }, [item.id, item.details, item.responsibilities]);
 
   return (
     <div

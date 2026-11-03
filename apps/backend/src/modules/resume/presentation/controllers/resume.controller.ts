@@ -23,11 +23,13 @@ import {
   ResumeParserService,
   ResumeRewriteService,
   ResumeService,
+  ResumeTailorService,
 } from '@/modules/resume/application/services';
 import {
   AtsCheckDto,
   MatchResumeDto,
   RewriteTextDto,
+  TailorResumeDto,
   UpdateResumeDto,
   UpdateSharingDto,
   WriteEmailDto,
@@ -42,6 +44,7 @@ export class ResumeController {
     private readonly resumeMatchingService: ResumeMatchingService,
     private readonly resumeEmailService: ResumeEmailService,
     private readonly resumeRewriteService: ResumeRewriteService,
+    private readonly resumeTailorService: ResumeTailorService,
     private readonly resumeAtsService: ResumeAtsService,
   ) {}
 
@@ -103,6 +106,17 @@ export class ResumeController {
   @Post('/rewrite')
   async rewrite(@Body() payload: RewriteTextDto) {
     return this.resumeRewriteService.rewrite(payload);
+  }
+
+  /** Rewrites the fields that matter most for a job; nothing is saved. */
+  @Throttle({ default: { ttl: 60000, limit: 5 } })
+  @Post('/tailor')
+  async tailor(@Body() payload: TailorResumeDto) {
+    return this.resumeTailorService.tailor(
+      payload.resume,
+      payload.jobDescription,
+      payload.keywords,
+    );
   }
 
   /** Scores the editor's resume for ATS readiness, without a job description. */
