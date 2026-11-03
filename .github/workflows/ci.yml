@@ -37,4 +37,17 @@ jobs:
       - run: pnpm lint
       - run: pnpm typecheck
       - run: pnpm test
+      # Prerendering the auth pages needs the client's NEXT_PUBLIC_* (the
+      # Clerk key above all). Same list as the build args in deploy.yml.
+      # Secrets aren't passed to PRs from forks, so those fail here.
+      - name: Load client build env
+        env:
+          FE_ENV: ${{ secrets.FE_ENV_PRODUCTION }}
+        run: |
+          if [ -z "$FE_ENV" ]; then
+            echo '::error::FE_ENV_PRODUCTION secret is not available'
+            exit 1
+          fi
+          printf '%s\n' "$FE_ENV" | tr -d '\r' | grep -E '^NEXT_PUBLIC_(API_URL|CLERK_PUBLISHABLE_KEY|CLERK_SIGN_IN_URL|REDIRECT_URL)=' | sed -E 's/="?([^"]*)"?$/=\1/' >> "$GITHUB_ENV"
+
       - run: pnpm build --filter=@repo/client --filter=@repo/backend

@@ -24,6 +24,8 @@ env:
 jobs:
   ci:
     uses: ./.github/workflows/ci.yml
+    # CI reads FE_ENV_PRODUCTION to build the client
+    secrets: inherit
 
   build:
     needs: ci

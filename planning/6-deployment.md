@@ -148,10 +148,11 @@ gh variable set APP_DOMAIN       --body yourdomain.com
 gh variable set API_DOMAIN       --body api.yourdomain.com
 ```
 
-A new `NEXT_PUBLIC_*` variable must be added in **three** places: the env
+A new `NEXT_PUBLIC_*` variable must be added in **four** places: the env
 schema (`apps/client/configs/env.config.ts`), the `ARG`/`ENV` list in
-`Dockerfile.client`, and the `grep` in `deploy.yml`. Missing one builds fine
-and ships `undefined`.
+`Dockerfile.client`, and the `grep` in both `deploy.yml` and `ci.yml` (CI
+builds the client with the same values, so PRs need the secret too). Missing
+one builds fine and ships `undefined`.
 
 ### 7. First certificate (before the first deploy)
 
