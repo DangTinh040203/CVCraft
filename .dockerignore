@@ -1,0 +1,24 @@
+# Installed and built inside the image, never copied from the host
+**/node_modules
+**/.next
+**/dist
+**/.turbo
+**/coverage
+**/generated
+**/*.tsbuildinfo
+
+# Secrets: production env reaches the containers through env_file, and the
+# client's NEXT_PUBLIC_* through build args. A stray apps/client/.env would
+# otherwise be read by `next build` and inlined into the bundle.
+**/.env
+**/.env.*
+!**/.env.example
+
+.git
+.github
+.claude
+.agents
+.playwright-mcp
+planning
+docker
+*.log

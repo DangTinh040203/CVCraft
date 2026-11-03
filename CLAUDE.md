@@ -19,6 +19,7 @@ The project is early. Built so far: Clerk auth (SSO only), the Redux builder syn
 - `3-pdf-mvp-reference.md`: the proven PDF pipeline, including its gotchas
 - `4-database-erd.md`: the planned data model
 - `5-live-interview.md`: how the voice mock interview works (audio, turn-taking, gotchas)
+- `6-deployment.md`: production on a GCE VM (docker compose, nginx + Certbot) and the GitHub Actions CI/CD, with the one-time setup runbook
 
 ## Commands
 

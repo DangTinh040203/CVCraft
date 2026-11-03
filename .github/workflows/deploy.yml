@@ -1,0 +1,130 @@
+name: Deploy
+
+# Push to main: CI, then build and push the client and backend images to
+# Artifact Registry, then pull and restart them on the GCE VM.
+# Migrations are NOT run here; apply them by hand before merging a schema change.
+#
+# Repo variables: GCP_PROJECT_ID, GCP_REGION, GCP_WIF_PROVIDER, GCP_DEPLOYER_SA,
+#                 GCE_INSTANCE, GCE_ZONE, APP_DOMAIN, API_DOMAIN
+# Repo secrets:   BE_ENV_PRODUCTION, FE_ENV_PRODUCTION (whole .env files)
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-production
+  cancel-in-progress: false
+
+env:
+  REGISTRY: ${{ vars.GCP_REGION }}-docker.pkg.dev/${{ vars.GCP_PROJECT_ID }}/cv-craft
+  IMAGE_TAG: ${{ github.sha }}
+
+jobs:
+  ci:
+    uses: ./.github/workflows/ci.yml
+
+  build:
+    needs: ci
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    strategy:
+      matrix:
+        app: [backend, client]
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: google-github-actions/auth@v2
+        with:
+          workload_identity_provider: ${{ vars.GCP_WIF_PROVIDER }}
+          service_account: ${{ vars.GCP_DEPLOYER_SA }}
+
+      - uses: google-github-actions/setup-gcloud@v2
+
+      - run: gcloud auth configure-docker ${{ vars.GCP_REGION }}-docker.pkg.dev --quiet
+
+      # NEXT_PUBLIC_* are baked into the client at build time. Keep this list
+      # in sync with the ARGs in Dockerfile.client and the env schema.
+      - name: Extract client build args
+        id: args
+        if: matrix.app == 'client'
+        env:
+          FE_ENV: ${{ secrets.FE_ENV_PRODUCTION }}
+        run: |
+          {
+            echo 'list<<EOF'
+            printf '%s\n' "$FE_ENV" | tr -d '\r' | grep -E '^NEXT_PUBLIC_(API_URL|CLERK_PUBLISHABLE_KEY|CLERK_SIGN_IN_URL|REDIRECT_URL)=' | sed -E 's/="?([^"]*)"?$/=\1/'
+            echo 'EOF'
+          } >> "$GITHUB_OUTPUT"
+
+      - uses: docker/setup-buildx-action@v3
+
+      - uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: docker/Dockerfile.${{ matrix.app }}
+          push: true
+          build-args: ${{ steps.args.outputs.list }}
+          tags: |
+            ${{ env.REGISTRY }}/${{ matrix.app }}:${{ env.IMAGE_TAG }}
+            ${{ env.REGISTRY }}/${{ matrix.app }}:latest
+          cache-from: type=gha,scope=${{ matrix.app }}
+          cache-to: type=gha,mode=max,scope=${{ matrix.app }}
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment: production
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: google-github-actions/auth@v2
+        with:
+          workload_identity_provider: ${{ vars.GCP_WIF_PROVIDER }}
+          service_account: ${{ vars.GCP_DEPLOYER_SA }}
+
+      - uses: google-github-actions/setup-gcloud@v2
+
+      - name: Prepare release files
+        env:
+          BE_ENV: ${{ secrets.BE_ENV_PRODUCTION }}
+          FE_ENV: ${{ secrets.FE_ENV_PRODUCTION }}
+        run: |
+          mkdir -p release
+          cp docker/docker-compose.prod.yml release/
+          cp -r docker/nginx release/nginx
+          printf '%s\n' "$BE_ENV" | tr -d '\r' > release/backend.env
+          printf '%s\n' "$FE_ENV" | tr -d '\r' > release/client.env
+          cat > release/.env <<EOF
+          REGISTRY=${REGISTRY}
+          IMAGE_TAG=${IMAGE_TAG}
+          APP_DOMAIN=${{ vars.APP_DOMAIN }}
+          API_DOMAIN=${{ vars.API_DOMAIN }}
+          EOF
+          tar -czf release.tgz -C release .
+
+      - name: Copy to VM
+        run: |
+          gcloud compute scp release.tgz "${{ vars.GCE_INSTANCE }}:~/release.tgz" \
+            --zone "${{ vars.GCE_ZONE }}" --quiet
+
+      # Docker runs via sudo: the OS Login user isn't reliably in the docker group
+      - name: Restart containers
+        run: |
+          gcloud compute ssh "${{ vars.GCE_INSTANCE }}" --zone "${{ vars.GCE_ZONE }}" --quiet --command '
+            set -euo pipefail
+            sudo mkdir -p /opt/craftcv
+            sudo tar -xzf ~/release.tgz -C /opt/craftcv
+            rm ~/release.tgz
+            sudo chmod 600 /opt/craftcv/backend.env /opt/craftcv/client.env /opt/craftcv/.env
+            cd /opt/craftcv
+            sudo docker compose -f docker-compose.prod.yml pull backend client
+            sudo docker compose -f docker-compose.prod.yml up -d --remove-orphans
+            sudo docker image prune -f
+          '

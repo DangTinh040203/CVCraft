@@ -1,0 +1,90 @@
+# Production stack on the VM, in /opt/craftcv (written there by deploy.yml).
+# `.env` next to this file supplies REGISTRY, IMAGE_TAG, APP_DOMAIN and
+# API_DOMAIN; backend.env and client.env are the apps' own env files.
+
+x-logging: &logging
+  driver: json-file
+  options:
+    max-size: 10m
+    max-file: '3'
+
+services:
+  backend:
+    image: ${REGISTRY}/backend:${IMAGE_TAG}
+    restart: unless-stopped
+    env_file: backend.env
+    environment:
+      NODE_ENV: production
+      PORT: 8000
+      # Chromium renders /print through the compose network, not the internet
+      PDF_RENDER_URL: http://client:3001
+    # Reaps the Chromium child processes Puppeteer leaves behind
+    init: true
+    healthcheck:
+      test:
+        - CMD
+        - node
+        - -e
+        - 'fetch("http://127.0.0.1:8000/api/v1/health").then((r) => process.exit(r.ok ? 0 : 1)).catch(() => process.exit(1))'
+      interval: 30s
+      timeout: 5s
+      start_period: 30s
+      retries: 3
+    logging: *logging
+
+  client:
+    image: ${REGISTRY}/client:${IMAGE_TAG}
+    restart: unless-stopped
+    env_file: client.env
+    environment:
+      NODE_ENV: production
+      PORT: 3001
+      HOSTNAME: 0.0.0.0
+    healthcheck:
+      test:
+        - CMD
+        - node
+        - -e
+        - 'fetch("http://127.0.0.1:3001/").then((r) => process.exit(r.ok ? 0 : 1)).catch(() => process.exit(1))'
+      interval: 30s
+      timeout: 5s
+      start_period: 30s
+      retries: 3
+    logging: *logging
+
+  nginx:
+    image: nginx:1.27-alpine
+    restart: unless-stopped
+    ports:
+      - '80:80'
+      - '443:443'
+    environment:
+      APP_DOMAIN: ${APP_DOMAIN}
+      API_DOMAIN: ${API_DOMAIN}
+    volumes:
+      # The image runs envsubst on templates/*.template into conf.d at start
+      - ./nginx/templates:/etc/nginx/templates:ro
+      - ./certbot/conf:/etc/letsencrypt:ro
+      - ./certbot/www:/var/www/certbot:ro
+    # Reload every 6 h so a renewed certificate is picked up
+    command: >-
+      /bin/sh -c 'while :; do sleep 6h & wait $${!}; nginx -s reload; done &
+      exec /docker-entrypoint.sh nginx -g "daemon off;"'
+    depends_on:
+      - backend
+      - client
+    logging: *logging
+
+  certbot:
+    image: certbot/certbot:v3.1.0
+    restart: unless-stopped
+    volumes:
+      - ./certbot/conf:/etc/letsencrypt
+      - ./certbot/www:/var/www/certbot
+    # The first certificate is issued by hand (see planning/6-deployment.md);
+    # this renews it through nginx's ACME webroot when it is close to expiry
+    entrypoint: >-
+      /bin/sh -c 'trap exit TERM; while :; do
+      certbot renew --webroot -w /var/www/certbot --quiet;
+      sleep 12h & wait $${!}; done'
+    logging: *logging

@@ -1,0 +1,88 @@
+# Rendered by the nginx image's envsubst at start. Only the variables set on
+# the container (APP_DOMAIN, API_DOMAIN) are substituted; nginx's own
+# variables such as $host are left alone.
+
+# Docker's DNS. Upstreams are resolved per request (proxy_pass with a
+# variable), so a redeployed container's new IP is picked up instead of
+# nginx keeping the old one and answering 502.
+resolver 127.0.0.11 valid=10s ipv6=off;
+
+map $http_upgrade $connection_upgrade {
+  default upgrade;
+  '' close;
+}
+
+ssl_certificate /etc/letsencrypt/live/${APP_DOMAIN}/fullchain.pem;
+ssl_certificate_key /etc/letsencrypt/live/${APP_DOMAIN}/privkey.pem;
+ssl_protocols TLSv1.2 TLSv1.3;
+ssl_prefer_server_ciphers off;
+ssl_session_cache shared:SSL:10m;
+ssl_session_timeout 1d;
+
+proxy_http_version 1.1;
+proxy_set_header Host $host;
+proxy_set_header X-Real-IP $remote_addr;
+proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+proxy_set_header X-Forwarded-Proto $scheme;
+
+server_tokens off;
+
+# HTTP: Let's Encrypt challenges, everything else to HTTPS
+server {
+  listen 80;
+  server_name ${APP_DOMAIN} www.${APP_DOMAIN} ${API_DOMAIN};
+
+  location /.well-known/acme-challenge/ {
+    root /var/www/certbot;
+  }
+
+  location / {
+    return 301 https://$host$request_uri;
+  }
+}
+
+server {
+  listen 443 ssl;
+  http2 on;
+  server_name www.${APP_DOMAIN};
+  return 301 https://${APP_DOMAIN}$request_uri;
+}
+
+# Client (Next.js)
+server {
+  listen 443 ssl;
+  http2 on;
+  server_name ${APP_DOMAIN};
+
+  location / {
+    set $client http://client:3001;
+    proxy_pass $client;
+  }
+}
+
+# API (NestJS) + Socket.IO
+server {
+  listen 443 ssl;
+  http2 on;
+  server_name ${API_DOMAIN};
+
+  # CV and job description PDF uploads are capped at 5 MB by the API
+  client_max_body_size 10m;
+
+  location /socket.io/ {
+    set $backend http://backend:8000;
+    proxy_pass $backend;
+    proxy_set_header Upgrade $http_upgrade;
+    proxy_set_header Connection $connection_upgrade;
+    # A mock interview keeps its socket open for up to 14 minutes
+    proxy_read_timeout 1h;
+    proxy_send_timeout 1h;
+  }
+
+  location / {
+    set $backend http://backend:8000;
+    proxy_pass $backend;
+    # Gemini calls and PDF renders can take a while
+    proxy_read_timeout 120s;
+  }
+}

@@ -136,6 +136,12 @@ principle was **self-managed VM ops over a fully managed platform**
 | Secrets       | 3 GitHub repo secrets as env-blobs: `BE_ENV_PRODUCTION` (written to `.env` on the VM, BE reads via `env_file`), `FE_ENV_PRODUCTION` (workflow greps `NEXT_PUBLIC_*` out of it as FE Docker build-args), and `ADMIN_ENV_PRODUCTION` (same pattern, kept separate from FE's so the two apps' env can diverge — e.g. a different `NEXT_PUBLIC_BASE_URL`/admin-only flags — without cross-editing). Updated with `gh secret set <NAME> < apps/{be,fe,admin}/.env.production`; local `.env.production` files are the source of truth and gitignored. |
 | Migrations    | Run **manually** against prod (deploy workflow explicitly does not run migrations)                                                                                                                                                                                                                                                                   |
 
+**Current scope (decided 2026-10-28):** client + backend only (admin is
+deferred, so only `BE_ENV_PRODUCTION` and `FE_ENV_PRODUCTION` exist for now),
+an e2-medium VM in `asia-southeast1`, nginx + Certbot (no Cloudflare). The
+setup runbook and the files that implement this are in
+[`6-deployment.md`](6-deployment.md).
+
 **Runtime pitfalls to design around from day one:**
 
 - BE Dockerfile/CI needs Chromium's system dependencies for Puppeteer/

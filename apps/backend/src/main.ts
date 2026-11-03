@@ -1,11 +1,7 @@
-import {
-  BadRequestException,
-  type INestApplication,
-  Logger,
-  ValidationPipe,
-} from '@nestjs/common';
+import { BadRequestException, Logger, ValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
+import { type NestExpressApplication } from '@nestjs/platform-express';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import cookieParser from 'cookie-parser';
 import { type Request } from 'express';
@@ -19,11 +15,11 @@ import { loggerConfig } from '@/libs/configs/logger.config';
 import { formatError } from '@/libs/utils/format-error.util';
 
 class BootstrapApplication {
-  private app: INestApplication;
+  private app: NestExpressApplication;
   private configService: ConfigService;
 
   async run() {
-    this.app = await NestFactory.create(AppModule, {
+    this.app = await NestFactory.create<NestExpressApplication>(AppModule, {
       logger: loggerConfig,
       // Svix signs the exact bytes Clerk sent (see ClerkWebhookGuard)
       rawBody: true,
@@ -37,6 +33,12 @@ class BootstrapApplication {
     const apiVersion = this.configService.get<string>(Env.API_VERSION, '1');
 
     this.app.setGlobalPrefix(`${apiPrefix}/v${apiVersion}`);
+
+    if (this.configService.get<string>(Env.NODE_ENV) === 'production') {
+      // Behind nginx: take req.ip from X-Forwarded-For, otherwise the
+      // throttler sees every user as nginx and they share one limit
+      this.app.set('trust proxy', 1);
+    }
 
     this.setupMiddleware();
 
