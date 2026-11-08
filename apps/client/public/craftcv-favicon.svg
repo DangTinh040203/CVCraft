@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="256" height="256" viewBox="0 0 256 256" fill="none">
+  <title>CraftCV favicon</title>
+  <rect width="256" height="256" rx="64" fill="#121A3A"/>
+  <path d="M75 48C75 41.373 80.373 36 87 36H153.686C157.929 36 161.996 37.686 165 40.686L187.314 63C190.314 66.004 192 70.071 192 74.314V208C192 214.627 186.627 220 180 220H87C80.373 220 75 214.627 75 208V48Z" fill="#F8F7FF"/>
+  <path d="M153 37V61C153 67.627 158.373 73 165 73H190" fill="#DDD9FF"/>
+  <path d="M153 37V61C153 67.627 158.373 73 165 73H190" stroke="#C9C4FF" stroke-width="2"/>
+  <path d="M91 125C91 105.67 106.67 90 126 90C139.73 90 151.69 97.9 157.64 109.27" stroke="#6355E8" stroke-width="16" stroke-linecap="round"/>
+  <path d="M87 148C95.2 162.38 109.98 171 126 171C139.85 171 152.46 163.16 159.6 151.5" stroke="#6355E8" stroke-width="16" stroke-linecap="round"/>
+  <path d="M199 86L205.06 102.94L222 109L205.06 115.06L199 132L192.94 115.06L176 109L192.94 102.94L199 86Z" fill="#AFA8FF"/>
+</svg>
