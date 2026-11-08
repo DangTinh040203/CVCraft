@@ -29,7 +29,7 @@ const Marquee = () => {
         <p
           className={`
             text-muted-foreground mb-8 text-center text-xs font-semibold
-            tracking-[0.2em] uppercase opacity-70
+            tracking-[0.2em] uppercase
           `}
         >
           Trusted by professionals worldwide
@@ -48,8 +48,8 @@ const Marquee = () => {
                 key={i}
                 className={`
                   font-display text-muted-foreground text-xl font-bold
-                  whitespace-nowrap opacity-40 transition-all duration-300
-                  hover:text-primary hover:scale-110 hover:opacity-100
+                  whitespace-nowrap transition-all duration-300
+                  hover:text-primary hover:scale-110
                   md:text-3xl
                 `}
               >

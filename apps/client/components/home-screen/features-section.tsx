@@ -62,6 +62,7 @@ const FeaturesSection = () => {
             />
           </m.div>
           <BlurText
+            as='h2'
             text='Everything You Need to Build a Winning Career'
             delay={80}
             animateBy='words'

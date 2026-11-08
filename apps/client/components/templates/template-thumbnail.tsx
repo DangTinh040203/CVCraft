@@ -16,6 +16,10 @@ const PAGE_HEIGHT_PX = 1123;
 export function TemplateThumbnail({ children }: { children: ReactNode }) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [scale, setScale] = useState(0);
+  // A full template is hundreds of nodes; a gallery or carousel of them all
+  // at once is thousands. Render each one only once it nears the viewport
+  // (clipped carousel slides don't count), then keep it.
+  const [isNearViewport, setIsNearViewport] = useState(false);
 
   useEffect(() => {
     const el = containerRef.current;
@@ -29,6 +33,20 @@ export function TemplateThumbnail({ children }: { children: ReactNode }) {
     return () => observer.disconnect();
   }, []);
 
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el || isNearViewport) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry?.isIntersecting) setIsNearViewport(true);
+      },
+      { rootMargin: '200px' },
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [isNearViewport]);
+
   return (
     <div
       ref={containerRef}
@@ -38,7 +56,7 @@ export function TemplateThumbnail({ children }: { children: ReactNode }) {
       {/* Rendered once measured: at scale 0 it is invisible anyway, and
           server-rendering every sample CV bloated the HTML and filled the
           page with the samples' <h1>s. aria-hidden: a preview, not content. */}
-      {scale > 0 && (
+      {scale > 0 && isNearViewport && (
         <div
           aria-hidden
           // text-left: undo the UA `text-align: center` inherited when the

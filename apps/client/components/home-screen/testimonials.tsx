@@ -65,6 +65,7 @@ const TestimonialsSection = () => {
             />
           </m.div>
           <BlurText
+            as='h2'
             text='Loved by Thousands of Job Seekers'
             delay={80}
             animateBy='words'

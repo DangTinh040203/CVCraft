@@ -131,6 +131,8 @@ const HeroSection = () => {
             </Badge>
           </m.div>
 
+          {/* Slide-in only, never opacity 0: the server HTML then paints the text
+              at once, instead of hiding it (and LCP) until JS hydrates. */}
           <h1 className='overflow-hidden'>
             <m.span
               className={`
@@ -139,8 +141,8 @@ const HeroSection = () => {
                 md:text-6xl
                 lg:mb-2 lg:text-7xl
               `}
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
+              initial={{ y: 30 }}
+              animate={{ y: 0 }}
               transition={{ duration: 0.5 }}
             >
               Discover, connect,
@@ -152,8 +154,8 @@ const HeroSection = () => {
                 md:text-6xl
                 lg:text-7xl
               `}
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
+              initial={{ y: 30 }}
+              animate={{ y: 0 }}
               transition={{ duration: 0.5, delay: 0.15 }}
             >
               grow.
@@ -166,8 +168,8 @@ const HeroSection = () => {
               leading-relaxed
               md:text-xl
             `}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
+            initial={{ y: 20 }}
+            animate={{ y: 0 }}
             transition={{ duration: 0.5, delay: 0.3 }}
           >
             Welcome to CraftCV, the largest professional CV building platform.
@@ -185,8 +187,8 @@ const HeroSection = () => {
               flex flex-col justify-center gap-4
               sm:flex-row
             `}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
+            initial={{ y: 20 }}
+            animate={{ y: 0 }}
             transition={{ duration: 0.5, delay: 0.45 }}
           >
             <Link href='/builder'>

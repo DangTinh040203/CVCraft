@@ -55,6 +55,7 @@ const BenefitsSection = () => {
               />
             </m.div>
             <BlurText
+              as='h2'
               text='Stand Out from the Massive Competition'
               delay={80}
               animateBy='words'

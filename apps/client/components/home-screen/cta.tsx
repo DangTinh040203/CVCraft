@@ -59,6 +59,7 @@ const CTASection = () => {
               Take the next step
             </m.div>
             <BlurText
+              as='h2'
               text='Ready to Land Your Dream Job?'
               delay={100}
               animateBy='words'

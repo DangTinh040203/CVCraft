@@ -75,7 +75,7 @@ const Footer = () => {
 
           {sections.map((section) => (
             <m.div key={section.title} variants={fadeInUp}>
-              <h4 className='mb-4 font-semibold'>{section.title}</h4>
+              <h2 className='mb-4 font-semibold'>{section.title}</h2>
               <ul className='space-y-2'>
                 {section.links.map((link) => (
                   <li key={link.label}>

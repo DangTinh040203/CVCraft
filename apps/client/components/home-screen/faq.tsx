@@ -44,6 +44,7 @@ const FAQSection = () => {
             />
           </m.div>
           <BlurText
+            as='h2'
             text='Frequently Asked Questions'
             delay={80}
             animateBy='words'

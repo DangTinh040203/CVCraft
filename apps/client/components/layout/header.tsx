@@ -327,6 +327,8 @@ const Header = () => {
               <Button
                 variant='ghost'
                 size='icon'
+                aria-label={isOpen ? 'Close menu' : 'Open menu'}
+                aria-expanded={isOpen}
                 onClick={() => setIsOpen(!isOpen)}
               >
                 <AnimatePresence mode='wait'>

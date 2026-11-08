@@ -69,6 +69,7 @@ const HowItWorksSection = () => {
             />
           </m.div>
           <BlurText
+            as='h2'
             text='Start Your Journey in Minutes'
             delay={80}
             animateBy='words'

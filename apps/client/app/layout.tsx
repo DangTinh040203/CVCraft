@@ -27,6 +27,8 @@ const fontMono = Geist_Mono({
   subsets: ['latin'],
   variable: '--font-mono',
   display: 'swap',
+  // Rarely used; not worth a preload on every page
+  preload: false,
 });
 
 export const metadata: Metadata = {

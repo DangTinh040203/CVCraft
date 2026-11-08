@@ -94,6 +94,7 @@ const WhyChooseUsSection = () => {
             />
           </m.div>
           <BlurText
+            as='h2'
             text='Why Choose CraftCV?'
             delay={80}
             animateBy='words'

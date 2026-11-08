@@ -5,6 +5,8 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 
 interface BlurTextProps {
   text?: string;
+  /** Element to render; section titles pass `h2` so the outline stays valid. */
+  as?: 'p' | 'h2' | 'h3';
   delay?: number;
   className?: string;
   spanClassName?: string;
@@ -36,6 +38,7 @@ const buildKeyframes = (
 
 const BlurText = ({
   text = '',
+  as: Tag = 'p',
   delay = 200,
   className = '',
   spanClassName = '',
@@ -51,7 +54,7 @@ const BlurText = ({
 }: BlurTextProps) => {
   const elements = animateBy === 'words' ? text.split(' ') : text.split('');
   const [inView, setInView] = useState(false);
-  const ref = useRef<HTMLParagraphElement>(null);
+  const ref = useRef<HTMLHeadingElement & HTMLParagraphElement>(null);
 
   useEffect(() => {
     if (!ref.current) return;
@@ -98,7 +101,7 @@ const BlurText = ({
   );
 
   return (
-    <p
+    <Tag
       ref={ref}
       className={className}
       style={{ display: 'flex', flexWrap: 'wrap' }}
@@ -131,7 +134,7 @@ const BlurText = ({
           </m.span>
         );
       })}
-    </p>
+    </Tag>
   );
 };
 

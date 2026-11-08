@@ -20,8 +20,9 @@ interface TemplateProps {
   resume: ResumeData;
 }
 
-// Customize panel's accent color overrides this via --resume-accent
-const ACCENT = 'var(--resume-accent, #3f8a68)';
+// Customize panel's accent color overrides this via --resume-accent. The
+// default is dark enough for 4.5:1 on white (WCAG AA for small text).
+const ACCENT = 'var(--resume-accent, #3a8061)';
 
 // Fixed node/edge coordinates so the decoration renders identically on the
 // server, the client, and in the exported PDF.
@@ -218,8 +219,7 @@ export function Template13({ resume }: TemplateProps) {
             <ul className='space-y-0.5 text-neutral-700'>
               {skills.map((skill) => (
                 <li key={skill.id}>
-                  - {skill.label}{' '}
-                  <span>({skill.value})</span>
+                  - {skill.label} <span>({skill.value})</span>
                 </li>
               ))}
             </ul>
