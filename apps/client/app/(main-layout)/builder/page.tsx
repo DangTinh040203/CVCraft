@@ -2,10 +2,12 @@ import { type Metadata } from 'next';
 import { Suspense } from 'react';
 
 import BuilderScreenContainer from '@/components/builder-screens/builder-screen-container';
+import { NO_INDEX } from '@/configs/site.config';
 
 export const metadata: Metadata = {
   title: 'Builder',
   description: 'Build your CV from a template.',
+  robots: NO_INDEX,
 };
 
 export default async function BuilderPage() {

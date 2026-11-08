@@ -132,8 +132,10 @@ are the source of truth.
 
 Backend needs: `FRONTEND_ORIGIN=https://yourdomain.com` (CORS + Socket.IO).
 `NODE_ENV`, `PORT` and `PDF_RENDER_URL` are set by the compose file.
-Client needs: `NEXT_PUBLIC_API_URL=https://api.yourdomain.com/api/v1`, the
-Clerk keys, `NEXT_PUBLIC_CLERK_SIGN_IN_URL`, `NEXT_PUBLIC_REDIRECT_URL`.
+Client needs: `NEXT_PUBLIC_API_URL=https://api.yourdomain.com/api/v1`,
+`NEXT_PUBLIC_SITE_URL=https://yourdomain.com` (canonical URLs, sitemap, Open
+Graph; unset, it falls back to `http://localhost:3001`), the Clerk keys,
+`NEXT_PUBLIC_CLERK_SIGN_IN_URL`, `NEXT_PUBLIC_REDIRECT_URL`.
 
 ```bash
 gh secret set BE_ENV_PRODUCTION < apps/backend/.env.production

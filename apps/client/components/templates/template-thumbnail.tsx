@@ -35,14 +35,20 @@ export function TemplateThumbnail({ children }: { children: ReactNode }) {
       className='relative w-full overflow-hidden rounded-lg bg-white'
       style={{ aspectRatio: `${PAGE_WIDTH_PX} / ${PAGE_HEIGHT_PX}` }}
     >
-      <div
-        // text-left: undo the UA `text-align: center` inherited when the
-        // thumbnail sits inside a <button> (e.g. the template card).
-        className='absolute top-0 left-0 origin-top-left text-left'
-        style={{ width: PAGE_WIDTH_PX, transform: `scale(${scale})` }}
-      >
-        {children}
-      </div>
+      {/* Rendered once measured: at scale 0 it is invisible anyway, and
+          server-rendering every sample CV bloated the HTML and filled the
+          page with the samples' <h1>s. aria-hidden: a preview, not content. */}
+      {scale > 0 && (
+        <div
+          aria-hidden
+          // text-left: undo the UA `text-align: center` inherited when the
+          // thumbnail sits inside a <button> (e.g. the template card).
+          className='absolute top-0 left-0 origin-top-left text-left'
+          style={{ width: PAGE_WIDTH_PX, transform: `scale(${scale})` }}
+        >
+          {children}
+        </div>
+      )}
     </div>
   );
 }

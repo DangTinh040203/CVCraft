@@ -37,7 +37,7 @@ export const config = {
     // Skip Next.js internals, metadata routes, static files and /print (opened
     // by the backend's headless Chromium, which has no Clerk session and must
     // not be sent through Clerk's handshake redirect)
-    '/((?!_next|print|icon|apple-icon|manifest|sitemap|robots|[^?]*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest)).*)',
+    '/((?!_next|print|icon|apple-icon|opengraph-image|manifest|sitemap|robots|[^?]*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest)).*)',
     '/(api|trpc)(.*)',
   ],
 };

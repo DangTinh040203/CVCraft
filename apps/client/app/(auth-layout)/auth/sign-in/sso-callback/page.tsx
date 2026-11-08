@@ -1,5 +1,10 @@
 import { AuthenticateWithRedirectCallback } from '@clerk/nextjs';
 import { Loader } from 'lucide-react';
+import { type Metadata } from 'next';
+
+import { NO_INDEX } from '@/configs/site.config';
+
+export const metadata: Metadata = { title: 'Signing in', robots: NO_INDEX };
 
 export default function SSOCallback() {
   return (

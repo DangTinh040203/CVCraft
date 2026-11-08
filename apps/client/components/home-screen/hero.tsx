@@ -131,10 +131,10 @@ const HeroSection = () => {
             </Badge>
           </m.div>
 
-          <div className='overflow-hidden'>
-            <m.h1
+          <h1 className='overflow-hidden'>
+            <m.span
               className={`
-                font-display text-foreground text-4xl leading-[1.1]
+                font-display text-foreground block text-4xl leading-[1.1]
                 font-extrabold tracking-tight
                 md:text-6xl
                 lg:mb-2 lg:text-7xl
@@ -144,11 +144,11 @@ const HeroSection = () => {
               transition={{ duration: 0.5 }}
             >
               Discover, connect,
-            </m.h1>
-            <m.h1
+            </m.span>{' '}
+            <m.span
               className={`
-                font-display gradient-text mb-6 py-2 text-4xl leading-[1.1]
-                font-extrabold tracking-tight
+                font-display gradient-text mb-6 block py-2 text-4xl
+                leading-[1.1] font-extrabold tracking-tight
                 md:text-6xl
                 lg:text-7xl
               `}
@@ -157,8 +157,8 @@ const HeroSection = () => {
               transition={{ duration: 0.5, delay: 0.15 }}
             >
               grow.
-            </m.h1>
-          </div>
+            </m.span>
+          </h1>
 
           <m.p
             className={`

@@ -2,11 +2,13 @@ import { type Metadata } from 'next';
 
 import { LegalPage } from '@/components/legal/legal-page';
 import { termsSections } from '@/components/legal/terms-content';
+import { pageMetadata } from '@/configs/site.config';
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: 'Terms of Service',
   description: 'The terms and conditions for using CraftCV.',
-};
+  path: '/terms',
+});
 
 export default function TermsPage() {
   return (

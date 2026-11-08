@@ -48,6 +48,6 @@ jobs:
             echo '::error::FE_ENV_PRODUCTION secret is not available'
             exit 1
           fi
-          printf '%s\n' "$FE_ENV" | tr -d '\r' | grep -E '^NEXT_PUBLIC_(API_URL|CLERK_PUBLISHABLE_KEY|CLERK_SIGN_IN_URL|REDIRECT_URL)=' | sed -E 's/="?([^"]*)"?$/=\1/' >> "$GITHUB_ENV"
+          printf '%s\n' "$FE_ENV" | tr -d '\r' | grep -E '^NEXT_PUBLIC_(API_URL|SITE_URL|CLERK_PUBLISHABLE_KEY|CLERK_SIGN_IN_URL|REDIRECT_URL)=' | sed -E 's/="?([^"]*)"?$/=\1/' >> "$GITHUB_ENV"
 
       - run: pnpm build --filter=@repo/client --filter=@repo/backend

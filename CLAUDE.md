@@ -68,6 +68,7 @@ pnpm --filter @repo/backend test -- app.controller   # pattern matched against *
 
 - Client routes use route groups: `(main-layout)` for the marketing pages, templates, builder and legal pages, and `(auth-layout)` for auth.
 - Build UI from `@repo/ui` (shadcn) components rather than hand-rolled controls: `Tabs`, `ToggleGroup` (single-choice pickers), `RadioGroup`, `Pagination`, `Progress`, `InputGroup`, `Tooltip` (one `TooltipProvider` is mounted in `app/layout.tsx`; don't add more). Don't put `TooltipTrigger asChild` directly on a Radix item that has its own `data-state` (toggle, radio): the tooltip's state overwrites it, so wrap the item in a `span` trigger. The theme's `ghost`/`outline` button hovers are solid purple, so lighten hovers where a selected state must stand out.
+- SEO: `configs/site.config.ts` holds the site name, copy and `NEXT_PUBLIC_SITE_URL` origin (`metadataBase`, canonical URLs, `app/sitemap.ts`, `app/robots.ts`, `app/manifest.ts`, `app/opengraph-image.tsx`). Give a public page `pageMetadata({ title, description, path })` (canonical + its own OG/Twitter card) and add it to the sitemap; give a signed-in or private page `robots: NO_INDEX`. Keep server-rendered HTML meaningful: no app-wide gate that renders `null` on the server (the old `PersistGate` did), and one `<h1>` per page.
 - The admin app is organized by feature: `app/(dashboard)/*` routes are thin and delegate to `features/<name>/`. Tables use `@tanstack/react-table` through `components/data-table`. Forms use react-hook-form + zod.
 
 ### Backend

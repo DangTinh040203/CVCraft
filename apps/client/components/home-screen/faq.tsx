@@ -10,29 +10,7 @@ import React from 'react';
 
 import BlurText from '@/components/common/blur-text';
 import ShinyText from '@/components/common/shiny-text';
-
-const faqs = [
-  {
-    q: 'Is CraftCV really free to use?',
-    a: 'Yes! You can create and download your CV for free. We offer premium templates and advanced AI features for users who want extra polish.',
-  },
-  {
-    q: 'How does the AI CV writing work?',
-    a: "Our AI analyzes your experience and the job description you're targeting. It then suggests impactful bullet points, optimizes keywords, and ensures your CV is tailored for the role.",
-  },
-  {
-    q: 'Are the templates ATS-friendly?',
-    a: 'Absolutely. All our templates are designed to pass Applicant Tracking Systems while still looking professional and modern.',
-  },
-  {
-    q: 'Can I edit my CV after downloading?',
-    a: 'Yes! Your CVs are saved to your account. You can come back anytime to make edits and download updated versions.',
-  },
-  {
-    q: 'How does the mock interview feature work?',
-    a: 'Our AI interviewer asks you common questions for your target role. You can practice answering verbally, and the AI provides feedback on your responses.',
-  },
-];
+import { FAQ_ITEMS } from '@/components/home-screen/faq-items';
 
 const FAQSection = () => {
   return (
@@ -93,7 +71,7 @@ const FAQSection = () => {
           viewport={{ once: true, margin: '-100px' }}
         >
           <Accordion type='single' collapsible className='w-full space-y-4'>
-            {faqs.map((faq, index) => (
+            {FAQ_ITEMS.map((faq, index) => (
               <m.div
                 key={faq.q}
                 initial={{ opacity: 0, x: -20 }}

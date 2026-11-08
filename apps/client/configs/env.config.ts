@@ -9,6 +9,8 @@ export const Env = createEnv({
     NEXT_PUBLIC_API_URL: z.string().url(),
     // Socket.IO server (mock interview); defaults to the API's origin
     NEXT_PUBLIC_WS_URL: z.string().url().optional(),
+    // Public origin of this app (canonical URLs, sitemap, Open Graph)
+    NEXT_PUBLIC_SITE_URL: z.string().url().default('http://localhost:3001'),
   },
   server: {
     CLERK_SECRET_KEY: z.string().min(1),
@@ -21,6 +23,7 @@ export const Env = createEnv({
     NEXT_PUBLIC_REDIRECT_URL: process.env.NEXT_PUBLIC_REDIRECT_URL,
     NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL,
     NEXT_PUBLIC_WS_URL: process.env.NEXT_PUBLIC_WS_URL,
+    NEXT_PUBLIC_SITE_URL: process.env.NEXT_PUBLIC_SITE_URL,
     CLERK_SECRET_KEY: process.env.CLERK_SECRET_KEY,
   },
 

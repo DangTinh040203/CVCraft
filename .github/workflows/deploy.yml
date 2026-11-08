@@ -58,7 +58,7 @@ jobs:
         run: |
           {
             echo 'list<<EOF'
-            printf '%s\n' "$FE_ENV" | tr -d '\r' | grep -E '^NEXT_PUBLIC_(API_URL|CLERK_PUBLISHABLE_KEY|CLERK_SIGN_IN_URL|REDIRECT_URL)=' | sed -E 's/="?([^"]*)"?$/=\1/'
+            printf '%s\n' "$FE_ENV" | tr -d '\r' | grep -E '^NEXT_PUBLIC_(API_URL|SITE_URL|CLERK_PUBLISHABLE_KEY|CLERK_SIGN_IN_URL|REDIRECT_URL)=' | sed -E 's/="?([^"]*)"?$/=\1/'
             echo 'EOF'
           } >> "$GITHUB_OUTPUT"
 
