@@ -5,7 +5,12 @@ import { Env } from '@/configs/env.config';
 /** One source for the SEO copy shared by metadata, the manifest and JSON-LD. */
 export const SITE = {
   name: 'CraftCV',
-  url: Env.NEXT_PUBLIC_SITE_URL.replace(/\/+$/, ''),
+  // `?? ` too: with SKIP_ENV_VALIDATION (CI, Docker build) the schema's
+  // default isn't applied, so an unset var arrives as undefined
+  url: (Env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3001').replace(
+    /\/+$/,
+    '',
+  ),
   title: 'CraftCV - AI Resume Builder with ATS-Friendly CV Templates',
   description:
     'Build a professional, ATS-friendly CV in minutes with CraftCV. Free resume templates, AI writing help, job description matching, ATS checks and voice mock interviews.',
